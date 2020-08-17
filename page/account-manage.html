@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>消息详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			h2{font-size: 20px;color: #333;line-height: 18px;font-weight: bold;}
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				h2{font-size: 18px;color: #333;line-height: 18px;}
+				p{font-size: 14px;}
+			}
+			
+			.mui-table-view-cell.mui-collapse .mui-collapse-content {
+				background: none;
+			}
+			
+			.mui-table-view {
+				background: none;
+			}
+			
+			.mui-input-group .mui-row {
+				height: auto !important; 
+			}
+			
+			.mui-input-group:before, .mui-input-group:after {
+				background-color: #fff;
+			}
+			
+			.mui-row>div:first-child {
+				width: 90%;
+				display: block;
+				margin: 0 auto;
+				padding: 15px 0;
+			}
+			
+			.mui-row>input {
+				padding: 0;
+				background-color: #f8f8fa;
+				width: 90%;
+				display: block;
+				margin-left: 5%;
+			}
+			
+			#forget {
+				width: 100%;
+				text-align: right;
+				padding: 20px 5%;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">账号管理</h1>
+		</header>
+
+		<div class="pad-top-74" style="position: relative;" id="app">
+			<form class="mui-input-group">
+			    <div class="mui-row">
+			      <div>姓名：</div>
+						<input type="text" class="mui-input-clear" readonly :value="loginUser.userName" placeholder="请输入用户名">
+			    </div>
+			    <div class="mui-row">
+			        <div>旧密码：</div>
+			        <input type="password" id="oldpwd" class="mui-input-password" placeholder="请输入密码">
+			    </div>
+					<div class="mui-row">
+					    <div>新密码：</div>
+					    <input type="password" id="newpwd" class="mui-input-password" placeholder="请输入密码">
+					</div>
+					<div class="mui-row">
+					    <div>确认密码：</div>
+					    <input type="password" id="repeatpwd" class="mui-input-password" placeholder="请输入密码">
+					</div>
+			    <div class="bluecolor" id="forget" @tap="forget">
+			       忘记密码？
+			    </div>
+			</form>
+			<div class="approveBottomWait">
+			
+				<div type="submit"class="fixedBig" id="save" @tap="updatePwd">保存</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			var restPass = /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\w~!@#$%^&*?]{6,20}$/;
+			mui.init();
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						loginUser: '',
+					}
+				},
+				methods: {
+					updatePwd(){
+						var oldpwd = $("#oldpwd").val();
+						var passwd = $("#newpwd").val();
+						var repasswd = $("#repeatpwd").val();
+						if(oldpwd == "" ||passwd == "" || repasswd == "") {
+							mui.alert("请将信息填写完整 !");
+							return false;
+						}
+						
+						if(passwd != repasswd) {
+							mui.alert("两次输入密码不同 !");
+							return false;
+						}
+						if(restPass.test(passwd) == false) {
+							mui.alert("密码格式不符,不低于8位的数字与字母组合 !");
+							return false;
+						}
+						statis('2', 'account-manage.html', `保存修改密码`)
+						$.ajax({
+							url: zfyurl+"/app/api/user/updatePasswd",
+							type: 'POST',
+							data: {
+								passwd: oldpwd,
+								newPasswdOne: passwd,
+								newPasswdTwo: repasswd,
+								userId: JSON.parse(localStorage.getItem('loginUser')).id
+							},
+							dataType: 'jsonp',
+							success: res=>{
+								if(res.code=='M000000'){
+									mui.alert(res.info);
+									localStorage.setItem('login', 0);
+									mui.openWindow({
+										url: "../login/login.html",
+										id: "login"
+									})
+								}
+								if(res.code=='E000000'){
+									mui.alert(res.info)
+								}
+							}
+						})
+					},
+					forget(){
+						mui.openWindow({
+							url: "../login/reset.html",
+							id: "reset"
+						})
+					}
+				},
+				created(){
+					statis('1', 'account-manage.html', `进入修改密码页面`)
+					this.loginUser = JSON.parse(localStorage.getItem('loginUser'));
+					console.log(this.loginUser)
+				}
+			})
+		</script>
+	</body>
+
+</html>
+
+

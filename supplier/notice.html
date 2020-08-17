@@ -1,0 +1,492 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>通知</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_sjrdslu2hlq.css" />
+		<style type="text/css">
+			.notice a {
+				display: block;
+			}
+			.font-lighter{font-size: 16px;color: #666;}
+			.mui-icon-arrowright{color: #999;}
+			.mui-scroll-wrapper{top: 20px}
+			/*.mui-pull-top-pocket{top: 20px;}*/
+			.noticeLeft {
+				width: 100%;
+			}
+			
+			.noticeRight {
+				    width: 20%;
+				    background-color: #fff;
+				    margin-bottom: 10px;
+				    box-shadow: 0px 0px 9px 0px rgba(98, 98, 98, 0.15);
+				    padding: 20px 2px 20px 2px;
+				    position: relative;
+						margin-left: 2%;
+						font-size: 12px;
+						text-align: center;
+						line-height: 20px !important;
+				}
+			.mui-off-canvas-left, .mui-off-canvas-right {
+				background: #fff;
+			}
+			
+			.mui-scroll {
+				position: relative;
+				height: 100%;
+			}
+			
+			.mui-scroll-wrapper {
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			
+			.proptype div {
+				margin-bottom: 10px;
+			}
+			
+			.proptype div:nth-child(n+2) {
+				display: flex;
+				justify-content: space-around;
+			}
+			
+			.proptime div {
+				margin-bottom: 10px;
+
+			}
+			
+			.proptime div:nth-child(n+2) {
+				display: flex;
+				justify-content: space-around;
+			}
+			
+			[data-id=picker-i] {
+				display: none !important;
+			}
+			[data-id=title-i] {
+				display: none !important;
+			}
+			[data-type=time] .mui-dtpicker-title h5 {
+				width: 100%;
+			}
+			[data-type=time] .mui-picker {
+				width: 100%;
+			}
+			
+			.propbutton {
+				width: 100%;
+				display: flex;
+				position: absolute;
+				bottom: 0;
+			}
+			
+			.propbutton div {
+				height: 30px;
+				line-height:  30px;
+			}
+			
+			#reset {
+				width: 50%;
+				border: #e4e4e4 .5px solid;
+				text-align: center;
+			}
+			
+			#confirm {
+				width: 50%;
+				background: #e4e4e4;
+				text-align: center;
+			}
+			
+			.search input {
+				width: 90%;
+			}
+			
+			#shezhi {
+				padding-left: 10px;
+			}
+			
+			.notice li {
+				height: 80px;
+			}
+		</style>
+	</head>
+
+	
+	<body>
+			
+		<div class=" pad-top-10" id="app" v-cloak>
+			
+				
+			<div id="refreshContainer">
+
+				<ul class="pad-bot-10 notice noticeList mui-row">
+				
+					<div style="display: flex;">
+					<a href="notice-detail.html" withTitle="false" class="noticeLeft" id="bussiness" @tap="clickLeft('bussiness', 8)" @swipeleft="turnLeft('bussiness')" @swiperight="turnRight('bussiness')">
+						<li class="mui-col-sm-12 mui-col-xs-12" >
+							<div class="icon fl">
+								<img src="../images/iocbussiness.png" class="fl" />
+								<span class="mui-badge mui-badge-danger" id="red4" v-if="bussinessNum!=''">{{bussinessNum}}</span>
+							</div>
+							<div class="noticeLiRight">
+								
+									<span class="font-bold">商机消息</span>
+								
+								<div>
+									<span class="font-lighter fz12">{{bussinessDate}}</span>
+								</div> 
+							</div>
+							 <div class="font-lighter">
+								 <span v-if="bussinessNum==''||bussinessNum==null">今天暂时没有收到新消息</span>
+								 <span v-else>您有消息未读，请及时查看</span>
+								</div>
+						</li>
+					</a>
+					<div class="noticeRight" id="bussinessRight" @tap="clickRight('bussiness',8)">
+						<div>标为</div><div>已读</div>
+					</div>
+					</div>
+					
+					<div style="display: flex;">
+					<a href="notice-detail.html" withTitle="false" class="noticeLeft" id="contract" @tap="clickLeft('contract', 9)" @swipeleft="turnLeft('contract')" @swiperight="turnRight('contract')">
+						<li class="mui-col-sm-12 mui-col-xs-12" >
+							<div class="icon fl">
+								<img src="../images/ioccontract.png" class="fl" />
+								<span class="mui-badge mui-badge-danger" id="red9" v-if="contractNum!=''">{{contractNum}}</span>
+							</div>
+							<div class="noticeLiRight">
+								
+									<span class="font-bold">合同消息</span>
+								
+								<div>
+									<span class="font-lighter fz12">{{contractDate}}</span>
+								</div> 
+							</div>
+							 <div class="font-lighter">
+								 <span v-if="contractNum==''||contractNum==null">今天暂时没有收到新消息</span>
+								 <span v-else>您有消息未读，请及时查看</span>
+							 </div>
+						</li>
+					</a>
+					<div class="noticeRight" id="contractRight" @tap="clickRight('contract',9)">
+						<div>标为</div><div>已读</div>
+					</div>
+					</div>
+					
+					<div style="display: flex;">
+					<a href="notice-detail.html" withTitle="false" class="noticeLeft" id="order" @tap="clickLeft('order', 2)" @swipeleft="turnLeft('order')" @swiperight="turnRight('order')">
+						<li class="mui-col-sm-12 mui-col-xs-12" >
+							<div class="icon fl">
+								<img src="../images/iocdeal.png" class="fl" />
+								<span class="mui-badge mui-badge-danger" id="red2" v-if="orderNum!=''">{{orderNum}}</span>
+							</div>
+							<div class="noticeLiRight">
+								
+									<span class="font-bold">订单消息</span>
+								
+								<div>
+									<span class="font-lighter fz12">{{orderDate}}</span>
+								</div> 
+							</div>
+							 <div class="font-lighter">
+								 <span v-if="orderNum==''||orderNum==null">今天暂时没有收到新消息</span>
+								 <span v-else>您有消息未读，请及时查看</span>
+							 </div>
+						</li>
+					</a>
+					<div class="noticeRight" id="orderRight" @tap="clickRight('order',2)">
+						<div>标为</div><div>已读</div>
+					</div>
+					</div>
+					
+					<div style="display: flex;">
+					<a href="notice-detail.html" withTitle="false" class="noticeLeft" id="store" @tap="clickLeft('store', 5)" @swipeleft="turnLeft('store')" @swiperight="turnRight('store')">
+						<li class="mui-col-sm-12 mui-col-xs-12" >
+							<div class="icon fl">
+								<img src="../images/iocstore.png" class="fl" />
+								<span class="mui-badge mui-badge-danger" id="red5" v-if="storeNum!=''">{{storeNum}}</span>
+							</div>
+							<div class="noticeLiRight">
+								
+									<span class="font-bold">入库通知</span>
+								
+								<div>
+									<span class="font-lighter fz12">{{storeDate}}</span>
+								</div> 
+							</div>
+							 <div class="font-lighter">
+								 <div class="font-lighter">
+										 <span v-if="storeNum==''||storeNum==null">今天暂时没有收到新消息</span>
+										 <span v-else>您有消息未读，请及时查看</span>
+								 </div>
+							 </div>
+						</li>
+					</a>
+					<div class="noticeRight" id="storeRight" @tap="clickRight('store',5)">
+						<div>标为</div><div>已读</div>
+					</div>
+					</div>
+					
+					<div style="display: flex;">
+					<a href="notice-detail.html" withTitle="false" class="noticeLeft" id="system" @tap="clickLeft('system', 6)" @swipeleft="turnLeft('system')" @swiperight="turnRight('system')">
+						<li class="mui-col-sm-12 mui-col-xs-12" >
+							<div class="icon fl">
+								<img src="../images/iocsystem.png" class="fl" />
+								<span class="mui-badge mui-badge-danger" id="red6" v-if="systemNum!=''">{{systemNum}}</span>
+							</div>
+							<div class="noticeLiRight">
+								
+									<span class="font-bold">系统消息</span>
+								
+								<div>
+									<span class="font-lighter fz12">{{systemDate}}</span>
+								</div> 
+							</div>
+							 <div class="font-lighter">
+								 <div class="font-lighter">
+										 <span v-if="systemNum==''||systemNum==null">今天暂时没有收到新消息</span>
+										 <span v-else>您有消息未读，请及时查看</span>
+								 </div>
+							 </div>
+						</li>
+					</a>
+					<div class="noticeRight" id="systemRight" @tap="clickRight('system',6)">
+						<div>标为</div><div>已读</div>
+					</div>
+					</div>
+					<div style="display: flex;">
+					<a href="notice-detail.html" withTitle="false" id="xiaozhu" @tap="clickLeft('xiaozhu', 7)" @swipeleft="turnLeft('xiaozhu')" @swiperight="turnRight('xiaozhu')" class="noticeLeft">
+						<li class="mui-col-sm-12 mui-col-xs-12" >
+							<div class="icon fl">
+								<img src="../images/iockefu.png" class="fl" />
+								<span class="mui-badge mui-badge-danger" id="red7" v-if="xiaozhuNum!=''">{{xiaozhuNum}}</span>
+							</div>
+							<div class="noticeLiRight">
+								
+									<span class="font-bold">小筑客服</span>
+								
+								<div>
+									<span class="font-lighter fz12">{{xiaozhuDate}}</span>
+								</div> 
+							</div>
+							 <div class="font-lighter">
+								 <span v-if="xiaozhuNum==''||xiaozhuNum==null">今天暂时没有收到新消息</span>
+								 <span v-else>您有消息未读，请及时查看</span>
+							 </div>
+						</li>
+					</a>
+					
+					<div class="noticeRight" id="xiaozhuRight" @tap="clickRight('xiaozhu')">
+						<div>标为</div><div>已读</div>
+					</div>
+					</div>
+					
+				</ul>
+			</div>
+			
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		
+		<script>
+			mui.init({
+				gestureConfig: {
+				        longtap: true, //默认为false
+								tap: true,
+								swipeleft: true,
+								swipeRight: true
+				      },
+				pullRefresh: {
+					container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					down: {
+					      style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+					      color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+					      height: 50,//可选,默认50px.下拉刷新控件的高度,
+					      auto: false,//可选,默认false.首次加载自动上拉刷新一次
+					      callback :pullfreshDown //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					    }
+				}
+				
+			});
+			
+
+			
+			
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						userId: localStorage.getItem('userId'),
+						noticeList: [],
+						orderNum : '',
+						orderDate : '',
+						bussinessNum: '',
+						bussinessDate : '',
+						storeNum: '',
+						storeDate : '',
+						systemNum: '',
+						systemDate : '',
+						xiaozhuNum: '',
+						xiaozhuDate : '',
+						contractNum: '',
+						contractDate : '',
+					}
+				},
+				methods: {
+					turnLeft(id){
+						$(`.noticeLeft`).css("transform","translate3d(0%, 0px, 0px)");
+						$(`.noticeRight`).hide();
+						$('#'+id).css("transform","translate3d(-1%, 0px, 0px)");
+						$('#'+id).css("transition","transform 350ms");
+						$(`#${id}Right`).show()
+					},
+					turnRight(id){
+						$(`#${id}`).css("transform","translate3d(0%, 0px, 0px)");
+						$(`#${id}`).css("transition","transform 350ms");
+						$(`#${id}Right`).hide();
+					},
+					clickLeft(id, type){
+						if($(`#${id}Right`).css('display')=='block'){
+							$(`#${id}`).css("transform","translate3d(0%, 0px, 0px)");
+							$(`#${id}`).css("transition","transform 350ms");
+							$(`#${id}Right`).hide();
+						}
+						localStorage.setItem('noticeType', type);
+					},
+					clickRight(id,type){
+						$(`#${id}`).css("transform","translate3d(0%, 0px, 0px)");
+						$(`#${id}`).css("transition","transform 350ms");
+						$(`#${id}Right`).hide();
+						
+						let content = "";
+						//修改操作
+						if(type==2){
+							content = '订单消息';
+						}else if(type==8){
+							content = '商机消息';
+						}else if(type==5){
+							content = '入库通知';
+						}else if(type==6){
+							content = '系统消息';
+						}else if(type==7){
+							content = '小筑客服';
+						}else if(type==9){
+							content = '合同消息'
+						}
+						statis('2', 'notice.html', `把消息列表页${content}标为已读`);
+						
+						$.ajax({
+									url: zfyurl+"/app/api/mkymsg/updateReadFlagByTypeAndStatus",
+									data: {
+										readFlag:1,
+										status: 2,
+										userId: this.userId,
+										type: type,
+										},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										if(res.code=="M000000"){
+												$(`red${type}`).hide();
+												location.reload();
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info)
+										}
+										
+									}
+								})
+					},
+					getNotice(id){
+						$.ajax({
+									url: zfyurl+"/app/api/mkymsg/findMsgCountByStatus",
+									data: {
+										readFlag: 0,
+										status: 2,
+										userId: id
+										},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										if(res.code=="M000000"){
+											console.log('M00000')
+											mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+												this.noticeList = res.data;
+												let noticeList = res.data;
+												for(let i in noticeList){
+													if(noticeList[i].type == 2){
+														this.orderNum = noticeList[i].num;
+														this.orderDate = noticeList[i].date;
+													}else if(noticeList[i].type == 8){
+														this.bussinessNum = noticeList[i].num;
+														this.bussinessDate = noticeList[i].date;
+													}else if(noticeList[i].type == 5){
+														this.storeNum = noticeList[i].num;
+														this.storeDate = noticeList[i].date;
+													}else if(noticeList[i].type == 6){
+														this.systemNum = noticeList[i].num;
+														this.systemDate = noticeList[i].date;
+													}else if(noticeList[i].type == 7){
+														this.xiaozhuNum = noticeList[i].num;
+														this.xiaozhuDate = noticeList[i].date;
+													}else if(noticeList[i].type == 9){
+														this.contractNum = noticeList[i].num;
+														this.contractDate = noticeList[i].date;
+													}
+												}
+												mui.hideLoading();
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info);
+											mui.hideLoading();
+										}
+										
+									}
+								})
+					}
+				},
+				created(){
+					mui.plusReady(()=>{
+						//查看操作
+						statis('1', 'notice.html', '查看消息列表页');
+						$('.noticeRight').hide();
+						let id = localStorage.getItem('userId');
+						this.getNotice(id);
+						mui.showLoading("正在加载..","div");
+					})
+				}
+			})
+			
+			function pullfreshDown(){
+				console.log('下拉刷新')
+				/* vm.getNotice(localStorage.getItem('userId')); */
+				location.reload();
+				setTimeout(()=>{
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+				},5000)
+			}
+			
+			window.addEventListener('refresh', function (event) {
+				location.reload()
+			 })
+			
+			window.addEventListener('close', function (event) {
+				plus.webview.getWebviewById('notice-detail.html').close();
+			 })
+		</script>
+		
+	</body>
+
+</html>

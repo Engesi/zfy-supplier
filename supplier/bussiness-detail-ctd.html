@@ -1,0 +1,725 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>消息详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			body {
+				font-size: 1rem;
+				    font-weight: 400;
+				    line-height: 1.5;
+			}
+			
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				p{font-size: 14px;}
+			}
+			.moren,.message{display: none;}
+			i {
+					padding-top: 8px;
+					padding-right: 8px;
+			}
+			
+			.iconfont {
+				font-size: 20px;
+			}
+			#store2 {
+				color: #ff0000;
+			}
+			
+			h2 {
+				    color: #3b3c42;
+				    padding-left: 10px;
+				    margin-top: 15px;
+				    margin-bottom: 10px;
+						font-size: 20px;
+						line-height: 30px;
+						font-weight: bold;
+			}
+			
+			.appdel>div {
+				
+			}
+			
+			#signup {
+				width: 100%;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.mui-popover {
+				width: 95%;
+				top: 25%;
+				margin-left: 2.5%;
+				position: fixed;
+			}
+			
+			.tippop {
+				position: absolute;
+				bottom: 250px;
+			}
+			
+			.bussinessOrange span {
+				font-size: 14px;
+			}
+			
+			button:enabled:active {
+				color: #FF5E32;
+				background-color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">商机详情</h1>
+					<span class="index-right">
+						
+					  <i class="mui-pull-right icon-heart iconfont" id="store1" @tap="addStore()"></i>
+						<i class="mui-pull-right icon-cc-heart iconfont" id="store2" @tap="cancelStore()"></i>
+					</span>
+		</header>
+
+		<div class="jumpTop" style="display: none;">
+			<span class="hideTop" @tap="jump('hideJump', 'hideTop')">基本信息</span>
+			<span class="businessTop" @tap="jump('businessJump', 'businessTop')">条款及要求</span>
+			<span class="ctdTop" @tap="jump('ctdJump', 'ctdTop')">竞价规则</span>
+			<span class="phoneTop" @tap="jump('phoneJump', 'phoneTop')">联系方式</span>
+		</div>
+		
+		<div class="pad-top-74 relative" id="hideJump">
+			<div class="whitebg2">
+				<div class="busDetailTitle">{{detail.name}}</div>
+				<div class="bussinessOrange">
+					<span><img src="../images/time@3x.png"/>
+						<span v-if="business.endTime!=0&&business.endTime!=''&&typeof(business.endTime)!='undefined'&&business.endTime!=null">倒计时{{business.endTime}}</span>
+						<span v-else>已截止</span></span>
+					</span>
+					<span><img src="../images/quxian.png"/>浏览次数
+					<span>{{business.pageView}}</span>
+					</span>
+					<button type="button" class="orangebtn">竞价采购</button>
+				</div>
+			</div>
+			
+				<div class="whitebg2" id="basicJump">
+					<div class="busDetailTitle">基本信息</div>
+						<div class="appdel">
+							<div>
+								<div>采购单位</div>
+								<span>{{detail.companyName}}</span>
+							</div>
+						<div>
+							<div>采购编号</div>
+							<span>{{detail.code}}</span>
+						</div>
+						<div v-if="detail.projectName">
+							<div>所属项目</div>
+							<span>{{detail.projectName}}</span>
+						</div>
+						<div>
+							<div>报名截止</div>
+							<span class="redcolor">{{detail.applyEndTime}}</span>
+						</div>
+						<div>
+							<div>采购方式</div>
+							<span v-if="detail.purchaseMethod==1">招标</span>
+							<span v-else-if="detail.purchaseMethod==2">询价</span>
+							<span v-else-if="detail.purchaseMethod==3">竞价</span>
+							<span v-else-if="detail.purchaseMethod==6">竞谈</span>
+						</div>
+						<div>
+							<div>商机分类</div>
+							<span>{{detail.businessType}}</span>
+						</div>
+						<div>
+							<div>采购类型</div>
+							<span>{{detail.listType}}</span>
+						</div>
+						<div v-if="detail.agencyCompanyName">
+							<div>代理机构</div>
+							<span>{{detail.agencyCompanyName}}</span>
+						</div>
+						<div v-if="detail.eqyFileIdName">
+							<div>竞价文件</div>
+							<span class="blueColor">{{detail.ctdFileIdName}}</span>
+						</div>
+						
+						<div>
+							<div>采购清单</div>
+							<span class="bluecolor">{{detail.listName}}<button type="button" id="seepop" class="mui-btn mui-btn-primary" style="float: right;">查看</button></span>
+						</div>
+					</div>
+				</div>
+			
+			<div id="popover" class="mui-popover listpop">
+				<div>
+					<div class="popTitle">采购清单</div>
+					<ul class="popUl">
+						<li>
+							<span>物料名称</span>
+							<span>规格</span>
+							<span>数量</span>
+							<span>单位</span>
+							<span>质量要求</span>
+						</li>
+						<li v-for="(item,index) in detail.purchasingListDetailList">
+							<span>{{item.materialName}}</span>
+							<span>{{item.size}}</span>
+							<span>{{item.count}}</span>
+							<span>{{item.unit}}</span>
+							<span style="white-space: nowrap;">{{item.remark}}</span>
+						</li>
+					</ul>
+					<div style="text-align: right; padding:20px 5px 5px 0;">
+						<button type="button" id="yes1" class="mui-btn mui-btn-primary">确定</button>
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="whitebg2" id="businessJump">
+				<div class="busDetailTitle">商务条款</div>
+				<div class="appdel">
+						
+						<div>
+							<div>出价要求</div>
+							<span>{{requestStr}}</span>
+						</div>
+						<div>
+							<div>交易方式</div>
+							<span v-if="detail.tradeWay==1">直接支付</span>
+							<span v-else-if="detail.tradeWay==2">账期支付</span>
+							<span v-else-if="detail.tradeWay==3">其他</span>
+						</div>
+						
+				
+					
+						<div>
+							<div>支付方式</div>
+							<span v-if="detail.payWay==1">银行转账</span>
+							<span v-else-if="detail.payWay==2">现金</span>
+							<span v-else-if="detail.payWay==3">其他</span>
+						</div>
+						<div>
+							<div>比价方式</div>
+							<span v-if="detail.priceComparisonWay==1">密封比价</span>
+							<span v-else-if="detail.priceComparisonWay==2">自由比价</span>
+							<span v-else>其他</span>
+						</div>
+				
+						
+						<div>
+							<div>发票要求</div>
+							<span v-if="detail.invoiceRequirements==1">增值税专用发票</span>
+							<span v-else-if="detail.invoiceRequirements==2">增值税普通发票</span>
+							<span v-else-if="detail.invoiceRequirements==3">不开发票</span>
+						</div>
+						<div>
+							<div>收货地址</div>
+							<span>{{detail.deliveryAddress}}</span>
+						</div>
+						
+				
+				
+				</div>
+			</div>
+			
+			<div class="whitebg2">
+				<div class="busDetailTitle">供应商资格要求</div>
+				<div class="appdel">
+					<div>
+						<div>资格要求</div>
+						<span>{{detail.qualificationRequirements}}</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="whitebg2" id="ctdJump">
+				<div class="busDetailTitle">竞价规则</div>
+				<div class="appdel">
+					<div>
+						<div>报名截止时间</div>
+						<span class="redcolor">{{detail.applyEndTime}}</span>
+					</div>
+					<div>
+						<div>竞价开始时间</div>
+						<span class="redcolor">{{detail.ctdStartTime}}</span>
+					</div>
+					<div>
+						<div>竞价时长</div>
+						<span class="redcolor">{{detail.ctdDuration}}分钟</span>
+					</div>
+					<div>
+						<div>竞价保护倒计时</div>
+						<span class="redcolor">{{detail.ctdProtectCountdown}}分钟</span>
+					</div>
+					<div>
+						<div>竞价保护延时</div>
+						<span class="redcolor">{{detail.ctdProtectDelay}}分钟</span>
+					</div>
+					<div>
+						<div>最高报价限制</div>
+						<span class="redcolor">{{detail.maximumQuotationLimit}}元</span>
+					</div>
+					<div>
+						<div>最小降价幅度</div>
+						<span class="redcolor">{{detail.minimumReduction}}元</span>
+					</div>
+					<div>
+						<div>竞价过程</div>
+						<span class="redcolor">{{detail.ctdProcessShowFlag}}</span>
+					</div>
+					<div>
+						<div>竞价结果</div>
+						<span class="redcolor">{{detail.ctdResultShowFlag}}</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="whitebg2">
+				<div class="busDetailTitle">补充信息</div>
+				<div class="appdel">
+					<div>
+						<div>补充说明</div>
+						<span>{{detail.additionalRemarks}}</span>
+					</div>
+					<div>
+						<div>附件</div>
+						<span>{{detail.attachmentIdName}}</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="whitebg2 whitebg2-last" id="phoneJump">
+				<div class="busDetailTitle">联系方式</div>
+				<div class="appdel" v-for="(item,index) in people">
+					<div>
+						<div>联系人</div>
+						<span>{{people[index]}}</span>
+					</div>
+					<div>
+						<div>联系电话</div>
+						<span>{{tels[index]}}</span>
+					</div>
+				</div>
+			</div>
+			
+			<div style="position: relative;">
+				<div class="mui-popover tippop">
+					<div class="popTitle">提示</div>
+					<p style="padding-left: 10px;">
+						您已确认参加本次采购，请到报名管理根据采购商要求完善报名材料及支付报名费用，并等待采购商通过报名的请求
+					</p>
+					<div style="text-align: right;padding:0 10px 10px 0;">
+						<button type="button" id="yes2" class="mui-btn mui-btn-primary">确定</button>
+					</div>
+				</div>
+				<div class="mui-popover failpop">
+					<div class="popTitle">提示</div>
+					<p style="padding-left: 10px;">
+						您没有报名的权限，请联系您的管理员了解详细信息！
+					</p>
+					<div style="text-align: right;padding:0 10px 10px 0;">
+						<button type="button" id="yes3" class="mui-btn mui-btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+				<div class="approveBottomWait" v-if="(business.type=='1'||business.type=='2'||business.type=='3'||business.type=='6')&&(business.purchaseCode!=null&&business.purchaseCode!='')">
+					         <span class="fixedBigDisabled" v-if="business.errorFlag==2">已终止</span>
+					         <span class="fixedBig"  class="fixedBig" @tap="apply()" v-else-if="business.endStatus==1&&business.bidApplyFlag==0&&business.register==1&&business.sellerApply==0&&business.roleApply==0&&business.errorFlag==1">报名</span>
+					         <span class="fixedBigDisabled" v-else-if="business.endStatus==2||business.errorFlag!=1">已截止</span>
+					         <span class="fixedBigDisabled" v-else-if="business.bidApplyFlag==1&&business.register==1">已报名</span>
+					         <span class="fixedBig" @tap="failapply()" v-else-if="business.register==0">报名</span>
+					         <span class="fixedBig" @tap="failapply()" v-else-if="business.sellerApply!=0||business.roleApply!=0">报名</span>
+					         <!-- <span id="bmjzsjBtn">报名截止时间：{{business.applyEndDatetime}}</span>
+					         <span id="djsCon" v-show="business.endTime!=0&&business.endTime!=''&&business.endTime!=null&&business.errorFlag!=2">倒计时<span>{{business.endTime}}</span></span> -->
+				</div>
+		</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				beforeback: function() {
+				　　　　 //获得父页面的webview
+				        var ws = plus.webview.currentWebview().opener();
+				　　　　 //触发父页面的自定义事件(refresh),从而进行刷新
+				        mui.fire(ws, 'num');
+				        //返回true,继续页面关闭逻辑
+				        return true;
+				    }
+			});
+			
+			var id = localStorage.getItem('extId');
+			$("#store2").hide();
+			var vm = new Vue({
+				el: "#app",
+				data(){
+					return{
+						detail: '',
+						people: [],
+						tels: [],
+						requestStr: '',
+						ctdProcessShowFlag: '',
+						ctdResultShowFlag: '',
+						loginUser: '',
+						business: '',
+					}
+				},
+				methods: {
+					pageHandler() {
+						   				  $.ajax({
+						   				  					 	url: zfyurl+"/app/api/extNotice/viewNotice",
+						   				  					 	data: {
+																			'id': id
+																		},
+						   				  					 	type:"POST",
+						   				  					 	dataType:'jsonp',
+						   				  					 	success: res=>{
+						   				  					 		if(res.code=="M000000"){
+						   				  					 			console.log(res.data);
+																				this.detail = res.data;
+																				if(res.data.taxFlag == 1){
+																					this.requestStr+= "报价含税";
+																				}
+																				if(res.data.freightFlag == 1){
+																					this.requestStr+= " 报价含运费";
+																				}
+																				if(res.data.partQuoteFlag == 1){
+																					this.requestStr+= " 报价含其他杂费";
+																				}
+																				
+																				if(res.data.ctdProcessShowFlag == 00){
+																					this.ctdProcessShowFlag+= "无";
+																				}
+																				if(res.data.ctdProcessShowFlag == 10){
+																					this.ctdProcessShowFlag+= " 公开竞价公司";
+																				}
+																				if(res.data.ctdProcessShowFlag == 01){
+																					this.ctdProcessShowFlag+= " 公开竞价价格";
+																				}
+																				if(res.data.ctdProcessShowFlag == 11){
+																					this.ctdProcessShowFlag+= " 公开竞价公司,公开竞价价格";
+																				}
+																				
+																				if(res.data.ctdResultShowFlag == 00){
+																					this.ctdResultShowFlag+= "无";
+																				}
+																				if(res.data.ctdResultShowFlag == 10){
+																					this.ctdResultShowFlag+= " 公布胜出公司名称";
+																				}
+																				if(res.data.ctdResultShowFlag == 01){
+																					this.ctdResultShowFlag+= " 公布胜出公司价格";
+																				}
+																				if(res.data.ctdResultShowFlag == 11){
+																					this.ctdResultShowFlag+= " 公布胜出公司名称,公布胜出公司价格";
+																				}
+																				
+																				this.people = this.detail.contacts.split(',');
+																				this.tels = this.detail.contactsTel.split(',');
+						   				  					 		}
+						   				  					 		if(res.code=="E000000"){
+						   				  					 			mui.alert(res.info)
+						   				  					 		}
+						   				  					 		
+						   				  					 	}
+						   				  				})
+																$.ajax({
+																					 	url: zfyurl+"/app/api/userSet/findUserCollectYes",
+																					 	data: {
+																							'collectId': id,
+																							'type': 1,
+																							'userId': this.loginUser.id,
+																						},
+																					 	type:"POST",
+																					 	dataType:'jsonp',
+																					 	success: res=>{
+																					 		if(res.code=="M000000"){
+																					 			let store = res.data;
+																								if(store){
+																									$("#store1").hide();
+																									$('#store2').show();
+																								}else {
+																									$("#store1").show();
+																									$('#store2').hide();
+																								}
+																					 		}
+																					 		if(res.code=="E000000"){
+																					 			mui.alert(res.info)
+																					 		}
+																					 		
+																					 	}
+																				})
+															$.ajax({
+																				 	url: zfyurl+"/app/api/extNotice/appViewBusiness",
+																				 	data: {
+																						'id': id,
+																						'userId': this.loginUser.id,
+																					},
+																				 	type:"POST",
+																				 	dataType:'jsonp',
+																				 	success: res=>{
+																				 		if(res.code=="M000000"){
+																							if(res.data.pageView==''||typeof(res.data.pageView)=='undefined'||res.data.pageView==null){
+																								res.data.pageView=0;
+																							}
+																							this.business = res.data;
+																							this.viewAdd();
+																							this.business.pageView = parseInt(this.business.pageView)+1;
+																				 		}
+																				 		if(res.code=="E000000"){
+																				 			mui.alert(res.info)
+																				 		}
+																				 		
+																				 	}
+																			})
+					 },
+					addStore(){
+						statis('2', 'bussiness-detail-ctd.html', `将此竞价采购商机添加到收藏`);
+						$.ajax({
+											 	url: zfyurl+"/app/api/userSet/saveUserCollect",
+											 	data: {
+													'collectId': id,
+													'type': 1,
+													'userId': this.loginUser.id,
+													'comId': this.loginUser.comId
+												},
+											 	type:"POST",
+											 	dataType:'jsonp',
+											 	success: res=>{
+											 		if(res.code=="M000000"){
+														$("#store1").hide();
+														$('#store2').show();
+											 		}
+											 		if(res.code=="E000000"){
+											 			mui.alert(res.info)
+											 		}
+											 		
+											 	}
+										})
+					},
+					cancelStore(){
+						statis('2', 'bussiness-detail-ctd.html', `将此竞价采购商机取消收藏`);
+						$.ajax({
+											 	url: zfyurl+"/app/api/userSet/deleteUserCollect",
+											 	data: {
+													'collectId': id,
+													'type': 1,
+													'userId': this.loginUser.id,
+												},
+											 	type:"POST",
+											 	dataType:'jsonp',
+											 	success: res=>{
+											 		if(res.code=="M000000"){
+														$("#store1").show();
+														$('#store2').hide();
+											 		}
+											 		if(res.code=="E000000"){
+											 			mui.alert(res.info)
+											 		}
+											 		
+											 	}
+										})
+					},
+					apply(){
+						mui.confirm('确认报名？', {
+						   btn: ['确定','取消'] //按钮
+						 }, (e)=>{
+							 if(e.index==0){
+								 statis('2', 'bussiness-detail-ctd.html', `报名竞价采购`);
+								 $.ajax({
+								 					 	url: zfyurl+"/app/api/extNotice/applyCreate",
+								 					 	data: {
+								 							purchaseId: this.detail.id,
+								 							purchaseCode: this.detail.code,
+								 							purchaseType: this.business.type,
+								 							companyId: this.loginUser.comId,
+								 							'userId': this.loginUser.id,
+								 						},
+								 					 	type:"POST",
+								 					 	dataType:'jsonp',
+								 					 	success: res=>{
+								 					 		if(res.code=="M000000"){
+								 								mui('.tippop').popover('toggle');
+								 								setTimeout(()=>{
+								 									location.reload()
+								 								},2000)
+								 					 		}
+								 					 		if(res.code=="E000000"){
+								 					 			mui.alert(res.info)
+								 					 		}
+								 					 		
+								 					 	}
+								 				})
+							 }
+						  
+						 });
+						
+					},
+					failapply(){
+						mui('.failpop').popover('toggle');//show hide toggle
+					},
+					viewAdd(){
+						$.ajax({
+											 	url: zfyurl+"/app/api/extNotice/pageViewAdd",
+											 	data: {
+													id: id,
+												},
+											 	type:"POST",
+											 	dataType:'jsonp',
+											 	success: res=>{
+											 		if(res.code=="M000000"){
+														
+											 		}
+											 		if(res.code=="E000000"){
+											 			mui.alert(res.info)
+											 		} 		
+											 	}
+										})
+					},
+					jump(id, elem){
+											 $('html, body').animate({  
+											   scrollTop: $(`#${id}`).offset().top-84
+											 }, 400);
+											 if(id=="hideJump"){
+												 $('.jumpTop').hide()
+											 }
+											 setTimeout(()=>{
+												 $(".jumpTop span").removeClass('active');
+												 $('.'+elem).addClass('active')
+											 },410)
+					},
+				},
+				created(){
+					statis('1', 'bussiness-detail-ctd.html', `进入竞价采购详情页面`);
+					this.loginUser = JSON.parse(localStorage.getItem('loginUser'));
+					
+					if(window.orientation === 180 || window.orientation === 0) {
+							console.log('竖屏')
+							$('.mui-popover').css('top', '25%');
+							$('.popUl').css('max-height', '250px');
+						}
+						if(window.orientation === 90 || window.orientation === -90) {
+							console.log('横屏')
+							$('.mui-popover').css('top', '10%');
+							$('.popUl').css('max-height', '120px');
+						}
+					
+					mui.plusReady(function () {
+							var val = plus.webview.currentWebview();
+							id = val.extId;
+							
+							let isRead = false;
+							isRead = val.isRead;
+							if(isRead){
+															 $.ajax({
+															 	url: zfyurl + "/app/api/extNotice/updateSubscribeReadFlag",
+															 	type: 'POST',
+															 	data: {
+																	userId: vm.loginUser.id,
+																	id: id
+															 	},
+															 	dataType: 'jsonp',
+															 	success: res => {
+															 		if (res.code == 'M000000') {
+																		console.log('成功')
+															 		}
+															 		if (res.code == 'E000000') {
+															 			mui.alert(res.info)
+															 		}
+															 	}
+															 })
+							}
+							vm.pageHandler()
+					})
+					/* this.pageHandler();
+					this.viewAdd(); */
+				}
+			})
+			$('#seepop').bind('tap',()=>{
+				mui('.listpop').popover('toggle');//show hide toggle
+			})
+			$('#yes1').bind('tap',()=>{
+				mui('.listpop').popover('toggle');//show hide toggle
+			})
+			$('#yes2').bind('tap',()=>{
+				mui('.tippop').popover('toggle');//show hide toggle
+			})
+			$('#yes3').bind('tap',()=>{
+				mui('.failpop').popover('toggle');//show hide toggle
+			})
+			
+			function scrollHeight(id){
+				return $(`#${id}`).offset().top-90;
+			}
+			
+			var sEvent = "onorientationchange" in window ? "orientationchange" : "resize";
+			window.addEventListener(sEvent, function() {
+			        if(window.orientation === 180 || window.orientation === 0) {
+					//alert('竖屏状态!');
+					console.log('竖屏')
+					$('.mui-popover').css('top', '25%');
+					$('.popUl').css('max-height', '250px');
+				}
+				if(window.orientation === 90 || window.orientation === -90) {
+					//alert('横屏状态!');
+					console.log('横屏')
+					$('.mui-popover').css('top', '10%');
+					$('.popUl').css('max-height', '120px');
+				}
+			}, false);
+			
+			$(document).scroll(function() {
+				
+				var scroH = $(document).scrollTop();  //滚动高度
+				        var viewH = $(window).height();  //可见高度 
+				        var contentH = $(document).height();  //内容高度
+								scrollShow(scroH, 'basicJump', 'hideTop', 'businessJump', 'businessTop', 'ctdJump', 'ctdTop', 'phoneJump', 'phoneTop');
+			 });
+			function scrollShow(scroH, div1, top1, div2, top2, div3, top3, div4, top4) {
+				if(scroH <scrollHeight(div1)){  //距离顶部小于100px时
+										$('.jumpTop').hide();
+				        }
+				        if(scroH >=scrollHeight(div1)&&scroH<scrollHeight(div2)){  //距离顶部大于100px时
+										$('.jumpTop').show();
+										$(".jumpTop span").removeClass('active');
+										$(`.${top1}`).addClass("active");
+				        }
+				   			
+				if(scroH >scrollHeight(div2)&&scroH<scrollHeight(div3)){  //距离顶部大于100px时
+										$('.jumpTop').show();
+										$(".jumpTop span").removeClass('active');
+										$(`.${top2}`).addClass("active");
+				        }
+				
+				if(scroH >scrollHeight(div3)&&scroH<scrollHeight(div4)){  //距离顶部大于100px时
+										$('.jumpTop').show();
+										$(".jumpTop span").removeClass('active');
+										$(`.${top3}`).addClass("active");
+				        }
+				
+				if(scroH >scrollHeight(div4)){  //距离顶部大于100px时
+										$('.jumpTop').show();
+										$(".jumpTop span").removeClass('active');
+										$(`.${top4}`).addClass("active");
+				        }
+					
+			}
+		</script>
+	</body>
+
+</html>
+
+

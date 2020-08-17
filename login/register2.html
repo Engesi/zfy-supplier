@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+	<head>
+		<meta charset="utf-8">
+		<title>注册-注册完成</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link href="../css/style.css" rel="stylesheet" />
+		<style>
+			.tips{position: fixed;left: 0;bottom: 70px;color: red;padding: 0 20px;}
+			
+			input{
+			    caret-color: #fff !important;
+			}
+		</style>
+	</head>
+	<body class="bg-white">
+		<!--顶部 start-->
+		<header class="mui-bar mui-bar-nav header bg-blue-grad">
+		    <button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+		    	<span class="mui-icon mui-icon-back col-fff font-14"></span>
+		    </button>
+			<h1 class="mui-title col-fff">注册完成</h1>
+		</header>
+		<!--顶部 end-->
+		<div class="mar-top-64">
+			<div class="reg-img">
+				<img src="../images/reg3_03.jpg"/>
+			</div>
+			<p class="tc font-18 col-1c89ea font-bold">新账号创建成功</p>
+			<p class="tc font-18 col-1c89ea font-bold">感谢您对筑服云的信任与支持</p>
+			<p class="tips">温馨提示：请尽快到pc端(www.zhufuc.com)填写企业信息，完整的信息有助于您顺利完成操作捕获商机</p>
+			<button class="reg-btn">完成</button>
+			
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script type="text/javascript">
+			$(".reg-btn").click(function(){
+				mui.plusReady(function(){
+				var register = plus.webview.getWebviewById('register.html');
+					var register1 = plus.webview.getWebviewById('register1.html');
+					var register2 = plus.webview.getWebviewById('register2.html');
+					plus.webview.close(register,"slide-out-right");
+					plus.webview.close(register1,"slide-out-right");
+					plus.webview.close(register2,"slide-out-right");	
+				});
+			});
+			
+		</script>
+	</body>
+
+</html>

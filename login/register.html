@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<title>注册</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<style>
+			.agreement {
+				position: fixed;
+				bottom: 70px;
+				left: 0;
+				width: 100%;
+				font-size: 14px;
+				color: #999;
+			}
+			
+			input.ui-checkbox,
+			.material-detail input {
+				display: inline-block;
+				width: 12px;
+				height: 12px;
+				border: 0;
+				outline: 0!important;
+				background-color: transparent;
+				-webkit-appearance: none;
+				padding: 0;
+				position: relative;
+			}
+			
+			input.ui-checkbox:before {
+				content: "";
+				width: 12px;
+				height: 12px;
+				border-radius: 2px;
+				border: solid 1px #007eff;
+				display: inline-block;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			
+			input[type=checkbox].ui-checkbox:checked:after {
+				content: "";
+				width: 10px;
+				height: 10px;
+				display: inline-block;
+				position: absolute;
+				top: 2px;
+				left: 2px;
+				background-color: #007eff;
+			}
+			.duanxi{
+			  width: 200px;	
+			}
+			.content{padding-bottom: 60px;}
+			
+			
+			input{
+			    caret-color: #fff !important;
+			}
+		</style>
+	</head>
+
+	<body class="bg-white">
+		<!--顶部 start-->
+		<header class="mui-bar mui-bar-nav header bg-blue-grad">
+			<button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+		    	<span class="mui-icon mui-icon-back col-fff font-14"></span>
+		    	<span class="col-fff">返回</span>
+		    </button>
+			<h1 class="mui-title col-fff">填写账户信息</h1>
+		</header>
+		<!--顶部 end-->
+		<div class="content pad-top-50">
+			<form>
+				<ul class="pad-lr-15 register">
+					<li>
+						<label><span class="col-red">*</span>注册姓名</label>
+						<input id="userName" type="text" />
+						<i class="icon fr"><img src="../images/reg-ok_03.png" class="f1" style="display: none;"/></i>
+						<i class="icon fr"><img src="../images/reg-cuowu_06.png" class="f2" style="display: none;" /></i>
+					</li>
+					<li>
+						<label><span class="col-red">*</span>设置密码</label>
+						<input id="passwd" type="password" />
+						<i class="icon fr"><img src="../images/reg-ok_03.png" class="f1" style="display: none;"/></i>
+						<i class="icon fr"><img src="../images/reg-cuowu_06.png" class="f2" style="display: none;" /></i>
+						<p class="msg">请输入6-20位并含两种及两种以上组合的数字、字母</p>
+					</li>
+					<li>
+						<label><span class="col-red">*</span>确认密码</label>
+						<input id="repasswd" type="password" />
+						<i class="icon fr"><img src="../images/reg-ok_03.png" class="f1" style="display: none;"/></i>
+						<i class="icon fr"><img src="../images/reg-cuowu_06.png" class="f2" style="display: none;" /></i>
+					</li>
+					<li>
+						<label><span class="col-red">*</span>手机号码</label>
+						<input id="phone" type="text" />
+						<i class="icon fr"><img src="../images/reg-ok_03.png" class="f1" style="display: none;"/></i>
+						<i class="icon fr"><img src="../images/reg-cuowu_06.png" class="f2" style="display: none;" /></i>
+					</li>
+					<li>
+						<label><span class="col-red">*</span>短信验证码</label>
+						<input type="text" class="duanxin" id="sendCode" />
+						<button class="mui-btn mui-btn-primar fr" id="getSendCode">获取验证码</button>
+					</li>
+				</ul>
+				<div class="hint" style="display: none;">
+					<p class="tc pad-top-20 pad-lr-15">短信验证码已发送至<span id="sendCodePhone"></span> 请查收！短信验证码十分钟内有效。</p>
+				</div>
+				
+			</form>
+			<div class="agreement tc">
+				<label><input type="checkbox" id="agreeInfo" class="ui-checkbox mar-right-5"/>我已阅读并同意</label>
+
+				<span style="color: #007eff;" id="service_agreement">《会员注册服务协议》</span>
+			</div>
+			<button id="reg" class="reg-btn">下一步</button>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script type="text/javascript">
+			var h = $(window).height()
+			window.onresize = function() {
+				if($(window).height() < h) {
+					$(".agreement").hide();
+					$("#reg").hide();
+				} else {
+					$("#reg").show();
+					$(".agreement").show();
+				}
+			};
+			$("#service_agreement").click(function(){
+				mui.openWindow({
+					url: "service-agreement.html",
+					id: "service-agreement"
+				})
+			})
+		</script>
+		<script>
+			//重新获取验证码倒计时 
+			var countdownTime = 60;
+			//验证码失效倒计时
+			var codeInvalidTime = 6000;
+
+			var registerPasswd = localStorage.getItem("registerPasswd");
+			var userNames = $("#userName").val();
+			if(registerPasswd != "" && userNames != "") {
+				$("#passwd").val(registerPasswd);
+				$("#repasswd").val(registerPasswd);
+			}
+
+			var restName = /^[\u4e00-\u9fa5]+$/;
+			var restPass = /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\w~!@#$%^&*?]{6,20}$/;
+			var restPhone = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
+			var hanzi=/^[\u2E80-\u9FFF]+$/;//Unicode编码中的汉字范围
+			$(function() {
+				$("#userName").blur(function() {
+					var userName = $("#userName").val();
+					if(restName.test(userName) == false) {
+						$(this).parent().find(".f2").css("display", "block");
+						$(this).parent().find(".f1").css("display", "none");
+
+					} else {
+						$(this).parent().find(".f1").css("display", "block");
+						$(this).parent().find(".f2").css("display", "none");
+					}
+
+				})
+
+				$("#passwd").blur(function() {
+					var passwd = $("#passwd").val();
+					if(restPass.test(passwd) == false) {
+						$(this).parent().find(".f2").css("display", "block");
+						$(this).parent().find(".f1").css("display", "none");
+					} else {
+						$(this).parent().find(".f1").css("display", "block");
+						$(this).parent().find(".f2").css("display", "none");
+					}
+				})
+
+				$("#repasswd").blur(function() {
+					var repasswd = $("#repasswd").val();
+					var passwd = $("#passwd").val();
+					if(restPass.test(repasswd) == false) {
+						$(this).parent().find(".f2").css("display", "block");
+						$(this).parent().find(".f1").css("display", "none");
+					} else {
+						if(passwd != repasswd) {
+							$(this).parent().find(".f2").css("display", "block");
+							$(this).parent().find(".f1").css("display", "none");
+						} else {
+							$(this).parent().find(".f1").css("display", "block");
+							$(this).parent().find(".f2").css("display", "none");
+						}
+					}
+				})
+
+				$("#phone").blur(function() {
+					var phone = $("#phone").val();
+					if(restPhone.test(phone) == false) {
+						$(this).parent().find(".f2").css("display", "block");
+						$(this).parent().find(".f1").css("display", "none");
+					} else {
+						$(this).parent().find(".f1").css("display", "block");
+						$(this).parent().find(".f2").css("display", "none");
+					}
+				})
+
+				$("#getSendCode").click(function() {
+					var phone = $("#phone").val();
+					if(restPhone.test(phone) == false) {
+						mui.alert("请输入正确的手机号 !");
+						return false;
+					}
+					$("#sendCodePhone").text(phone);
+					$(".hint").show();
+					sendMsg();
+					var url = zfyurl+"/app/api/user/regirestCode";
+					$.ajax({
+						type: "post",
+						url: url,
+						data: {
+							phone: phone
+						},
+						dataType: "jsonp",
+						success: function(res) {
+							if(res.code == "M000000") {
+								localStorage.removeItem("regirestCode");
+								localStorage.setItem("regirestCode", res.info);
+								codeInvalid();
+
+							} else {
+								alert(res.info);
+								$("#getCode").prop("disabled", false);
+								$("#getCode").text("重新获取验证码");
+								countdownTime = 60;
+								return false;
+							}
+						}
+					});
+				})
+
+				$("#reg").click(function() {
+					var userName = $("#userName").val();
+					var passwd = $("#passwd").val();
+					var repasswd = $("#repasswd").val();
+					var phone = $("#phone").val();
+					var regirestCode = localStorage.getItem("regirestCode");
+					var sendCode = $("#sendCode").val();
+					if(hanzi.test(userName) == false){
+					 	mui.alert("请输入正确的姓名！");
+					 	return false;
+					}
+					if(userName == "" || passwd == "" || repasswd == "" || phone == "") {
+						mui.alert("请将信息填写完整 !")
+						return false;
+					}
+					
+					var isNext = true;
+					$(".f2").each(function() {
+						if($(this).css("display") == "block") {
+							mui.alert("请将信息填写正确 !");
+							isNext = false;
+							return false;
+						}
+					})
+					if(isNext==false){
+						return false;
+					}
+					if(sendCode == '') {
+						mui.alert("验证码不能为空 !");
+						return false;
+					}
+
+					setTimeout(function() {
+						if(!$("#agreeInfo").is(":checked")) {
+							mui.alert("不同意会员服务协议无法完成注册 !");
+							return false;
+						}
+
+						var url = zfyurl+"/app/api/user/checkphone";
+						$.ajax({
+							type: "post",
+							url: url,
+							data: {
+								inphone: phone,
+								regCode: sendCode
+							},
+							dataType: "jsonp",
+							success: function(res) {
+								if(res.info == null) {
+									var userRegisterArray = new Array();
+									userRegisterArray[0] = {
+										userName: userName,
+										passwd: repasswd,
+										phone: phone
+									};
+									localStorage.removeItem("registerPasswd");
+									localStorage.setItem("registerPasswd", passwd);
+									localStorage.removeItem("userRegisterArray");
+									localStorage.setItem("userRegisterArray", JSON.stringify(userRegisterArray));
+									openWindow("register1.html")
+								} else {
+									mui.alert("该手机号已经被注册了 !");
+									return false;
+								}
+							}
+						});
+					}, 10);
+				})
+			})
+
+			function sendMsg() {
+				if(countdownTime == 0) {
+					$("#getSendCode").prop("disabled", false);
+					$("#getSendCode").text("获取验证码");
+					countdownTime = 60;
+					return false;
+				} else {
+					$("#getSendCode").prop("disabled", true);
+					$("#getSendCode").text(countdownTime + "S");
+					countdownTime--;
+
+				}
+				setTimeout(function() {
+					sendMsg();
+				}, 1000)
+			}
+
+			function codeInvalid() {
+				if(codeInvalidTime == 0) {
+					localStorage.removeItem("regirestCode");
+					codeInvalidTime = 6000;
+					return false;
+				} else {
+					codeInvalidTime--;
+				}
+
+				setTimeout(function() {
+					codeInvalid();
+				}, 1000)
+
+			}
+		</script>
+	</body>
+
+</html>

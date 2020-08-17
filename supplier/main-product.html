@@ -1,0 +1,641 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>选择主营产品</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_2sxay9ukhqx.css" />
+		<style type="text/css">
+		.font-lighter{font-size: 16px;color: #666;}
+		.mui-icon-arrowright{color: #999;}
+		.mui-scroll-wrapper{top: 20px}
+		/*.mui-pull-top-pocket{top: 20px;}*/
+		h2 {
+			  
+			    padding-left: 15px;
+			    margin-top: 15px;
+			    margin-bottom: 10px;
+					font-size:18px;
+					font-family:PingFangSC-Medium,PingFang SC;
+					font-weight:500;
+					color:rgba(51,52,55,1);
+					line-height:25px;
+		}
+		
+			
+			.mui-collapse-content  {
+				
+			}
+		.mui-table-view:before,.mui-table-view:after {
+			height: 0;
+		}
+		
+		html {
+			height: 100%;
+		}
+		
+		body {
+			height: 100%;
+			overflow: hidden;
+		}
+		
+		#app {
+			height: 100%;
+			overflow: hidden;
+			}
+		
+		.mainProduct {
+			height: 100%;
+			overflow: hidden;
+			padding-bottom: 150px;
+		}
+		
+		.mainProdLeft {
+			height: 100%;
+			overflow-y: scroll;
+			
+		}
+		
+		.mainProdRight {
+			height: 100%;
+			overflow: scroll;
+			padding-bottom: 30px;
+		}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-closeempty"></a>
+					</span>
+					<h1 class="mui-title">选择主营产品</h1>
+					
+					
+		</header>
+		<div id="app">
+		
+		
+		<div class="mainProduct approve-sx-last">
+
+				
+				<div class="mainProdLeft">
+					<h2>物料</h2>
+					 <ul class="mui-table-view" v-for="(item, index) in mainList"> 
+									<li class="mui-table-view-cell mui-collapse">
+											<a class="mui-navigate-right" href="javascript" :id="item.code" @tap="mainSelect(item.code, item.name)">{{item.name}}</a>
+											<div class="mui-collapse-content">
+													
+													<span class="leftSpan" v-for="(item2, index2) in item.list" :key="item2.code" :id="item2.code" @tap="showButtons(item2.list, item2.code, item2.name)">{{item2.name}}</span>
+											</div>
+									</li>
+							</ul>
+				</div>
+				
+				<div class="mainProdRight buttonWrap sxactive" >
+							<button v-show="totalShow" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="totalTap(`${totalBtn}-right`, totalBtn)" class="" :id=`${totalBtn}-right`>{{totalName}}</button>
+							<div class="middleButtons" v-show="!totalShow">
+								<div><button class="mui-btn mui-btn-primary mui-btn-outlined" v-if="allBtnExit" @tap="allBtnTap()" :class="{'active': allBtnActive}" :id="allBtnId">{{allBtnName}}</button></div>
+								<div :id=`${allBtnCode}-wrap` class="singleWrap">
+									<button class="mui-btn mui-btn-primary mui-btn-outlined" @tap="buttonTap(item.code)" :class="{'active': item.isActive}" :id="item.code" v-for="(item, index) in buttonList" :key="item.code">{{item.name}}</button>
+									
+								</div>
+							</div>
+				</div>
+				
+		</div>
+		
+		<div class="approveBottomWait">
+			<div class="fixedBig" @tap="confirm">确定（已选<span v-if="num!=''&&typeof(num)!='undefined'">{{num}}</span><span v-else>0</span>个）</div>
+		</div>
+		</div>
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			Array.prototype.indexOf = function(val) {
+			for (var i = 0; i < this.length; i++) { 
+			if (this[i] == val) return i;
+			} 
+			return -1; 
+			};
+			Array.prototype.remove = function remove(val) {
+				var index = this.indexOf(val);
+				if (index > -1) {
+					this.splice(index, 1);
+				}
+			};
+			function dedupe(arr) {
+			    var rets = [];
+			    for (var i = 0; i < arr.length; i ++) {
+			        if (!rets.includes(arr[i])) {
+			            rets.push(arr[i]);
+			        }
+			    }
+			    return rets;
+			}
+			
+			function isContained(aa, bb) {
+			
+			        if (!(aa instanceof Array) || !(bb instanceof Array) || ((aa.length < bb.length))) { return false; }
+			
+			        var aaStr = aa.toString();
+			
+			        for (var i = 0; i < bb.length; i++) { if (aaStr.indexOf(bb[i]) < 0) return false; }
+			
+			        return true;
+			
+			    }
+			
+			
+			
+			mui.init({
+				gestureConfig: {
+				        tap: true, //默认为false
+								longtap: true
+				      },
+				beforeback: function() {
+					 if(vm.codeList.length>0){
+						 vm.codeStr = vm.codeList.toString();
+					 }else{
+						 vm.codeStr = ''
+					 }
+　　　　	localStorage.setItem('codeStr', vm.codeStr);					 
+				
+				        return true;
+				    }
+			});
+			let list1 = [];
+			let list2 = [];
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						mainList: [],
+						buttonList: [],
+						codeList: [],
+						codeStr: '',
+						allBtnName: '',
+						allBtnId: '',
+						allBtnCode: '',
+						allBtnActive: false,
+						allBtnExit: false,
+						allBtnList: [],
+						leftList1: [], //左侧一级菜单
+						leftList2: [], //左侧二级菜单
+						totalBtn: '',
+						totalName: '',
+						isAdd1: true,
+						isAdd2: true,
+						isSelect: true,
+						isAll: false,
+						noticeSet: [],
+						num: '',
+						totalShow: false,
+						totalList: [],
+						nameList: []
+					}
+				},
+				watch: {
+					'codeList': function(){
+						this.num = this.codeList.length;
+					}
+				},
+				methods: {
+					getMain(){
+						$.ajax({
+											url: zfyurl+"/app/api/extNotice/findMaterial",
+											type: 'POST',
+											data: {
+											
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													this.mainList = res.data;
+													this.getNameList();
+													for(let i = 0; i<this.mainList.length; i++){
+														console.log('fffffffffffffffffff')
+														this.isContained(this.mainList[i].code);
+													}
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+										})
+					},
+					mainSelect(elem, name){
+						this.totalBtn = elem;
+						this.totalName = name;
+						this.totalShow = true;
+						$('.mui-navigate-right').removeClass('bluecolor');
+						$(`#${elem}`).addClass('bluecolor');
+						
+						for(let i = 0; i<this.leftList1.length; i++){
+							if(this.leftList1[i]==elem){
+								
+							}else{
+								$(`#${this.leftList1[i]}`).addClass('bluecolor');
+							}
+						}
+						console.log(this.totalList)
+						let clear = setInterval(()=>{
+							if($(`#${this.totalBtn}-right`)[0]!=undefined){
+								for( let q = 0; q<this.totalList.length; q++){
+									let fuck = this.totalBtn;
+									if(`${this.totalBtn}-right`==this.totalList[q]){
+										
+										$(`#${fuck}-right`).addClass('active');
+										break;
+									}else{
+										$(`#${fuck}-right`).removeClass('active');
+										
+									};
+									
+								};
+								
+								window.clearInterval(clear)
+							}
+						},100)
+					},
+					totalTap(elem, code){
+						console.log(code)
+					
+						
+					
+						let mainList = this.mainList;
+						for(let i =0; i<mainList.length; i++){
+							if(mainList[i].code==code){
+								var oneList = [];
+								for(let j=0; j<mainList[i].list.length; j++){
+									for(let k=0; k<mainList[i].list[j].list.length; k++){
+										oneList.push(mainList[i].list[j].list[k].code);
+									}
+								}
+							}
+						}
+						if($(`#${elem}`).attr('class').indexOf('active') == -1){
+							this.totalList.push(elem)
+								$(`#${elem}`).addClass('active');
+							this.codeList = this.codeList.concat(oneList); //连接codeList
+						}else {
+							this.totalList.remove(elem);
+							$(`#${elem}`).removeClass('active');
+							for(let i =0; i<oneList.length; i++){
+								this.codeList.remove(oneList[i])
+							}
+						}
+						
+						console.log(this.totalList)
+						
+						this.codeList = dedupe(this.codeList); //数组去重
+						
+						this.leftList(); //用codeList制作左侧二级选中菜单数组
+						
+						//用左侧二级选中菜单数组选中左侧二级菜单
+						$('.leftSpan').removeClass('active');
+						for(let i = 0; i<this.leftList2.length; i++){
+							
+								$(`#${this.leftList2[i]}`).addClass('active');
+							
+						}
+						
+					},
+					showButtons(list, elem, name){
+						this.totalShow = false;
+						this.allBtnCode = elem;
+						let list2 = JSON.parse(JSON.stringify(list));
+						
+						this.allBtnName = name;
+						this.allBtnId = `${elem}-all`;
+						this.allBtnExit = false;
+						this.allBtnExit = true;
+						
+						let clear = setInterval(()=>{
+							if($(`#${this.allBtnId}`)[0]!=undefined){
+								for( let q = 0; q<this.allBtnList.length; q++){
+									if(this.allBtnId==this.allBtnList[q]){
+										let fuck = this.allBtnId;
+										console.log('输出class', $(`#${fuck}`).attr('class'))
+										$(`#${fuck}`).addClass('active');
+										break;
+									}else{
+										console.log('删除选中')
+										$(`#${this.allBtnId}`).removeClass('active');
+										
+									};
+									
+								};
+								for(let i = 0; i<$('.singleWrap button').length; i++){
+									if($($('.singleWrap button')[i]).attr('class').indexOf('active') == -1){
+										this.isAll = false;
+										break;
+									}else{
+										this.isAll = true;
+									}
+									
+								};
+								if(this.isAll){
+									if($(`#${this.allBtnId}`).attr('class').indexOf('active') == -1){
+										$(`#${this.allBtnId}`).addClass('active');
+										this.allBtnList.push(this.allBtnId)
+									}
+									
+								}
+								window.clearInterval(clear)
+							}
+						},100)
+						console.log('allBtnList',this.allBtnList);
+						console.log('allBtnId', this.allBtnId)
+						
+						
+						for (let i = 0; i<list2.length;i++){
+							for(let j = 0;j<this.codeList.length;j++){
+								if(list2[i].code==this.codeList[j]){
+									list2[i].isActive = true;
+									console.log(i)
+								}
+							}
+						};
+						this.buttonList = list2;
+						console.log('codeList',this.codeList)
+						console.log('buttonList',this.buttonList)
+						$('.mui-collapse-content span').removeClass('active');
+						$(`#${elem}`).addClass('active');
+						for(let i = 0; i<this.leftList2.length; i++){
+							if(this.leftList2[i]==elem){
+								
+							}else{
+								$(`#${this.leftList2[i]}`).addClass('active');
+							}
+						}
+						
+						
+					},
+					
+					buttonTap(code){
+						if($(`#${code}`).attr('class').indexOf('active') == -1){
+							
+							this.codeList.push(code);
+							console.log(this.codeList);
+							$(`#${code}`).addClass('active');
+							for(let i = 0; i<$('.singleWrap button').length; i++){
+								console.log('骂了隔壁的奥', $($('.singleWrap button')[i]).attr('class'));
+								if($($('.singleWrap button')[i]).attr('class').indexOf('active') == -1){
+									this.isAll = false;
+									break;
+								}else{
+									this.isAll = true;
+								}
+								
+							};
+							if(this.isAll){
+								$(`#${this.allBtnId}`).addClass('active');
+								this.allBtnList.push(this.allBtnId)
+							}
+							
+							let totalCode = code.substring(0,2); //当前一级类别的code
+							console.log(totalCode)
+							
+							/* 获取当前一级类别的所有三级code */
+							this.isContained(totalCode);
+							
+							this.leftList();
+							
+						}else{
+							
+							if($(`#${this.allBtnId}`).attr('class').indexOf('active') != -1){
+								$(`#${this.allBtnId}`).removeClass('active');
+								this.allBtnList.remove(this.allBtnId);
+								if($(`#${this.totalBtn}-right`).attr('class').indexOf('active') != -1){
+									$(`#${this.totalBtn}-right`).removeClass('active');
+									this.totalList.remove(`${this.totalBtn}-right`);
+								}
+							}
+							$(`#${code}`).removeClass('active');
+							this.codeList.remove(code);
+							console.log(this.codeList);
+							
+							this.leftList();
+							}
+							
+							
+					},
+					allBtnTap (){
+						let code = this.allBtnCode;
+						if($(`#${this.allBtnId}`).attr('class').indexOf('active') == -1){
+							console.log('fuck', `#${code}-all`);
+							$(`#${this.allBtnId}`).addClass('active');
+							for(let j=0;j<this.codeList.length; j++){
+								console.log(j,'j')
+								for(let i=0;i<this.buttonList.length; i++){
+									if(this.codeList[j]==this.buttonList[i].code){
+										this.codeList.remove(this.codeList[j])
+									}
+								}
+							}
+							console.log('codeList',this.codeList)
+							for(let i=0;i<this.buttonList.length; i++){
+								this.buttonList[i].isActive = true;
+								this.codeList.push(this.buttonList[i].code);
+								console.log(i)
+							}
+							this.allBtnList.push(this.allBtnId);
+							$(`#${code}-wrap button`).addClass('active');
+							console.log('buttonList',this.buttonList);
+						
+							let totalCode = this.allBtnId.substring(0,2); //当前一级类别的code
+							this.isContained(totalCode)
+						this.leftList();
+							
+						}else{
+							$(`#${this.allBtnId}`).removeClass('active');
+							this.allBtnList.remove(this.allBtnId);
+							for(let j in this.codeList){
+								for(let i=0;i<this.buttonList.length; i++){
+									if(this.codeList[j]==this.buttonList[i].code){
+										this.codeList.remove(this.codeList[j])
+									}
+								}
+							}
+							
+							if($(`#${this.totalBtn}-right`).attr('class').indexOf('active') != -1){
+								$(`#${this.totalBtn}-right`).removeClass('active');
+								this.totalList.remove(`${this.totalBtn}-right`);
+							}
+							
+							$(`#${this.allBtnCode}-wrap button`).removeClass('active');
+							console.log('buttonList',this.buttonList)
+							console.log('codeList',this.codeList)
+							
+							this.leftList();
+						}
+					},
+					leftList(){
+						this.leftList1 = [];
+						this.leftList2 = [];
+						for (let i=0; i<this.codeList.length; i++){
+							let code = this.codeList[i];
+							this.leftList1.push(code.substring(0,2));
+							this.leftList2.push(code.substring(0,4));
+						}
+						this.leftList1 = dedupe(this.leftList1);
+						this.leftList2 = dedupe(this.leftList2);
+					},
+					isContained(totalCode){
+						let mainList = this.mainList;
+						for(let i =0; i<mainList.length; i++){
+							if(mainList[i].code==totalCode){
+								var oneList = [];
+								for(let j=0; j<mainList[i].list.length; j++){
+									for(let k=0; k<mainList[i].list[j].list.length; k++){
+										oneList.push(mainList[i].list[j].list[k].code);
+									}
+								}
+							}
+						}
+						
+						var c = isContained(this.codeList, oneList); //判断当前codeList是否全部包含当前一级类别的所有code
+						if(c){
+							console.log('cccccc')
+							this.totalList.push(`${totalCode}-right`);
+							dedupe(this.totalList)
+							$(`#${totalCode}-right`).addClass('active');
+						}
+					},
+					getNameList(){
+						let mainList = this.mainList;
+						var nameList = [];
+						for(let i =0; i<mainList.length; i++){
+								for(let j=0; j<mainList[i].list.length; j++){
+									for(let k=0; k<mainList[i].list[j].list.length; k++){
+										nameList.push({code: mainList[i].list[j].list[k].code, name: mainList[i].list[j].list[k].name});
+									}
+								}
+							
+						};
+						this.nameList = nameList;
+					},
+					getUserSet(){
+						$.ajax({
+											url: zfyurl+"/app/api/userSet/findUserSet",
+											type: 'POST',
+											data: {
+												type: 2,
+												identify: 2,
+												userId: localStorage.getItem('userId')
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													this.noticeSet = res.data;
+												
+													//areaList赋值
+													if(localStorage.getItem('codeStr')!=''&&localStorage.getItem('codeStr')!=null&&localStorage.getItem('codeStr')!=undefined&&localStorage.getItem('codeStr')!=999){
+														console.log('缓存')
+														this.codeList = localStorage.getItem('codeStr').split(',');
+														for(let i = 0; i<this.mainList.length; i++){
+															console.log('fffffffffffffffffff')
+															this.isContained(this.mainList[i].code);
+														}
+														this.leftList();
+													}else if(localStorage.getItem('codeStr')=='999'){ //重置为空
+														this.codeList = [];
+														console.log('缓存999');
+														this.leftList1 = [];
+														this.leftList2 = [];
+													}else{
+														console.log('接口')
+														if(this.noticeSet.noticePurchase.length!=0){
+																	this.codeList = this.noticeSet.noticePurchase.split(',');
+																	console.log('接口有值')
+																}else{
+																	this.codeList = [];
+																		console.log('接口没值')
+																}
+													}
+													
+													
+													
+												this.leftList();
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+									})
+					},
+					confirm(){
+						console.log(this.totalList);
+						console.log(this.codeList);
+						if(vm.codeList.length==0){
+							vm.codeStr = ''
+						}else{
+							vm.codeStr = vm.codeList.toString()
+						}
+						var ws=plus.webview.getWebviewById('bussiness-subscribe.html');
+						mui.fire(ws, 'main', {  
+								codeStr: vm.codeStr,
+								codeList: vm.codeList,
+								totalList: vm.totalList,
+								mainList: vm.mainList,
+								nameList: vm.nameList
+						});
+						mui.back()
+					}
+				},
+				created(){
+					statis('1', 'main-product.html', '进入商机设置-选择主营产品页面');
+					this.getMain();
+					this.getUserSet();
+					
+					/* mui.plusReady(()=>{
+						this.getUserSet()
+					}) */
+					mui.showLoading("正在加载..","div");
+				},
+				mounted(){
+
+					let clear2 = setInterval(()=>{
+						if(typeof($("#0101")[0])!='undefined'){
+							console.log('不等于')
+							console.log(this.leftList1)
+							console.log(this.leftList2);
+							mui.hideLoading();
+							for(let i = 0; i<this.leftList1.length; i++){
+								console.log(i);
+								console.log($(`#${this.leftList1[i]}`)[0]);
+								$(`#${this.leftList1[i]}`).addClass('bluecolor');
+							}
+							for(let i = 0; i<this.leftList2.length; i++){
+								$(`#${this.leftList2[i]}`).addClass('active');
+							};
+							
+							window.clearInterval(clear2)
+							
+						};
+						console.log('asaas')
+					},500)
+					
+				}0
+			});
+
+			
+			
+		
+		</script>
+	</body>
+
+</html>

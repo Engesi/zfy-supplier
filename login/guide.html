@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+				<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+				<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+				<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+				<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css"/>
+				<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+				<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_ayl3ny90m4p.css" />
+				<style>
+					.zhezhao {
+						opacity: 0.6;
+						pointer-events: none;
+					}
+				</style>
+	</head>
+
+	<body>
+		<div id="app">
+			
+			
+		</div>
+	
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script type="text/javascript">
+			var btnArray = ['暂不使用', '同意'];
+			mui.init()
+		
+		
+				var vm = new Vue({
+					el: '#app',
+					data(){
+						return {
+							
+						}
+					},
+					methods: {
+
+					},
+					created(){
+								mui.plusReady( ()=> {
+										setPhoneType();
+								    let agreement = localStorage.getItem('agreement');
+								    console.log(agreement);
+								    if(agreement!=1){
+								    	mui.confirm(
+								    	`<div style="text-align: left">
+								    	本软件尊重并保护所有使用服务用户的个人隐私权。为了给您提供更准确、更有个性化的服务，本软件会按照本隐私权政策的规定使用您的个人信息。但本软件将以高度的勤勉、审慎义务对待这些信息。
+								    	请你务必审慎阅读、充分理解协议中相关条款内容。
+								    	你可阅读<a style="color: #007aff" href="agreement.html" withtitle="false">《隐私政策》</a>和<a style="color: #007aff" href="agreement-private.html" withtitle="false">《服务协议》</a>了解详细信息。
+								    	如你同意，请点击“同意”开始接受我们的服务。
+								    	</div>
+								    	
+								    	`,
+								    	 '服务协议和隐私政策', 
+								    	 btnArray,
+								    	 function(e) {
+								    					if (e.index == 1) {
+								    						 localStorage.setItem('agreement', 1);
+								    						 setTimeout(()=>{
+																	 mui.openWindow({
+																	 	id: '../index.html',
+																	 	url: '../index.html'
+																	 })
+																 },1000)
+								    					} else {
+								    						 plus.runtime.quit();
+								    					}
+								    			},'div'
+								    	)
+								    }else{
+								    	mui.openWindow({
+								    		id: '../index.html',
+								    		url: '../index.html'
+								    	})
+								    }
+								})
+						    
+						
+						
+					}
+				})
+		
+			
+		
+		</script>
+	</body>
+
+</html>

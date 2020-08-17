@@ -1,0 +1,367 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>消息详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			body {
+				font-size: 1rem;
+				    font-weight: 400;
+				    line-height: 1.5;
+			}
+			
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				p{font-size: 14px;}
+			}
+			.moren,.message{display: none;}
+			i {
+					padding-top: 8px;
+					padding-right: 8px;
+			}
+			
+			.iconfont {
+				font-size: 20px;
+			}
+			
+			#store2 {
+				color: #ff0000;
+			}
+			
+			h2 {
+				    color: #3b3c42;
+				    padding-left: 10px;
+				    margin-top: 15px;
+				    margin-bottom: 10px;
+						font-size: 20px;
+						line-height: 30px;
+						font-weight: bold;
+			}
+			
+			.appdel>div {
+				
+			}
+			
+			#signup {
+				width: 100%;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.mui-popover {
+				width: 95%;
+				top: 25%;
+				margin-left: 2.5%;
+				position: fixed;
+			}
+			
+			.bussinessOrange span {
+				font-size: 14px;
+			}
+			
+			button:enabled:active {
+				color: #FF5E32;
+				background-color: #fff;
+			}
+			
+			.busContent p {
+				font-size: 14px;
+				padding-top: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">商机详情</h1>
+					<span class="index-right">
+						
+					  <i class="mui-pull-right icon-heart iconfont" id="store1" @tap="addStore()"></i>
+						<i class="mui-pull-right icon-cc-heart iconfont" id="store2" @tap="cancelStore()"></i>
+					</span>
+		</header>
+		
+		<div class="pad-top-74 relative">
+			<div class="whitebg2">
+				<div class="busDetailTitle">{{detail.name}}</div>
+				<div class="bussinessOrange">
+					<span><img src="../images/time@3x.png"/>
+						<span v-if="business.endTime!=0&&business.endTime!=''&&typeof(business.endTime)!='undefined'&&business.endTime!=null">倒计时{{business.endTime}}</span>
+						<span v-else>已截止</span></span>
+					</span>
+					<span><img src="../images/quxian.png"/>浏览次数
+						<span>{{business.pageView}}</span>
+					</span>
+					<button type="button" class="orangebtn" v-if="type==1">招标采购</button>
+					<button type="button" class="orangebtn" v-if="type==2">询价采购</button>
+					<button type="button" class="orangebtn" v-if="type==3">竞价采购</button>
+					<button type="button" class="orangebtn" v-if="type==6">竞谈采购</button>
+				</div>
+			</div>
+			<div class="whitebg2">
+				<div class="busDetailTitle">基本信息</div>
+					<div class="appdel">
+						<div>
+							<div>采购单位</div>
+							<span>{{detail.companyName}}</span>
+						</div>
+					<div>
+						<div>采购编号</div>
+						<span>{{detail.code}}</span>
+					</div>
+					<div v-if="detail.projectName">
+						<div>报名截止</div>
+						<span>{{detail.projectName}}</span>
+					</div>
+					<div>
+						<div>商机分类</div>
+						<span>{{detail.businessType}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="whitebg2">
+				<div class="busDetailTitle">商机内容</div>
+					<div class="busContent" v-html="detail.content"></div>
+			</div>
+			<div class="approveBottomWait" >
+				         <span class="fixedBig"  class="fixedBig" @tap="apply()">报名</span>
+			</div>
+		</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				beforeback: function() {
+				　　　　 //获得父页面的webview
+				        var ws = plus.webview.currentWebview().opener();
+				　　　　 //触发父页面的自定义事件(refresh),从而进行刷新
+				        mui.fire(ws, 'num');
+				        //返回true,继续页面关闭逻辑
+				        return true;
+				    }
+			});
+			
+			var id = "";
+			
+			$("#store2").hide();
+			var vm = new Vue({
+				el: "#app",
+				data(){
+					return{
+						detail: '',
+						people: [],
+						tels: [],
+						requestStr: '',
+						loginUser: '',
+						business: '',
+						type: ''
+					}
+				},
+				methods: {
+					pageHandler() {
+						   				  $.ajax({
+						   				  					 	url: zfyurl+"/app/api/extNotice/viewNotice",
+						   				  					 	data: {
+																			'id': id
+																		},
+						   				  					 	type:"POST",
+						   				  					 	dataType:'jsonp',
+						   				  					 	success: res=>{
+						   				  					 		if(res.code=="M000000"){
+						   				  					 			console.log(res.data);
+																				this.detail = res.data;
+																				
+						   				  					 		}
+						   				  					 		if(res.code=="E000000"){
+						   				  					 			mui.alert(res.info)
+						   				  					 		}
+						   				  					 		
+						   				  					 	}
+						   				  				})
+																$.ajax({
+																					 	url: zfyurl+"/app/api/userSet/findUserCollectYes",
+																					 	data: {
+																							'collectId': id,
+																							'type': 1,
+																							'userId': this.loginUser.id,
+																						},
+																					 	type:"POST",
+																					 	dataType:'jsonp',
+																					 	success: res=>{
+																					 		if(res.code=="M000000"){
+																					 			let store = res.data;
+																								if(store){
+																									$("#store1").hide();
+																									$('#store2').show();
+																								}else {
+																									$("#store1").show();
+																									$('#store2').hide();
+																								}
+																					 		}
+																					 		if(res.code=="E000000"){
+																					 			mui.alert(res.info)
+																					 		}
+																					 		
+																					 	}
+																				})
+											$.ajax({
+																 	url: zfyurl+"/app/api/extNotice/appViewBusiness",
+																 	data: {
+																		'id': id,
+																		'userId': this.loginUser.id,
+																	},
+																 	type:"POST",
+																 	dataType:'jsonp',
+																 	success: res=>{
+																 		if(res.code=="M000000"){
+																 			if(res.data.pageView==''||typeof(res.data.pageView)=='undefined'||res.data.pageView==null){
+																 				res.data.pageView=0;
+																 			}
+																 			this.business = res.data;
+																			this.viewAdd();
+																 			this.business.pageView = parseInt(this.business.pageView)+1;
+																 		}
+																 		if(res.code=="E000000"){
+																 			mui.alert(res.info)
+																 		}
+																 		
+																 	}
+															})
+					 },
+					 apply(){
+						 mui.alert('此公告为自定义公告，只允许线下报名', '', '', '', 'div')
+					 },
+					addStore(){
+						statis('2', 'bussiness-detail-customize.html', `将此自定义公告添加到收藏`);
+						$.ajax({
+											 	url: zfyurl+"/app/api/userSet/saveUserCollect",
+											 	data: {
+													'collectId': id,
+													'type': 1,
+													'userId': this.loginUser.id,
+													'comId': this.loginUser.comId
+												},
+											 	type:"POST",
+											 	dataType:'jsonp',
+											 	success: res=>{
+											 		if(res.code=="M000000"){
+														$("#store1").hide();
+														$('#store2').show();
+											 		}
+											 		if(res.code=="E000000"){
+											 			mui.alert(res.info)
+											 		}
+											 		
+											 	}
+										})
+					},
+					cancelStore(){
+						statis('2', 'bussiness-detail-customize.html', `将此自定义公告取消收藏`);
+						$.ajax({
+											 	url: zfyurl+"/app/api/userSet/deleteUserCollect",
+											 	data: {
+													'collectId': id,
+													'type': 1,
+													'userId': this.loginUser.id,
+												},
+											 	type:"POST",
+											 	dataType:'jsonp',
+											 	success: res=>{
+											 		if(res.code=="M000000"){
+														$("#store1").show();
+														$('#store2').hide();
+											 		}
+											 		if(res.code=="E000000"){
+											 			mui.alert(res.info)
+											 		}
+											 		
+											 	}
+										})
+					},
+					reload(){
+						location.reload();
+					},
+					
+					failapply(){
+						mui('.failpop').popover('toggle');//show hide toggle
+					},
+					viewAdd(){
+						$.ajax({
+											 	url: zfyurl+"/app/api/extNotice/pageViewAdd",
+											 	data: {
+													id: id,
+												},
+											 	type:"POST",
+											 	dataType:'jsonp',
+											 	success: res=>{
+											 		if(res.code=="M000000"){
+														
+											 		}
+											 		if(res.code=="E000000"){
+											 			mui.alert(res.info)
+											 		} 		
+											 	}
+										})
+					}
+					
+				},
+				created(){
+					statis('1', 'bussiness-detail-customize.html', `进去自定义公告详情`);
+					this.loginUser = JSON.parse(localStorage.getItem('loginUser'));
+					mui.plusReady(function () {
+					    
+							var val = plus.webview.currentWebview();
+							console.log(JSON.stringify(val))
+							id = val.extId;
+							console.log(id);
+							vm.type = val.type;
+							let isRead = false;
+							isRead = val.isRead;
+							if(isRead){
+															 $.ajax({
+															 	url: zfyurl + "/app/api/extNotice/updateSubscribeReadFlag",
+															 	type: 'POST',
+															 	data: {
+																	userId: vm.loginUser.id,
+																	id: id
+															 	},
+															 	dataType: 'jsonp',
+															 	success: res => {
+															 		if (res.code == 'M000000') {
+																		console.log('成功')
+															 		}
+															 		if (res.code == 'E000000') {
+															 			mui.alert(res.info)
+															 		}
+															 	}
+															 })
+							}
+							
+							vm.pageHandler()
+					})
+					/* this.pageHandler() */
+				}
+			})
+	
+			
+		
+			   
+
+		</script>
+	</body>
+
+</html>
+
+

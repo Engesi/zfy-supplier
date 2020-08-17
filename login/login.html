@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>登陆</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<style>
+			.login-input li input{width: 80%;}
+			.mui-checkbox input[type=checkbox]:checked:before, .mui-radio input[type=radio]:checked:before{color: #fff;}
+			.mui-icon-eye {
+				padding-top: 18px;
+			}
+			
+			input{
+			    caret-color: #fff !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="login" id="app">
+			<div class="tc login-logo">
+				<img src="../images/logo.png"/>
+			</div>
+			<h1 class="font-18 col-fff tc font-bold pad-top-20">筑服云——建筑产业链服务平台</h1>
+			<ul class="login-input">
+				<li>
+					<div class="icon tc">
+						<img src="../images/denglu-shouji.png" width="14px"/>
+						<div class="line"></div>
+					</div>
+					<input style="position: relative;" type="text" placeholder="请输入手机号" @focus="inLogin" @blur="leaveLogin" id="phone" v-model="phone"/>
+					<div class="loginedpwd" v-show="isShow">
+						<ul>
+							<li v-for = "(item, index) in selectPhone" @tap="setPhone(item)">{{item}}</li>
+						</ul>
+					</div>
+				</li>
+				<li class="mui-input-row">
+					<div class="icon">
+						<img src="../images/denglu-mima.png"/>
+						<div class="line"></div>
+					</div>
+					<input type="password" placeholder="请输入密码" @keyup.13="tapToSearch" class="mui-input-password" id="passwd"/>
+				</li>
+			</ul>
+			<div class="tc login-a pad-top-30">
+				<a href="login-dx.html" withtitle="false" >短信登录</a>
+				<!-- <a href="register.html" withtitle="false" >免费注册</a> -->
+				<a href="reset.html" class="bor-none" withtitle="false">忘记密码</a>
+			</div>
+			<input type="button" value="登 录" id="login"/>
+			<!--<div class="third-party tc">
+				<p class="col-fff font-16">———— 第三方账号登录 ————</p>
+				<span><img src="../images/wx_03.png" width="30px"/></span>
+			</div>-->
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			$("#phone").val(localStorage.getItem("phone"));
+			$("#passwd").val(localStorage.getItem("password"));
+			$("#phone").bind("input propertychange", function(e) {
+				if($("#phone").val().length>9&&$("#phone").val().length<12){
+					if($("#phone").val()!=localStorage.getItem("phone")){
+						$("#passwd").val("");
+					}
+				}
+			});
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						phone: '',
+						phoneListBuyer: [],
+						selectPhone: [],
+						isShow: false,
+					}
+				},
+				watch: {
+					'phone': function(newp, oldp){
+						this.selectPhone = [];
+						if(this.phoneListBuyer.length!=0){
+							let length = newp.length;
+							for (let item of this.phoneListBuyer){
+								if(item.slice(0, length).includes(newp)){
+									this.selectPhone.push(item)
+								}
+							}
+						}
+					}
+				},
+				methods: {
+					leaveLogin(){
+						this.isShow = false;
+					},
+					inLogin(){
+						this.isShow = true;
+					},
+					setPhone(phone){
+						this.phone = phone;
+						this.isShow = false;
+					},
+					tapToSearch(){
+						 var loginUser="";
+			   var phone=$("#phone").val();
+			   var passwd=$("#passwd").val();
+			   var remember=$("#remember").checked;
+			   if(phone.trim()==""){
+			   	 mui.alert("请输入手机号 !", "", "", "", "div");
+			   	 return false;
+			   }
+			   	
+			   if(passwd.trim()==""){
+			   	 mui.alert("请输入密码 !");
+			   	 return false;
+			   }
+				 statis('2', 'login.html', '用手机号密码登录');
+			    $.ajax({
+					 	url: zfyurl+"/app/api/user/login",
+					 	data:{phone:phone,passwd:passwd},
+					 	type:"POST",
+					 	dataType:'jsonp',
+					 	success:function(res){
+					 		if(res.code=="M000000"){
+					 			var data=res.data;
+/*					 			if(data.identifyFlag!="1"){
+					 				mui.alert("当前账号还未认证,请前往pc端(www.zhufuc.com)认证 !");
+					 				return false;
+					 			}*/
+                                loginUser=JSON.stringify(data);
+					 		    if(data.registerIdentify=='1'){
+					 		    	mui.alert('请用供应商账号登录', "", "", "", "div");
+					 		    }
+					 		    
+					 		    if(data.registerIdentify=='2'){
+					 		    	localStorage.setItem('login', 2);
+										localStorage.setItem('userName', data.userName);
+										localStorage.setItem('bs', 2);
+										addPhone(phone);
+					 		    	mui.openWindow({
+					 		    		url: "../index-supplier.html",
+					 		    		id: "supplier"
+					 		    	})
+					 		    }
+					 		    if(data.registerIdentify=='3'){
+					 		    	localStorage.setItem('login', 3);
+										localStorage.setItem('userName', data.userName);
+										localStorage.setItem('bs', 2);
+										addPhone(phone);									
+											mui.openWindow({
+												url: "../index-supplier.html",
+												id: "supplier"
+											})
+										
+					 		    	
+					 		    }
+					 		}
+					 		if(res.code=="E000000"){
+					 			mui.alert(res.info)
+					 		}
+							localStorage.setItem('userId', data.id);
+					 		localStorage.setItem('loginUser',loginUser);
+					 		localStorage.setItem("phone",phone);
+			   				localStorage.setItem("password",passwd);
+					 	}
+				})
+					}
+				},
+				created(){
+					statis('1', 'login.html', '进入密码登录页面');
+					this.phoneListBuyer = JSON.parse(localStorage.getItem('phoneListBuyer')) || [];
+				}
+			})
+			mui('body').on('tap','#login',function(e){
+			   var loginUser="";
+			   var phone=$("#phone").val();
+			   var passwd=$("#passwd").val();
+			   var remember=$("#remember").checked;
+			   if(phone.trim()==""){
+			   	 mui.alert("请输入手机号 !");
+			   	 return false;
+			   }
+			   	
+			   if(passwd.trim()==""){
+			   	 mui.alert("请输入密码 !");
+			   	 return false;
+			   }
+				 console.log(phone);
+				 statis('2', 'login.html', '用手机号密码登录');
+			    $.ajax({
+					 	url: zfyurl+"/app/api/user/login",
+					 	data:{phone:phone,passwd:passwd},
+					 	type:"POST",
+					 	dataType:'jsonp',
+					 	success:function(res){
+					 		if(res.code=="M000000"){
+					 			var data=res.data;
+/*					 			if(data.identifyFlag!="1"){
+					 				mui.alert("当前账号还未认证,请前往pc端(www.zhufuc.com)认证 !");
+					 				return false;
+					 			}*/
+                                loginUser=JSON.stringify(data);
+					 		    if(data.registerIdentify=='1'){
+					 		    	mui.alert('请用供应商账号登录', "", "", "", "div");
+					 		    }
+					 		    
+					 		    if(data.registerIdentify=='2'){
+					 		    	localStorage.setItem('login', 2);
+										localStorage.setItem('userName', data.userName);
+										localStorage.setItem('bs', 2);
+										console.log(2);
+										addPhone(phone);
+					 		    	mui.openWindow({
+					 		    		url: "../index-supplier.html",
+					 		    		id: "supplier"
+					 		    	})
+					 		    }
+					 		    if(data.registerIdentify=='3'){
+					 		    	localStorage.setItem('login', 3);
+										localStorage.setItem('userName', data.userName);
+										localStorage.setItem('bs', 1);
+										console.log(3)
+										console.log(localStorage.getItem('userId'))
+									  addPhone(phone);
+											mui.openWindow({
+												url: "../index-supplier.html",
+												id: "supplier"
+											})
+										
+					 		    	
+					 		    }
+					 		}
+					 		if(res.code=="E000000"){
+					 			mui.alert(res.info)
+					 		}
+							localStorage.setItem('userId', data.id);
+					 		localStorage.setItem('loginUser',loginUser);
+					 		localStorage.setItem("phone",phone);
+			   				localStorage.setItem("password",passwd);
+					 	}
+				})
+		    });
+		    var first = null;
+			mui.back = function() {
+              //首次按键，提示‘再按一次退出应用’
+                if (!first) {
+                    first = new Date().getTime();
+                    mui.toast('再按一次退出应用');
+                    setTimeout(function() {
+                        first = null;
+                    }, 1000);
+                } else {
+                    if (new Date().getTime() - first < 1000) {
+                        plus.runtime.quit();
+                    }
+                }
+            };
+		</script>
+		
+	</body>
+
+</html>

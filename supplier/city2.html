@@ -1,0 +1,704 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>城市选择</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_2sxay9ukhqx.css" />
+		<style type="text/css">
+		.font-lighter{font-size: 16px;color: #666;}
+		.mui-icon-arrowright{color: #999;}
+		.mui-scroll-wrapper{top: 20px}
+		/*.mui-pull-top-pocket{top: 20px;}*/
+		h2 {
+			    color: #3b3c42;
+			    padding-left: 15px;
+			    margin-top: 15px;
+			    margin-bottom: 10px;
+					font-size: 22px;
+					line-height: 20px;
+		}
+		
+			
+			.mui-collapse-content  {
+				
+			}
+		.mui-table-view:before,.mui-table-view:after {
+			height: 0;
+		}
+		
+		html {
+			height: 100%;
+		}
+		
+		body {
+			height: 100%;
+			overflow: hidden;
+		}
+		
+		#app {
+			height: 100%;
+			overflow: hidden;
+			}
+		
+		.mainProduct {
+			height: 100%;
+			overflow: hidden;
+			padding-bottom: 150px;
+		}
+		
+		.mainProdLeft {
+			height: 100%;
+			overflow-y: scroll;
+			
+		}
+		
+		.mainProdRight {
+			height: 100%;
+			overflow: scroll;
+			padding-bottom: 30px;
+		}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-closeempty"></a>
+					</span>
+					<h1 class="mui-title">选择主营产品</h1>
+					
+					
+		</header>
+		<div id="app">
+		
+		
+		<div class="mainProduct approve-sx-last">
+
+				<div class="mainProdLeft">
+					<h2>物料</h2>
+					 <ul class="mui-collapse-content" v-for="(item, index) in mainList"> 
+								<li class="leftSpan mainProdLeft" v-for="(item2, index2) in item.list" :key="item2.id" :id="'province'+item2.id" @tap="showButtons(item2.list, item2.id, 'province'+item2.id, item2.name)">
+									<span>{{item2.name}}</span>
+								</li>
+					 </ul>
+				</div>
+				
+				<div class="mainProdRight buttonWrap sxactive" >
+							<div class="middleButtons" v-show="!totalShow">
+								<div><button class="mui-btn mui-btn-primary mui-btn-outlined" v-if="allBtnExit" @tap="allBtnTap()" :class="{'active': allBtnActive}" :id="allBtnId">{{allBtnName}}</button></div>
+								<div :id=`${allBtnId}-wrap` class="singleWrap">
+									<button class="mui-btn mui-btn-primary mui-btn-outlined" @tap="buttonTap(item.id)" :class="{'active': item.isActive}" :id="item.id" v-for="(item, index) in buttonList" :key="item.id">{{item.name}}</button>
+									
+								</div>
+							</div>
+				</div>
+				
+		</div>
+		
+		<div class="approveBottomWait">
+			<div class="fixedBig" @tap="confirm">确定（已选<span v-if="num!=''&&typeof(num)!='undefined'">{{num}}</span><span v-else>0</span>个）</div>
+		</div>
+		</div>
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			Array.prototype.indexOf = function(val) {
+			for (var i = 0; i < this.length; i++) { 
+			if (this[i] == val) return i;
+			} 
+			return -1; 
+			};
+			Array.prototype.remove = function remove(val) {
+				var index = this.indexOf(val);
+				if (index > -1) {
+					this.splice(index, 1);
+				}
+			};
+			function dedupe(arr) {
+			    var rets = [];
+			    for (var i = 0; i < arr.length; i ++) {
+			        if (!rets.includes(arr[i])) {
+			            rets.push(arr[i]);
+			        }
+			    }
+			    return rets;
+			}
+			
+			function isContained(aa, bb) {
+			
+			        if (!(aa instanceof Array) || !(bb instanceof Array) || ((aa.length < bb.length))) { return false; }
+			
+			        var aaStr = aa.toString();
+			
+			        for (var i = 0; i < bb.length; i++) { if (aaStr.indexOf(bb[i]) < 0) return false; }
+			
+			        return true;
+			
+			    }
+			
+			
+			
+			mui.init({
+				gestureConfig: {
+				        tap: true, //默认为false
+								longtap: true
+				      },
+				beforeback: function() {
+					 if(vm.codeList.length>0){
+						 vm.codeStr = vm.codeList.toString();
+					 }else{
+						 vm.codeStr = ''
+					 }
+　　　　	localStorage.setItem('codeStr', vm.codeStr);					 
+				
+				        return true;
+				    }
+			});
+			let list1 = [];
+			let list2 = [];
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						mainList: [],
+						buttonList: [],
+						codeList: [],
+						codeStr: '',
+						allBtnName: '',
+						allBtnId: '',
+						allBtnCode: '',
+						allBtnActive: false,
+						allBtnExit: true,
+						allBtnList: [],
+						leftList1: [], //左侧一级菜单选中的列表
+						leftList2: [], //左侧二级菜单选中的列表
+						totalBtn: '', //左侧一级菜单的elem
+						totalName: '', //左侧一级菜单的name
+						totalId: '', //左侧一级菜单的id
+						totalRight: '', //一级菜单的右侧按钮
+						isAdd1: true,
+						isAdd2: true,
+						isSelect: true,
+						isAll: false,
+						noticeSet: [],
+						num: '',
+						totalShow: false, //一级菜单的右侧全选按钮是否显示
+						totalList: [],
+						nameList: [],
+						isNone: false,
+						provinceList: [], //已选省份列表
+						outList: [] //已选地区列表
+					}
+				},
+				watch: {
+					'codeList': function(){
+						this.num = this.codeList.length;
+					}
+				},
+				methods: {
+					getMain(){
+						$.ajax({
+											url: zfyurl+"/app/api/extNotice/findNoticeArea",
+											type: 'POST',
+											data: {
+											
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													this.mainList = res.data; //地区省市三级列表
+													/* this.getNameList();
+													for(let i = 0; i<this.mainList.length; i++){
+														this.isContained(this.mainList[i].code);
+													} */
+													let codeList = [2, 10, 11];
+													this.codeList = codeList;
+													let mainList = this.mainList;
+													console.log(mainList)
+													var oneList = []; //所有已选城市的id，没什么用
+													var provinceList = []; //所有已选省的id
+													var outList = []; //所有已选区域的flag
+													for(let i =0; i<mainList.length; i++){
+															for(let j=0; j<mainList[i].list.length; j++){
+																for(let k=0; k<mainList[i].list[j].list.length; k++){
+																	for(let q = 0; q<codeList.length; q++){
+																		if(mainList[i].list[j].list[k].id==codeList[q]){
+																			oneList.push(mainList[i].list[j].list[k].id);
+																			provinceList.push(mainList[i].list[j].id);
+																			this.leftList2.push('province'+mainList[i].list[j].id);
+																			outList.push(mainList[i].list[j].list[k].areaFlag);
+																		}
+																	}
+																}
+															}
+													}
+													this.provinceList = dedupe(provinceList);
+													this.outList = dedupe(outList);
+													console.log(oneList);
+													console.log(this.provinceList);
+													console.log(this.outList);
+													//给左侧菜单加上active
+													
+													
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+										})
+					},
+					mainSelect(id, name){
+						let elem = 'area'+id; 
+						this.totalId = id;
+						this.totalBtn = elem; //左侧一级菜单的elem
+						this.totalName = name; //左侧一级菜单的name
+						this.totalShow = true; //一级菜单的右侧全选按钮是否显示
+						this.totalRight = `${this.totalId}right`;
+						$('.mui-navigate-right').removeClass('bluecolor'); //移除所有左侧一级菜单的选中样式
+						$(`#${elem}`).addClass('bluecolor'); //给当前点击的左侧一级菜单加上选中样式
+						
+						//循环左侧一级菜单选中列表，给列表中的elem加上选中样式
+						for(let i = 0; i<this.leftList1.length; i++){
+							if(this.leftList1[i]==elem){
+								
+							}else{
+								$(`#${this.leftList1[i]}`).addClass('bluecolor');
+							}
+						}
+						
+						//循环，等右侧一级按钮出来之后，看它是否在totalList中，在的话就加上active
+						let clear = setInterval(()=>{
+							if($(`#${this.totalRight}`)[0]!=undefined){
+								for( let q = 0; q<this.totalList.length; q++){
+									let fuck = this.totalId;
+									if(`${this.totalRight}`==this.totalList[q]){
+										
+										$(`#${fuck}right`).addClass('active');
+										break;
+									}else{
+										$(`#${fuck}right`).removeClass('active');
+										
+									};
+									
+								};
+								
+								window.clearInterval(clear)
+							}
+						},100)
+					},
+					totalTap(elem, code){
+						console.log(code)
+					
+						
+					 //循环出当前地区对应的第3级列表的id数组
+						let mainList = this.mainList;
+						for(let i =0; i<mainList.length; i++){
+							if(mainList[i].id==code){
+								var oneList = []; //当前地区对应的第3级列表的id数组
+								for(let j=0; j<mainList[i].list.length; j++){
+									for(let k=0; k<mainList[i].list[j].list.length; k++){
+										oneList.push(mainList[i].list[j].list[k].id);
+									}
+								}
+							}
+						}
+						
+						if($(`#${elem}`).attr('class').indexOf('active') == -1){
+								this.totalList.push(elem);
+								$(`#${elem}`).addClass('active');
+							this.codeList = this.codeList.concat(oneList); //连接codeList
+						}else {
+							this.totalList.remove(elem);
+							$(`#${elem}`).removeClass('active');
+							for(let i =0; i<oneList.length; i++){
+								this.codeList.remove(oneList[i])
+							}
+						}
+						
+						console.log(this.totalList)
+						
+						this.codeList = dedupe(this.codeList); //数组去重
+						
+						this.leftList(); //用codeList制作左侧二级选中菜单数组
+						
+						//用左侧二级选中菜单数组选中左侧二级菜单
+						$('.leftSpan').removeClass('active');
+						for(let i = 0; i<this.leftList2.length; i++){
+							
+								$(`#${this.leftList2[i]}`).addClass('active');
+							
+						}
+						
+					},
+					showButtons(list, id, elem, name){
+						this.totalShow = false;
+						this.allBtnCode = elem; //左侧省份的elem
+						let list2 = JSON.parse(JSON.stringify(list));
+						
+						this.allBtnName = name; //右侧省份的name
+						this.allBtnId = `${elem}-all`; //右侧省份的elem
+						console.log(this.allBtnList,'allBtnList');
+						console.log(this.allBtnId,'allBtnId')
+						//通过右侧省份的选中list，给右侧省份添加active
+						let clear = setInterval(()=>{
+							if($(`#${this.allBtnId}`)[0]!=undefined){
+								for( let q = 0; q<this.allBtnList.length; q++){
+									if(this.allBtnId==this.allBtnList[q]){
+										let fuck = this.allBtnId;
+										console.log('输出class', $(`#${fuck}`).attr('class'))
+										$(`#${fuck}`).addClass('active');
+										break;
+									}else{
+										console.log('删除选中')
+										$(`#${this.allBtnId}`).removeClass('active');
+										
+									};
+									
+								};
+								
+								
+								
+								//判断右侧单个市级按钮是否全部选中
+								for(let i = 0; i<$('.singleWrap button').length; i++){
+									if($($('.singleWrap button')[i]).attr('class').indexOf('active') == -1){
+										this.isAll = false;
+										break;
+									}else{
+										this.isAll = true;
+									}
+									
+								};
+								
+								//如果全部选中,给右侧省级按钮加上全选
+								if(this.isAll){
+									if($(`#${this.allBtnId}`).attr('class').indexOf('active') == -1){
+										$(`#${this.allBtnId}`).addClass('active');
+										this.allBtnList.push(this.allBtnId); //给右侧省级list添加一项
+									}
+									
+								}
+								window.clearInterval(clear)
+							}
+						},100)
+						console.log('allBtnList',this.allBtnList);
+						console.log('allBtnId', this.allBtnId);
+						
+						
+						//给在codeList中的右侧单个div加上active
+						for (let i = 0; i<list2.length;i++){
+							for(let j = 0;j<this.codeList.length;j++){
+								if(list2[i].id==this.codeList[j]){
+									console.log('相等')
+									list2[i].isActive = true;
+									console.log(i)
+								}
+							}
+						};
+						this.buttonList = list2; //给右侧市区的list重新渲染
+						console.log('codeList',this.codeList)
+						console.log('buttonList',this.buttonList)
+						
+						//给左侧省份菜单加上active
+						$('.mui-collapse-content .leftSpan').removeClass('active');
+						$(`#${elem}`).addClass('active');
+						
+						//给左侧省级菜单加上在列表中的active
+						for(let i = 0; i<this.leftList2.length; i++){
+							if(this.leftList2[i]==elem){
+								
+							}else{
+								$(`#${this.leftList2[i]}`).addClass('active');
+							}
+						}
+						
+						
+					},
+					
+					buttonTap(code){
+						//当前市级按钮没选中
+						if($(`#${code}`).attr('class').indexOf('active') == -1){
+							
+							this.codeList.push(code);
+							console.log(this.codeList);
+							$(`#${code}`).addClass('active'); //给当前市区按钮加上active
+							
+							//判断当前右侧市区是否全部选中
+							for(let i = 0; i<$('.singleWrap button').length; i++){
+								console.log('骂了隔壁的奥', $($('.singleWrap button')[i]).attr('class'));
+								if($($('.singleWrap button')[i]).attr('class').indexOf('active') == -1){
+									this.isAll = false;
+									break;
+								}else{
+									this.isAll = true;
+								}
+								
+							};
+							
+						
+							
+							//如果全部选中,给右侧省级按钮加上全选
+							if(this.isAll){
+								$(`#${this.allBtnId}`).addClass('active');
+								this.allBtnList.push(this.allBtnId)
+							}
+							
+							this.leftList2.push(this.allBtnCode); //给左侧省级菜单list加上此时的左侧省份
+							this.leftList2 = dedupe(this.leftList2); //左侧省份list去重
+						}else{
+							//当前市级按钮选中了
+							
+							//当前右侧市级按钮全部选中了
+							if($(`#${this.allBtnId}`).attr('class').indexOf('active') != -1){
+								$(`#${this.allBtnId}`).removeClass('active');
+								this.allBtnList.remove(this.allBtnId); //从右侧省级菜单中移除
+							}
+							$(`#${code}`).removeClass('active'); //给当前按钮移除active
+							this.codeList.remove(code); //从codeList中移除当前
+							console.log(this.codeList);
+							
+							//判断当前右侧市区是否全部没选中
+							for(let i = 0; i<$('.singleWrap button').length; i++){
+								console.log('骂了隔壁的奥', $($('.singleWrap button')[i]).attr('class'));
+								if($($('.singleWrap button')[i]).attr('class').indexOf('active') == -1){
+									this.isNone = true;
+								}else{
+									this.isNone = false;
+									break;
+								}
+								
+							};
+							
+							//如果当前右侧全部没选中，从左侧选中省份list移除
+							if(this.isNone == true){
+								this.leftList2.remove(this.allBtnCode)
+							}
+							}
+							
+							
+					},
+					allBtnTap (){
+						let code = this.allBtnId;
+						if($(`#${this.allBtnId}`).attr('class').indexOf('active') == -1){
+							console.log('fuck', `#${code}-all`);
+							$(`#${this.allBtnId}`).addClass('active'); //给当前按钮加上active
+							
+							//先把codeList中所有当前右侧市区id去掉
+							for(let j=0;j<this.codeList.length; j++){
+								console.log(j,'j')
+								for(let i=0;i<this.buttonList.length; i++){
+									if(this.codeList[j]==this.buttonList[i].id){
+										this.codeList.remove(this.codeList[j])
+									}
+								}
+							}
+							
+							console.log('codeList',this.codeList);
+							
+							//再把当前右侧所有市区id加进codeList里
+							for(let i=0;i<this.buttonList.length; i++){
+								this.buttonList[i].isActive = true;
+								this.codeList.push(this.buttonList[i].id);
+								console.log(i)
+							};
+							
+							this.allBtnList.push(this.allBtnId); //给右侧省list添加一个
+							$(`#${this.allBtnId}-wrap button`).addClass('active'); //给当前右侧所有市区加上active
+							console.log('buttonList',this.buttonList);
+						
+						this.leftList2.push(this.allBtnCode); //给左侧省份list添加
+						this.leftList2 = dedupe(this.leftList2); //给左侧省份list去重
+							
+						}else{
+							$(`#${this.allBtnId}`).removeClass('active');
+							this.allBtnList.remove(this.allBtnId); //给右侧省list去掉一个
+							for(let j in this.codeList){ //去除掉所有codeList中的当前右侧市
+								for(let i=0;i<this.buttonList.length; i++){
+									if(this.codeList[j]==this.buttonList[i].id){
+										this.codeList.remove(this.codeList[j])
+									}
+								}
+							}
+							
+							
+							$(`#${this.allBtnId}-wrap button`).removeClass('active'); //给当前右侧所有市去掉active
+							console.log('buttonList',this.buttonList)
+							console.log('codeList',this.codeList)
+							
+							this.leftList2.remove(this.allBtnCode);
+						}
+					},
+					leftList(){
+						this.leftList1 = [];
+						this.leftList2 = [];
+						for (let i=0; i<this.codeList.length; i++){
+							let code = this.codeList[i];
+							this.leftList1.push(code.substring(0,2));
+							this.leftList2.push(code.substring(0,4));
+						}
+						this.leftList1 = dedupe(this.leftList1);
+						this.leftList2 = dedupe(this.leftList2);
+					},
+					isContained(totalCode){
+						let mainList = this.mainList;
+						for(let i =0; i<mainList.length; i++){
+							if(mainList[i].code==totalCode){
+								var oneList = [];
+								for(let j=0; j<mainList[i].list.length; j++){
+									for(let k=0; k<mainList[i].list[j].list.length; k++){
+										oneList.push(mainList[i].list[j].list[k].code);
+									}
+								}
+							}
+						}
+						
+						var c = isContained(this.codeList, oneList); //判断当前codeList是否全部包含当前一级类别的所有code
+						if(c){
+							console.log('cccccc')
+							this.totalList.push(`${totalCode}-right`);
+							dedupe(this.totalList)
+							$(`#${totalCode}-right`).addClass('active');
+						}
+					},
+					getNameList(){
+						let mainList = this.mainList;
+						var nameList = [];
+						/* for(let i =0; i<mainList.length; i++){
+								for(let j=0; j<mainList[i].list.length; j++){
+									for(let k=0; k<mainList[i].list[j].list.length; k++){
+										nameList.push({code: mainList[i].list[j].list[k].code, name: mainList[i].list[j].list[k].name});
+									}
+								}
+							
+						}; */
+						this.nameList = nameList;
+					},
+					getUserSet(){
+						/* $.ajax({
+											url: zfyurl+"/app/api/userSet/findUserSet",
+											type: 'POST',
+											data: {
+												type: 2,
+												identify: 2,
+												userId: localStorage.getItem('userId')
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													this.noticeSet = res.data;
+												
+													//areaList赋值
+													if(localStorage.getItem('codeStr')!=''&&localStorage.getItem('codeStr')!=null&&localStorage.getItem('codeStr')!=undefined&&localStorage.getItem('codeStr')!=999){
+														console.log('缓存')
+														this.codeList = localStorage.getItem('codeStr').split(',');
+														for(let i = 0; i<this.mainList.length; i++){
+															console.log('fffffffffffffffffff')
+															this.isContained(this.mainList[i].code);
+														}
+														this.leftList();
+													}else if(localStorage.getItem('codeStr')=='999'){ //重置为空
+														this.codeList = [];
+														console.log('缓存999');
+														this.leftList1 = [];
+														this.leftList2 = [];
+													}else{
+														console.log('接口')
+														if(this.noticeSet.noticePurchase.length!=0){
+																	this.codeList = this.noticeSet.noticePurchase.split(',');
+																	console.log('接口有值')
+																}else{
+																	this.codeList = [];
+																		console.log('接口没值')
+																}
+													}
+													
+													
+													
+												this.leftList();
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+									}) */
+									
+									
+					},
+					confirm(){
+						console.log(this.totalList);
+						console.log(this.codeList);
+						if(vm.codeList.length==0){
+							vm.codeStr = ''
+						}else{
+							vm.codeStr = vm.codeList.toString()
+						}
+						var ws=plus.webview.getWebviewById('bussiness-subscribe.html');
+						mui.fire(ws, 'main', {  
+								codeStr: vm.codeStr,
+								codeList: vm.codeList,
+								totalList: vm.totalList,
+								mainList: vm.mainList,
+								nameList: vm.nameList
+						});
+						mui.back()
+					}
+				},
+				created(){
+					this.getMain();
+					this.getUserSet();
+					
+					/* mui.plusReady(()=>{
+						this.getUserSet()
+					}) */
+					/* mui.showLoading("正在加载..","div"); */
+				},
+				mounted(){
+
+					let clear2 = setInterval(()=>{
+						if(typeof($("#province2")[0])!='undefined'){
+							console.log('不等于')
+							console.log(this.leftList1)
+							console.log(this.leftList2);
+							mui.hideLoading();
+							/* for(let i = 0; i<this.leftList1.length; i++){
+								console.log(i);
+								console.log($(`#${this.leftList1[i]}`)[0]);
+								$(`#${this.leftList1[i]}`).addClass('bluecolor');
+							} */
+							
+							//给左侧菜单加上active
+							$('.leftSpan').removeClass('active');
+							for(let i = 0; i<this.leftList2.length; i++){
+								
+									$(`#${this.leftList2[i]}`).addClass('active');
+								
+							}
+							
+							window.clearInterval(clear2)
+							
+						};
+						console.log('asaas')
+					},500)
+					
+				}
+			});
+
+			
+			
+		
+		</script>
+	</body>
+
+</html>

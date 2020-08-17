@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>帮助中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			h2{font-size: 20px;color: #333;line-height: 18px;font-weight: bold;}
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				h2{font-size: 18px;color: #333;line-height: 18px;}
+				p{font-size: 14px;}
+			}
+			
+			
+			#textarea {
+				    border: #c8c7cc .5px solid;
+				    margin-top: 5px;
+				    padding: 5px;
+				    border-radius: 8px;
+			}
+			
+			h2 {
+				    border-left: 3px solid #ff7b57;
+				    font-size: 1.375rem;
+				    color: #3b3c42;
+				    padding-left: 10px;
+				    margin-top: 15px;
+				    margin-bottom: 10px;
+			}
+			
+			
+			.table {
+			                border: 1px solid #cad9ea;
+			                color: #666;
+			            }
+			
+			            .table th {
+			                background-repeat: repeat-x;
+			                height: 30px;
+			            }
+			
+			            .table td,
+			            .table th {
+			                border: 1px solid #cad9ea;
+			                padding: 0 1em 0;
+			            }
+			
+			            .table tr.alter {
+			                background-color: #f5fafe;
+			            }
+			
+			.grayPop {
+				font-size: 1rem;
+				    color: #999999;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">审批</h1>
+		</header>
+
+		<div class="pad-lr-10 pad-top-50" style="position: relative;">
+			<h2>基础信息</h2>
+			<div class="comdel">
+				<div>
+					<div>项目编号:</div>
+					<span>GCXM202000000004</span>
+				</div>
+				<div>
+					<div>项目名称:</div>
+					<span>阿阿斯顿</span>
+				</div>
+				<div>
+					<div>地址:</div>
+					<span>北京市北京市东城区东华门大街86号</span>
+				</div>
+				<div>
+					<div>项目规模:</div>
+					<span>大</span>
+				</div>
+				<div>
+					<div>工程造价:</div>
+					<span>124234万元</span>
+				</div>
+				<div>
+					<div>项目状态:</div>
+					<span>开工</span>
+				</div>
+				<div>
+					<div>工程类型:</div>
+					<span>房建工程</span>
+				</div>
+				<div>
+					<div>重点工程项目:</div>
+					<span>其他</span>
+				</div>
+				<div>
+					<div>开竣工时间:</div>
+					<span>2019-12-31至2020-01-21</span>
+				</div>
+				<div>
+					<div>业主属性:</div>
+					<span>政府机关</span>
+				</div>
+				<div>
+					<div>应用场景:</div>
+					<span>项目前期准备</span>
+				</div>
+				<div>
+					<div>经办人:</div>
+					<span>侯建成</span>
+				</div>
+				<div>
+					<div>项目概述:</div>
+				</div>
+			</div>
+			<div class="mui-input-row">
+				
+			  <textarea id="textarea" placeholder="项目概述" class="mui-input-speech mui-input-clear"></textarea>
+			</div>
+			<div class="comdel">
+				<div>
+					<div>项目图片</div>
+					<span>
+						<img src="../dist/favicon.ico" />
+					</span>
+				</div>
+			</div>
+			<h2>相关主体</h2>
+			<div class="comdel">
+				<div>
+					<div>施工单位:</div>
+					<span>北京第一家采购商测试公司</span>
+				</div>
+				<div>
+					<div>建设单位:</div>
+					<span>隧道股份</span>
+				</div>
+				<div>
+					<div>勘查单位:</div>
+					<span>按时发放</span>
+				</div>
+				<div>
+					<div>设计单位:</div>
+					<span>啊实打实</span>
+				</div>
+				<div>
+					<div>监理单位:</div>
+					<span>俺师傅师傅</span>
+				</div>
+			</div>
+			<h2>参与人员</h2>
+			
+			<div>
+					<!-- <ul class="popUl">
+						<li>
+							<span>序号</span>
+							<span>姓名</span>
+							<span>机构</span>
+							<span>职位</span>
+							<span>联系方式</span>
+							<span>就职时间</span>
+						</li>
+						<li>
+							<span>123</span>
+							<span>43234</span>
+							<span>北京第一家采购商测试公司</span>
+							<span>234423</span>
+							<span>234423</span>
+							<span>234423</span>
+						</li>
+						<li>
+							<span>123</span>
+							<span>43234</span>
+							<span>北京第一家采购商测试公司</span>
+							<span>234423</span>
+							<span>234423</span>
+							<span>234423</span>
+						</li>
+						<li>
+							<span>123</span>
+							<span>43234</span>
+							<span>北京第一家采购商测试公司</span>
+							<span>234423</span>
+							<span>234423</span>
+							<span>234423</span>
+						</li>
+					</ul> -->
+					<div style="width: 100%; overflow-x: auto;">
+						<ul class="popUl">
+								<li class="grayPop">
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span>侯建成的9001测试有限公司</span>
+								</li>
+								<li class="grayPop">
+									<span>名称</span>
+									<span>规格</span>
+									<span>数量</span>
+									<span>单位</span>
+									<span>质量要求</span>
+									<span>单价</span>
+									<span>总价</span>
+								</li>
+										
+								<li>
+									<span>${+1}</span>
+									<span>${item.555555555555555555}</span>
+									<span>${}</span>
+									<span>${}</span>
+									<span>${item.}</span>
+									<span>${item.}</span>
+									<span>${item.}</span>
+								</li>
+								<li>
+									<span>${item.}</span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span>${item.}</span>
+								</li>
+							</ul>
+					</div>
+						<!-- <table width="100%" class="table" id="tablevalue">
+						            <tr><th width=50%>时间</th><th width=50%>温度</th></tr>
+						                <tr><td></td><td></td></tr>
+						        </table> -->
+						
+				</div>
+			<h2>合作供应商</h2>
+			<div class="comdel">
+				<div>
+					<div></div>
+					<span></span>
+				</div>
+			</div>
+			<h2>项目附件</h2>
+			<div class="comdel">
+				<div>
+					<div></div>
+					<span></span>
+				</div>
+			</div>
+			<h2>项目奖项</h2>
+			<div class="comdel">
+				<div>
+					<div></div>
+					<span></span>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script>
+			mui.init();
+			
+		</script>
+	</body>
+
+</html>
+
+

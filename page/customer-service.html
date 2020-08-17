@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>消息详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			h2 {
+				font-size: 20px;
+				color: #333;
+				line-height: 18px;
+				font-weight: bold;
+			}
+
+			p {
+				font-size: 12px;
+				line-height: 26px;
+				padding-top: 15px;
+				color: #494949;
+			}
+
+			@media only screen and (max-width: 320px) {
+				h2 {
+					font-size: 18px;
+					color: #333;
+					line-height: 18px;
+				}
+
+				p {
+					font-size: 12px;
+				}
+			}
+
+			h2 {
+				color: #3b3c42;
+				padding-left: 15px;
+				margin-top: 15px;
+				margin-bottom: 10px;
+			}
+
+			.mui-table-view-cell.mui-collapse .mui-collapse-content {
+				background: none;
+			}
+
+			.mui-table-view {
+				background: none;
+			}
+
+			.mui-navigate-right {
+				border-bottom: #c8c7cc 1px solid;
+			}
+
+			.mui-collapse-content p {
+				color: #999A9F;
+			}
+
+			.mui-table-view:before,
+			.mui-table-view:after {
+				height: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<span class="index-left">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			</span>
+			<h2 class="mui-title">客服服务</h2>
+		</header>
+
+		<div class="service" style="position: relative;" id="app" id="refreshContainer">
+			<div style="background-color: #fff;">
+				<div class="busDetailTitle">常见问题解答</div>
+				<ul class="mui-table-view" v-for="(item, index) in qsList">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="javascript">{{item.title}}</a>
+						<div class="mui-collapse-content">
+							<p>
+								{{item.content}}
+							</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div style="background-color: #fff;">
+				<div class="busDetailTitle">您还可以通过以下方式咨询</div>
+				<!-- <div class="lightBlueBtn">在线咨询</div> -->
+				<div class="lightBlueBtn" @tap="call">电话客服 400-033-8033</div>
+			</div>
+			<!-- <div class="fixedBottom">
+				<h2>您还可以通过以下方式咨询</h2>
+				<div class="lightBlueBtn">在线咨询</div>
+				<div class="lightBlueBtn">电话咨询400-8000-0008</div>
+			</div> -->
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				pullRefresh : {
+				   container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				   up : {
+				     height:50,//可选.默认50.触发上拉加载拖动距离
+											auto:false,//可选,默认false.自动上拉加载一次
+											contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+											contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+				     callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+				   }
+				 }
+			});
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						pageNum: '',
+						pageSize: 10,
+						qsList: []
+					}
+				},
+				methods: {
+					getVideos(pageNum){
+						this.pageNum = pageNum;
+						$.ajax({
+											url: zfyurl+"/app/api/user/helpCenter?type=2",
+											type: 'POST',
+											data: {
+												
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													this.qsList = res.data;
+													this.pageNum+=1;
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+										})
+					},
+					call(){
+						 var btnArray=['拨打','取消'];
+						            var phone="4000338033";
+						            mui.confirm('是否拨打'+phone+'?','提示',btnArray,function(e){
+						                if(e.index == 0){
+															statis('1', 'customer-service.html', `打电话`)
+						                    plus.device.dial(phone,false);
+						                }
+						            }, 'div');
+					}
+				},
+				created(){
+					statis('1', 'customer-service.html', `进入客服中心页面`)
+					this.getVideos(1)
+				}
+			})
+			
+			function pullfresh(){
+										$.ajax({
+															url: zfyurl+"/app/api/user/helpCenter?type=2",
+															type: 'POST',
+															data: {
+																
+															},
+															dataType: 'jsonp',
+															success: res=>{
+																if(res.code=='M000000'){
+																	if(res.data.length==0){
+																		this.endPullupToRefresh(false);
+																		$('.mui-pull-caption').text('没有更多数据了')
+																	}else {
+																		vm.pageNum+=1;
+																		
+																		let qsList = res.data;
+																		$.each(qsList,(index,item)=>{
+																			vm.qsList.push(qsList[index]);
+																		})
+																		this.endPullupToRefresh(false);
+																	}
+																
+																}
+																if(res.code=='E000000'){
+																	mui.alert(res.info)
+																}
+															}
+														})
+			}
+		</script>
+	</body>
+
+</html>

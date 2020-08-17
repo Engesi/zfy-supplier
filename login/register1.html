@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<title>注册-完善企业信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<style>
+	
+	input{
+	    caret-color: #fff !important;
+	}
+		</style>
+	</head>
+
+	<body class="bg-white">
+		<!--顶部 start-->
+		<header class="mui-bar mui-bar-nav header bg-blue-grad">
+			<button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+		    	<span class="mui-icon mui-icon-back col-fff font-14"></span>
+		    	<span>返回</span>
+		    </button>
+			<h1 class="mui-title">完善企业信息</h1>
+		</header>
+		<!--顶部 end-->
+		<div class="content pad-top-50">
+			<h3 class="font-18 tc col-56">请选择注册身份</h3>
+			<div class="pad-lr-45 mar-top-30 mar-bot-20">
+				<ul class="reg-tab clearfix tc" id="registerIdentify">
+					<li>采购商</li>
+					<li>供应商</li>
+					<li class="mar-0 active">两者都是</li>
+				</ul>
+			</div>
+
+			<form>
+				<ul class="pad-lr-15 register">
+					<li>
+						<label><span class="col-red">*</span>公司全名</label>
+						<input id="companyName" type="text" />
+						<i class="icon fr"><img src="../images/reg-ok_03.png" class="f1" style="display: none;"/></i>
+						<i class="icon fr"><img src="../images/reg-cuowu_06.png" class="f2" style="display: none;" /></i>
+					</li>
+					<li>
+						<label><span class="col-red">*</span>社会统一信用代码</label>
+						<input id="organizationCode" type="text" style="width: 50%;" />
+						<i class="icon fr"><img src="../images/reg-ok_03.png" class="f1" style="display: none;"/></i>
+						<i class="icon fr"><img src="../images/reg-cuowu_06.png" class="f2" style="display: none;" /></i>
+					</li>
+					<!--<li>
+						<label>邀请码</label>-->
+						<input type="hidden" id="supplyInviteCode" placeholder="此项为非必填项" />
+					<!--</li>-->
+				</ul>
+			</form>
+			<span id='reg' onclick="popover()" class="reg-btn">下一步</span>
+
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../js/fit.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var h = $(window).height();
+			window.onresize = function() {
+				if($(window).height() < h) {
+					$("#reg").hide();
+				} else {
+					$("#reg").show();
+				};
+			};
+			// 添加列表项的点击事件
+			mui('.reg-tab').on('tap', 'li', function(e) {
+				$(this).addClass("active").siblings().removeClass("active")
+			});
+		</script>
+		<script>
+			var userRegisterArray = new Array();
+			userRegisterArray = JSON.parse(localStorage.getItem("userRegisterArray"));
+			var userName = userRegisterArray[0].userName;
+			var passwd = userRegisterArray[0].passwd;
+			var phone = userRegisterArray[0].phone;
+			var registerIdentify = "";
+			var restOrgCode = /^[\dA-Z]{18}$/;
+			var restcompanyName = /^[\u4e00-\u9fa5]+$/;
+			$("#companyName").blur(function() {
+				var companyName = $("#companyName").val();
+				if(restcompanyName.test(companyName) == false) {
+					$(this).parent().find(".f2").css("display", "block");
+					$(this).parent().find(".f1").css("display", "none");
+				} else {
+					$(this).parent().find(".f1").css("display", "block");
+					$(this).parent().find(".f2").css("display", "none");
+				}
+			})
+			$("#organizationCode").blur(function() {
+				var organizationCode = $("#organizationCode").val();
+				if(restOrgCode.test(organizationCode) == false) {
+					$(this).parent().find(".f2").css("display", "block");
+					$(this).parent().find(".f1").css("display", "none");
+				} else {
+					$(this).parent().find(".f1").css("display", "block");
+					$(this).parent().find(".f2").css("display", "none");
+				}
+			})
+
+			function popover() {
+				var companyName = $("#companyName").val();
+				var organizationCode = $("#organizationCode").val();
+				var supplyInviteCode = $("#supplyInviteCode").val();
+				if(companyName == "" || organizationCode == "") {
+					mui.alert("请将必填项填写完整 !")
+					return false;
+				}
+				var booleanflag = true;
+				$(".f2").each(function() {
+					if($(this).css("display") == "block") {
+						mui.alert("请将信息填写正确 !");
+						booleanflag = false;
+						return false;
+					}
+				})
+				if(booleanflag == true) {
+					if(supplyInviteCode != "") {
+						$.ajax({
+							type: "post",
+							url: zfyurl+"/app/api/supply/checkinviteCode",
+							dataType: "jsonp",
+							data: {
+								name: companyName,
+								supplyInviteCode: supplyInviteCode
+							},
+							success: function(res) {
+								console.log(res.data);
+								if(res.data.length == 0) {
+									mui.alert("请输入正确的邀请码 !");
+									return false;
+								} else {
+									userRegirest(userName, passwd, registerIdentify, companyName, organizationCode,supplyInviteCode);
+								}
+
+							}
+						});
+					} else {
+						userRegirest(userName, passwd, registerIdentify, companyName, organizationCode,supplyInviteCode);
+
+					}
+				}
+
+			}
+
+			function userRegirest(userName, passwd, registerIdentify, companyName, organizationCode,supplyInviteCode) {
+				$("#registerIdentify li").each(function() {
+					if($(this).hasClass("active")) {
+						if($(this).text() == "两者都是") {
+							registerIdentify = "3";
+						} else if($(this).text() == "采购商") {
+							registerIdentify = "1";
+						} else if($(this).text() == "供应商") {
+							registerIdentify = "2";
+						}
+					}
+				})
+
+				var url = zfyurl+"/app/api/user/register";
+				$.ajax({
+					type: "post",
+					url: url,
+					dataType: "jsonp",
+					data: {
+						userName: userName,
+						passwd: passwd,
+						phone: phone,
+						registerIdentify: registerIdentify,
+						companyName: companyName,
+						organizationCode: organizationCode,
+						supplyInviteCode,supplyInviteCode
+					},
+					success: function(res) {
+						if(res.code == "M000000") {
+						  openWindow("register2.html")
+						} else {
+							mui.alert("注册失败");
+
+						}
+					}
+				});
+
+			}
+		</script>
+	</body>
+
+</html>

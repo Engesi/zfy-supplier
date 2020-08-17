@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>消息详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			h2{font-size: 20px;color: #333;line-height: 18px;font-weight: bold;}
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				h2{font-size: 18px;color: #333;line-height: 18px;}
+				p{font-size: 14px;}
+			}
+			.moren,.message{display: none;}
+			i {
+				padding-top: 13px;
+			}
+			#store2 {
+				color: #ff0000;
+				display: none;
+			}
+			
+			.graduate {
+				top: 20%;
+				left: 20%;
+			}
+			
+			.reset {
+				width: 95%;
+				position: fixed;
+				bottom: 0;
+			}
+			
+			#getcode {
+				width: 18%;
+			}
+			
+			.middlelabel {
+				width: 45% !important;
+			}
+			
+			.largelabel {
+				width: 60% !important;
+			}
+			
+			.mui-input-group .mui-input-row {
+				height: auto !important; 
+			}
+			
+			#textarea {
+				    border: #c8c7cc .5px solid;
+				    margin-top: 5px;
+				    padding: 5px;
+				    border-radius: 8px;
+						width: 95%;
+						margin-left: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">完善个人资料</h1>
+		</header>
+
+		<div class="pad-lr-10 pad-top-50" style="position: relative;">
+			<div id="popover" class="mui-popover graduate">
+			  <ul class="mui-table-view">
+			    <li class="mui-table-view-cell">高中</li>
+			    <li class="mui-table-view-cell bigschool">大学</li>
+			    <li class="mui-table-view-cell">硕士</li>
+			  </ul>
+			</div>
+			<form class="mui-input-group">
+			    <div class="mui-input-row">
+			      <label>姓名：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入用户名">
+			    </div>
+			    
+					<div class="mui-input-row flexwrap">
+						<label>性别：</label>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>男</label>
+							<input name="radio1" value="1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>女</label>
+							<input name="radio1" value="2" type="radio">
+						</div>
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>部门：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入">
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>职务：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入">
+					</div>
+					
+					<div class="mui-input-row" style="position: relative;">
+					  <label>手机：</label>
+						<input type="text" disabled value="1575563596" class="mui-input-clear" placeholder="请输入">
+						<button type="button" id="choose" class="mui-btn mui-btn-primary" style="position: absolute; right: 0;">修改</button>
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>邮箱：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入">
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>毕业院校：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入">
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>出生日期</label>
+						<input id="birth" type="text" class="mui-input-clear" placeholder="请选择年月日 >">
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>工作单位：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入">
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>最高学历：</label>
+						
+						<input id="graduate" type="text" class="mui-input-clear" placeholder="请选择学历 >">
+						
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>工作时长：</label>
+						<input type="text" class="mui-input-clear" placeholder="请输入">
+					</div>
+					
+					<div class="mui-input-row">
+					  <label>毕业日期</label>
+						<input id="enddate" type="text" class="mui-input-clear" placeholder="请选择年月日 >">
+					</div>
+					
+					<div class="mui-input-row flexwrap">
+						<label class="middlelabel">是否在首页展示：</label>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>是</label>
+							<input name="radio2" value="1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>否</label>
+							<input name="radio2" value="2" type="radio">
+						</div>
+					</div>
+					
+					<div class="mui-input-row flexwrap">
+						<label class="largelabel">是否接受与我司相关的短信通知：</label>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>是</label>
+							<input name="radio3" value="1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>否</label>
+							<input name="radio3" value="2" type="radio">
+						</div>
+					</div>
+					
+					<div class="mui-input-row">
+					  <textarea id="textarea" placeholder="个人简介" class="mui-input-speech mui-input-clear"></textarea>
+					</div>
+					
+			    <div class="mui-button-row">
+			        <button type="button" class="mui-btn mui-btn-primary" >确认</button>
+			        <button type="button" class="mui-btn mui-btn-danger" >取消</button>
+			    </div>
+			</form>
+			<div id="popover" class="mui-popover reset">
+			  <form class="mui-input-group">
+			      <div class="mui-input-row">
+			          <label>密码：</label>
+			          <input type="password" class="mui-input-password" placeholder="请输入密码">
+			      </div>
+						<div class="mui-input-row">
+						  <label>新手机号：</label>
+							<input id="enddate" type="text" class="mui-input-clear" placeholder="输入手机号">
+							<button type="button" id="getcode" class="mui-btn mui-btn-primary" style="position: absolute; right: 0;">验证码</button>
+						</div>
+						<div class="mui-input-row">
+						  <label>验证码：</label>
+							<input id="code" type="text" class="mui-input-clear" placeholder="输入验证码">
+						</div>
+						<div class="mui-button-row">
+							<button type="button" class="mui-btn mui-btn-danger" >取消</button>
+						  <button type="button" class="mui-btn mui-btn-primary" >立即修改</button>
+						</div>
+			  </form>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script>
+			mui.init();
+			var dtPicker = new mui.DtPicker({
+				type: 'date',
+				beginYear: '1900'
+			});
+			$('#birth').bind('tap',function(){
+				dtPicker.show(function (selectItems) {
+				        console.log('开始时间',selectItems.y.text);//{text: "2016",value: 2016} 
+								$('#birth').val(`${selectItems.y.value}/${selectItems.m.value}/${selectItems.d.value}`)
+				    })
+			})
+			
+			$('#enddate').bind('tap',function(){
+				dtPicker.show(function (selectItems) {
+				        console.log('开始时间',selectItems.y.text);//{text: "2016",value: 2016} 
+								$('#enddate').val(`${selectItems.y.value}/${selectItems.m.value}/${selectItems.d.value}`)
+				    })
+			})
+			
+			$("#graduate").bind('tap',function(){
+				console.log(12)
+				mui('.graduate').popover('show');
+			})
+			
+			$('.bigschool').bind("tap",function(){
+				$('#graduate').val('大学')
+				mui('.mui-popover').popover('hide');
+			})
+			
+			$("#choose").bind('tap',function(){
+				console.log(12)
+				mui('.reset').popover('show');
+			})
+		</script>
+	</body>
+
+</html>
+
+

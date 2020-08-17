@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>找回密码</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<style>
+			.login-input li input {
+				color: #666666;
+			}
+			
+			input{
+			    caret-color: #fff !important;
+			}
+		</style>
+	</head>
+
+	<body class="bg-white">
+		<!--顶部 start-->
+		<header class="mui-bar mui-bar-nav header bg-blue-grad">
+			<button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+		    	<span class="mui-icon mui-icon-back col-fff font-14"></span>
+		    	<span class="col-fff">返回</span>
+		    </button>
+			<h1 class="mui-title">找回密码</h1>
+		</header>
+		<!--顶部 end-->
+		<div class="reset pad-lr-30 mar-top-64 pad-top-70">
+			<div class="tc login-logo">
+				<img src="../images/logo-reset_03.png" />
+			</div>
+			<ul class="login-input">
+				<li>
+					<div class="icon tc">
+						<img src="../images/user-rest_03.png" width="14px" />
+						<div class="line"></div>
+					</div>
+					<input type="password" placeholder="请输入新密码" id="passwd" />
+
+				</li>
+				<p class="msg">请输入6-20位并含两种及两种以上组合的数字,字母</p>
+				<li>
+					<div class="icon">
+						<img src="../images/password-rest_07.png" />
+						<div class="line"></div>
+					</div>
+					<input type="password" placeholder="请输入密码" id="repasswd" />
+				</li>
+			</ul>
+		</div>
+		<button id="save" class="reg-btn">下一步</button>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script>
+			$(function(){
+				statis('1', 'reset1.html', `进入重新设置密码页面`)
+			})
+			hideBtn("#save")
+			var restPass = /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\w~!@#$%^&*?]{6,20}$/;
+			var phone = localStorage.getItem("resetforgetphone");
+			$("#save").click(function() {
+				var passwd = $("#passwd").val();
+				var repasswd = $("#repasswd").val();
+				if(passwd == "" || repasswd == "") {
+					mui.alert("请将信息填写完整 !");
+					return false;
+				}
+				if(passwd != repasswd) {
+					mui.alert("两次输入密码不同 !");
+					return false;
+				}
+				if(restPass.test(passwd) == false) {
+					mui.alert("密码与密码格式不符 !");
+					return false;
+				}
+				
+				statis('2', 'reset1.html', `重新设置密码`)
+				var url = zfyurl+"/app/api/user/upPassByphone";
+				$.ajax({
+					type: "post",
+					url: url,
+					data: {
+						phone: phone,
+						passwd: repasswd
+					},
+					dataType: "jsonp",
+					success: function(res) {
+						if(res.code = "M000000") {
+							mui.toast("密码修改成功 !");
+						
+													
+															if(plus.webview.getWebviewById('supplier')){
+																plus.webview.getWebviewById('supplier').close();
+															}
+															
+													
+							setTimeout(function() {
+								 location.href = "login.html"; 
+							},1000);
+
+						} else {
+							mui.alert(res.info);
+						}
+					}
+				});
+
+			})
+		</script>
+	</body>
+
+</html>

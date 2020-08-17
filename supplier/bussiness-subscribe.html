@@ -1,0 +1,1002 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>商机订阅</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			.font-lighter {
+				font-size: 16px;
+				color: #666;
+			}
+
+			.mui-icon-arrowright {
+				color: #999;
+			}
+
+			.mui-scroll-wrapper {
+				top: 20px
+			}
+
+			.totalDiv {
+				margin-top: 20px;
+			}
+
+			.mainButtons button {
+				width: auto !important;
+			}
+
+			/*.mui-pull-top-pocket{top: 20px;}*/
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<span class="index-left">
+					<a class="mui-action-back mui-icon mui-icon-closeempty"></a>
+				</span>
+				<h1 class="mui-title">商机订阅</h1>
+
+
+			</header>
+
+			<div class="pad-top-64 sxactive" id="app">
+				<div class="approve-sx approve-sx-state">
+					<div class="busDetailTitle">采购方式</div>
+					<div class="buttonWrap buyWrap">
+						<button type="button" id="buyAll" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="setBuyActiveAll('buyAll',0)">全部</button>
+						<button type="button" id="buy1" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="setBuyActive('buy1',1)">招标采购</button>
+						<button type="button" id="buy2" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="setBuyActive('buy2',2)">询价采购</button>
+						<button type="button" id="buy3" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="setBuyActive('buy3',3)">竞价采购</button>
+						<button type="button" id="buy6" class="mui-btn mui-btn-primary mui-btn-outlined" @tap="setBuyActive('buy6',6)">竞谈采购</button>
+					</div>
+				</div>
+				<div class="approve-sx approve-sx-state">
+					<div class="busDetailTitle">交易方式</div>
+					<div class="buttonWrap dealWrap">
+						<button type="button" id="dealAll" @tap="setDealActiveAll('dealAll',0)" class="mui-btn mui-btn-primary mui-btn-outlined">全部</button>
+						<button type="button" id="deal1" @tap="setDealActive('deal1',1)" class="mui-btn mui-btn-primary mui-btn-outlined">现金交易</button>
+						<button type="button" id="deal2" @tap="setDealActive('deal2',2)" class="mui-btn mui-btn-primary mui-btn-outlined">账期支付</button>
+					</div>
+				</div>
+
+				<div class="approve-sx approve-sx-state remove4n">
+					<a withTitle="false" href="city.html">
+						<div class="approve-sx-href">
+							<div class="busDetailTitle">地区选择</div><span class="iconfont icon-jiantou"></span>
+						</div>
+					</a>
+					<div class="buttonWrap sxactive totalDiv">
+						<button v-for="(item, index) in areaFlagList" type="button" :key="item.flag" :id=`flag${item.flag}` @tap="setAllArea(item.flag, `#flag${item.flag}`)"
+						 class="mui-btn mui-btn-primary mui-btn-outlined active">{{item.name}}</button>
+					</div>
+					<div class="buttonWrap sxactive totalDiv">
+						<button v-for="(item, index) in areaNameList" type="button" :key="item.id" :id=`area${item.id}` @tap="setArea(item.id, `#area${item.id}`)"
+						 class="mui-btn mui-btn-primary mui-btn-outlined active">{{item.name}}</button>
+					</div>
+
+				</div>
+
+				<div class="approve-sx approve-sx-state remove4n mainButtons">
+					<a withTitle="false" href="main-product.html">
+						<div class="approve-sx-href">
+							<div class="busDetailTitle">主营产品</div><span class="iconfont icon-jiantou"></span>
+						</div>
+
+						<div class="redcolor" style="margin-top: 15px;"><span>添加您经营的产品或主营业务（可多选），商机推送更全更精确。</div>
+					</a>
+					<div class="buttonWrap sxactive totalDiv">
+						<button v-for="(item, index) in totalNameList" type="button" :key="item.code" :id="item.code" @tap="setAllMain(item.code)"
+						 class="mui-btn mui-btn-primary mui-btn-outlined active">{{item.name}}</button>
+					</div>
+					<div class="buttonWrap sxactive singleDiv">
+						<button v-for="(item, index) in forList" type="button" :key="item.code" :id="item.code" @tap="setMain(item.code)"
+						 class="mui-btn mui-btn-primary mui-btn-outlined active">{{item.name}}</button>
+					</div>
+				</div>
+
+				<div class="approve-sx approve-sx-state">
+					<div class="busDetailTitle">发布单位</div>
+					<div class="buttonWrap comWrap">
+						<button v-if="isShow" type="button" id="comAll" @tap="setComActiveAll('comAll',0)" class="mui-btn mui-btn-primary mui-btn-outlined">全部</button>
+						<button v-if="isShow" type="button" v-for="(item, index) in companyList" :id=`com-${item.com_flag}` @tap="setComActive(`com-${item.com_flag}`,item.com_flag)"
+						 class="mui-btn mui-btn-primary mui-btn-outlined">{{item.name}}</button>
+					</div>
+				</div>
+				<div class="approve-sx approve-sx-time approve-sx-last">
+					<div class="busDetailTitle">订阅设置</div>
+					<div style="justify-content: space-between;" class="flexwrap">
+						<span>是否开启订阅设置</span>
+						<div class="mui-switch mui-switch-mini mui-switch-blue" id="mySwitch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</div>
+					<div class="redcolor"><span>订阅设置关闭后您将无法接受到系统给您推送的商机，请谨慎操作。</span></div>
+				</div>
+				<div class="approveBottomWait">
+					<div class="fixedWhiteBlue" @tap="reset">重置</div>
+					<div class="approveAgree" id="confirm" @tap="confirm">确定</div>
+				</div>
+			</div>
+
+		</div>
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为false
+					longtap: true
+				},
+			});
+			Array.prototype.indexOf = function(val) {
+				for (var i = 0; i < this.length; i++) {
+					if (this[i] == val) return i;
+				}
+				return -1;
+			};
+			Array.prototype.remove = function(val) {
+				var index = this.indexOf(val);
+				if (index > -1) {
+					this.splice(index, 1);
+				}
+			};
+
+			function isContained(aa, bb) {
+
+				if (!(aa instanceof Array) || !(bb instanceof Array) || ((aa.length < bb.length))) {
+					return false;
+				}
+
+				var aaStr = aa.toString();
+
+				for (var i = 0; i < bb.length; i++) {
+					if (aaStr.indexOf(bb[i]) < 0) return false;
+				}
+
+				return true;
+
+			}
+
+			function dedupe(arr) {
+				var rets = [];
+				for (var i = 0; i < arr.length; i++) {
+					if (!rets.includes(arr[i])) {
+						rets.push(arr[i]);
+					}
+				}
+				return rets;
+			}
+
+			function simpleName(res) {
+				$.each(res.data, (index, item) => {
+					if (item.provinceName == "内蒙古自治区") {
+						item.provinceName = "内蒙古";
+					}
+					if (item.provinceName == "广西壮族自治区") {
+						item.provinceName = "广西";
+					}
+					if (item.provinceName == "西藏自治区") {
+						item.provinceName = "西藏";
+					}
+					if (item.provinceName == "宁夏回族自治区") {
+						item.provinceName = "宁夏";
+					}
+					if (item.provinceName == "新疆维吾尔自治区") {
+						item.provinceName = "新疆";
+					}
+					if (item.provinceName == "香港特别行政区") {
+						item.provinceName = "香港";
+					}
+					if (item.provinceName == "澳门特别行政区") {
+						item.provinceName = "澳门";
+					}
+				})
+			}
+
+			var vm = new Vue({
+				el: '#app',
+				data() {
+					return {
+						allList: [], //所有城市的对象数组，对象里包含id,name,flag
+						companyList: [],
+						buyList: [],
+						dealList: [],
+						comList: [],
+						areaList: [],
+						loginUser: '',
+						noticeSet: '',
+						status: '',
+						codeStr: '',
+						nameList: [],
+						totalNameList: [],
+						forList: [],
+						mainList: [],
+						codeList: [],
+						isShow: true,
+						nameList: [],
+						totalList: [],
+						forDone: false,
+						areaNameList: [],
+						areaDone: false,
+						comAllList: [],
+						noticeCityId: '',
+						areaInitList: [],
+						flagList: [], //所有8个地区的的对象，每个对象包括flag和name
+						areaFlagList: [], //已选择的地区的对象，每个对象包括flag和name
+					}
+				},
+				watch: {
+					'buyList': function() {
+						if (this.buyList.length == 4) {
+							$('#buyAll').addClass('active');
+							this.buyList = [0];
+						};
+
+					},
+					'dealList': function() {
+						if (this.dealList.length == 2) {
+							$('#dealAll').addClass('active');
+							this.dealList = [0];
+						}
+
+					},
+					'comList': function() {
+						if (this.comList.length == this.companyList.length) {
+							$('#comAll').addClass('active');
+						};
+
+					},
+					'codeList': function() {
+
+					},
+					'areaList': function() {
+
+					},
+				},
+				methods: {
+					getAreaList(areaFlag) {
+						$.ajax({
+							url: zfyurl + "/app/api/extNotice/findNoticeArea",
+							type: 'POST',
+							data: {
+
+							},
+							dataType: 'jsonp',
+							success: res => {
+								if (res.code == 'M000000') {
+									this.areaInitList = res.data;
+									let mainList = res.data;
+									let oneList = [];
+									let flagList = [];
+									for (let i = 0; i < mainList.length; i++) {
+										flagList.push({
+											flag: mainList[i].areaFlag,
+											name: mainList[i].name
+										});
+										for (let j = 0; j < mainList[i].list.length; j++) {
+											for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+												oneList.push(mainList[i].list[j].list[k]);
+											}
+										}
+
+									};
+									this.allList = oneList; //所有城市的对象数组，对象里包含id,name,flag
+									this.areaDone = true;
+									this.flagList = flagList;
+								}
+								if (res.code == 'E000000') {
+									mui.alert(res.info)
+								}
+							}
+						})
+					},
+					getCompanyList() {
+						$.ajax({
+							url: zfyurl + "/app/api/extNotice/findPurchaseCom?type=3",
+							type: 'POST',
+							data: {
+
+							},
+							dataType: 'jsonp',
+							success: res => {
+								if (res.code == 'M000000') {
+
+									for (let i = 0; i < res.data.length; i++) {
+										if (res.data[i].name == "山西机械建设") {
+											res.data[i].name = "机械建设";
+										}
+										if (res.data[i].name == "山西国际经合") {
+											res.data[i].name = "国际经合";
+										}
+										this.comAllList.push(res.data[i].com_flag);
+									}
+
+									this.companyList = res.data;
+								}
+								if (res.code == 'E000000') {
+									mui.alert(res.info)
+								}
+							}
+						})
+					},
+					isOpen() {
+						if (this.buyList.length != 0 || this.dealList.length != 0 || this.comList.length != 0 || this.codeList.length !=
+							0 || this.areaList.length != 0) {
+							if (this.status != 1) {
+								this.status = 1;
+								$('#mySwitch').addClass('mui-active');
+							}
+						}
+					},
+					setBuyActive(elem, ids) {
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$(el).addClass('active');
+							this.buyList.push(id);
+						} else {
+							if ($('#buyAll').attr('class').indexOf('active') != -1) {
+								$("#buyAll").removeClass('active');
+								this.buyList = [1, 2, 3, 6];
+							}
+							$(el).removeClass('active');
+							this.buyList.remove(id);
+						}
+						this.isOpen();
+					},
+					setBuyActiveAll(elem, ids) {
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$('.buyWrap button').addClass('active');
+							this.buyList = [0];
+						} else {
+							$('.buyWrap button').removeClass('active');
+							this.buyList = [];
+						}
+						this.isOpen();
+					},
+					setDealActive(elem, ids) {
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$(el).addClass('active');
+							this.dealList.push(id);
+						} else {
+							if ($('#dealAll').attr('class').indexOf('active') != -1) {
+								$("#dealAll").removeClass('active');
+								this.dealList = [1, 2];
+							}
+							$(el).removeClass('active');
+							this.dealList.remove(id);
+						}
+						this.isOpen();
+					},
+					setDealActiveAll(elem, ids) {
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$('.dealWrap button').addClass('active');
+							this.dealList = [0];
+						} else {
+							$('.dealWrap button').removeClass('active');
+							this.dealList = [];
+
+						};
+						this.isOpen();
+					},
+					setComActive(elem, ids) {
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$(el).addClass('active');
+							this.comList.push(id);
+						} else {
+							if ($('#comAll').attr('class').indexOf('active') != -1) {
+								this.comList = [];
+								for (let i = 0; i < this.companyList.length; i++) {
+									if (this.companyList[i].com_flag == id) {} else {
+										this.comList.push(this.companyList[i].com_flag);
+									}
+								}
+								$("#comAll").removeClass('active');
+							}
+							$(el).removeClass('active');
+							this.comList.remove(id);
+						};
+						this.isOpen();
+					},
+					setComActiveAll(elem, ids) {
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$('.comWrap button').addClass('active');
+							this.comList = this.comAllList;
+						} else {
+							$('.comWrap button').removeClass('active');
+							this.comList = [];
+						};
+						this.isOpen();
+					},
+					confirm() {
+						statis('2', 'bussiness-subscribe.html', '保存商机设置');
+						let buyStr = this.buyList.toString();
+						let dealStr = this.dealList.toString();
+						let comStr = this.comList.toString();
+						let areaStr = this.areaList.toString();
+						if (this.areaList.length == 0) {
+							this.noticeCityId = ""
+						} else {
+							this.noticeCityId = this.areaList.toString();
+						}
+						if (this.codeList.length == 0) {
+							this.codeStr = ""
+						} else {
+							this.codeStr = this.codeList.toString();
+						}
+						$.ajax({
+							url: zfyurl + "/app/api/userSet/saveUserSet",
+							type: 'POST',
+							data: {
+								type: 2,
+								identify: 2,
+								userId: localStorage.getItem('userId'),
+								comId: this.loginUser.comId,
+								noticeType: buyStr,
+								noticeMethod: dealStr,
+								noticeCityId: this.noticeCityId,
+								noticeComId: comStr,
+								status: this.status,
+								noticePurchase: this.codeStr
+							},
+							dataType: 'jsonp',
+							success: res => {
+								if (res.code == 'M000000') {}
+								if (res.code == 'E000000') {
+									mui.alert(res.info)
+								}
+							}
+						})
+						mui.plusReady(function() {
+							var ws = plus.webview.getWebviewById('supplier/bussiness-follow.html');
+							mui.fire(ws, 'set', {
+								buyStr: buyStr,
+								dealStr: dealStr,
+								comStr: comStr
+							});
+							mui.back();
+
+						})
+					},
+					getUserSet() {
+						$.ajax({
+							url: zfyurl + "/app/api/userSet/findUserSet",
+							type: 'POST',
+							data: {
+								type: 2,
+								identify: 2,
+								userId: localStorage.getItem('userId')
+							},
+							dataType: 'jsonp',
+							success: res => {
+								if (res.code == 'M000000') {
+									if (res.data != null) {
+										this.noticeSet = res.data;
+										if (this.noticeSet.noticePurchase) {
+											if (this.noticeSet.noticePurchase.length != 0) {
+												this.codeList = this.noticeSet.noticePurchase.split(',');
+												this.getMain();
+											} else {
+												this.codeList = [];
+												mui.hideLoading();
+											}
+										} else {
+											mui.hideLoading();
+										}
+
+
+										//城市渲染
+										this.getAreaList();
+										if (this.noticeSet.noticeCityId) {
+											if (this.noticeSet.noticeCityId.length != 0) {
+
+												this.areaList = this.noticeSet.noticeCityId.split(',');
+
+												let clear3 = setInterval(() => {
+													if (this.areaDone) {
+														let areaList = JSON.parse(JSON.stringify(this.areaList));
+														this.areaFlagList = []; //把已选择地区的列表清空
+														for (let i = 0; i < this.flagList.length; i++) {
+															this.areaIsContained(this.flagList[i].flag) //得到当前选择的地区flag,areaFlagList
+														};
+														for (let i = 0; i < this.areaFlagList.length; i++) {
+															let oneList = this.getOneArea(this.areaFlagList[i].flag);
+															for (let j = 0; j < oneList.length; j++) {
+																areaList.remove(oneList[j])
+															}
+														}
+
+														for (let i = 0; i < areaList.length; i++) {
+															for (let j = 0; j < this.allList.length; j++) {
+																if (areaList[i] == this.allList[j].id) {
+																	this.areaNameList.push({
+																		id: this.allList[j].id,
+																		name: this.allList[j].name
+																	})
+																}
+															}
+														};
+
+														window.clearInterval(clear3)
+
+													};
+												}, 500)
+
+
+
+
+
+											} else {
+												this.areaList = []
+											}
+										}
+
+
+
+										//开关渲染
+										this.status = res.data.status;
+										if (this.status == 1) {
+											$('#mySwitch').addClass('mui-active');
+										} else {
+											$('#mySwitch').removeClass('mui-active');
+										}
+
+
+
+										//buyList渲染
+										if (this.noticeSet.noticeType.length != 0) {
+											this.buyList = this.noticeSet.noticeType.split(',');
+											for (let i = 0; i < this.buyList.length; i++) {
+												if (this.buyList[i] == 0) {
+													$('.buyWrap button').addClass('active');
+												} else {
+													$(`#buy${this.buyList[i]}`).addClass('active');
+												}
+											}
+										} else {
+											this.buyList = []
+										}
+
+										//dealList渲染
+										if (this.noticeSet.noticeMethod.length != 0) {
+
+											this.dealList = this.noticeSet.noticeMethod.split(',');
+											for (let j = 0; j < this.dealList.length; j++) {
+												if (this.dealList[j] == 0) {
+													$('.dealWrap button').addClass('active');
+												} else {
+													$(`#deal${this.dealList[j]}`).addClass('active');
+												}
+											}
+										} else {
+											this.dealList = []
+										}
+
+										//comList渲染
+										if (this.noticeSet.noticeComId.length != 0) {
+											this.comList = this.noticeSet.noticeComId.split(',');
+											for (let i = 0; i < this.comList.length; i++) {
+												if (this.comList[i] == 0) {
+													$('.comWrap button').addClass('active');
+												} else {
+													$(`#com-${this.comList[i]}`).addClass('active');
+												}
+											}
+										} else {
+											this.comList = []
+										}
+									} else {
+										this.codeList = [];
+										this.comList = [];
+										this.dealList = [];
+										this.buyList = [];
+										this.areaList = [];
+										mui.hideLoading();
+									}
+
+								}
+								if (res.code == 'E000000') {
+									mui.alert(res.info)
+								}
+							}
+						})
+					},
+					reset() {
+						this.buyList = [];
+						this.dealList = [];
+						this.comList = [];
+						this.areaList = [];
+						this.status = 2;
+						this.codeList = [];
+						$('.sxactive button').removeClass('active');
+						localStorage.setItem('areaStr', '999');
+						localStorage.setItem('codeStr', '999');
+						$('#mySwitch').removeClass('mui-active');
+					},
+					setAllMain(code) {
+						let mainList = this.mainList;
+						for (let i = 0; i < mainList.length; i++) {
+							if (mainList[i].code == code) {
+								var oneList1 = [];
+								for (let j = 0; j < mainList[i].list.length; j++) {
+									for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+										oneList1.push(mainList[i].list[j].list[k].code);
+									}
+								}
+							}
+						}
+						if ($(`#${code}`).attr('class').indexOf('active') == -1) {
+							$(`#${code}`).addClass('active');
+							this.codeList = this.codeList.concat(oneList1);
+						} else {
+							$(`#${code}`).removeClass('active');
+							for (let i = 0; i < mainList.length; i++) {
+								if (mainList[i].code == code) {
+									for (let j = 0; j < mainList[i].list.length; j++) {
+										for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+											this.codeList.remove(mainList[i].list[j].list[k].code)
+										}
+									}
+								}
+							}
+						}
+
+						if (this.codeList.length == 0) {
+							localStorage.setItem('codeStr', 999);
+						} else {
+							localStorage.setItem('codeStr', this.codeList.toString());
+						}
+						this.isOpen();
+					},
+					setMain(code) {
+						if ($(`#${code}`).attr('class').indexOf('active') == -1) {
+							$(`#${code}`).addClass('active');
+							this.codeList.push(code)
+						} else {
+							$(`#${code}`).removeClass('active');
+							this.codeList.remove(code)
+						}
+						if (this.codeList.length == 0) {
+							localStorage.setItem('codeStr', 999);
+						} else {
+							localStorage.setItem('codeStr', this.codeList.toString());
+						}
+						this.isOpen();
+					},
+					setArea(id, elem) {
+						if ($(elem).attr('class').indexOf('active') == -1) {
+							$(elem).addClass('active');
+							this.areaList.push(id)
+						} else {
+							$(elem).removeClass('active');
+							this.areaList.remove(id);
+						}
+						if (this.areaList.length == 0) {
+							localStorage.setItem('areaStr', 999);
+						} else {
+							localStorage.setItem('areaStr', this.areaList.toString());
+						}
+						this.isOpen();
+					},
+					setAllArea(id, elem) {
+						let oneList = this.getOneArea(id);
+						if ($(elem).attr('class').indexOf('active') == -1) {
+							$(elem).addClass('active');
+							this.areaList.concat(oneList);
+						} else {
+							$(elem).removeClass('active');
+							for (let i = 0; i < oneList.length; i++) {
+								this.areaList.remove(oneList[i]);
+							}
+
+						}
+						if (this.areaList.length == 0) {
+							localStorage.setItem('areaStr', 999);
+						} else {
+							localStorage.setItem('areaStr', this.areaList.toString());
+						}
+						this.isOpen();
+					},
+					isContained(totalCode) {
+						let mainList = this.mainList;
+						for (let i = 0; i < mainList.length; i++) {
+							if (mainList[i].code == totalCode) {
+								var oneList3 = [];
+								for (let j = 0; j < mainList[i].list.length; j++) {
+									for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+										oneList3.push(mainList[i].list[j].list[k].code);
+									}
+								}
+							}
+						}
+
+						var c = isContained(this.codeList, oneList3); //判断当前codeList是否全部包含当前一级类别的所有code
+						if (c) {
+							this.totalList.push(`${totalCode}`);
+							dedupe(this.totalList)
+						}
+
+
+
+					},
+					areaIsContained(areaFlag) {
+						let mainList = this.areaInitList;
+						for (let i = 0; i < mainList.length; i++) {
+							if (mainList[i].id == areaFlag) {
+								var twoList = []; //当前一级类别的所有code
+								for (let j = 0; j < mainList[i].list.length; j++) {
+									for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+										twoList.push(mainList[i].list[j].list[k].id);
+									}
+								}
+							}
+						}
+
+						let c = isContained(this.areaList, twoList); //判断当前codeList是否全部包含当前一级类别的所有code
+						if (c) {
+
+							for (let i = 0; i < this.flagList.length; i++) {
+								if (this.flagList[i].flag == areaFlag) {
+									this.areaFlagList.push(this.flagList[i]);
+								}
+							}
+
+						}
+					},
+					getOneArea(areaFlag) {
+						let mainList = this.areaInitList;
+						let oneList = []; //当前一级类别的所有code
+						for (let i = 0; i < mainList.length; i++) {
+							if (mainList[i].id == areaFlag) {
+								for (let j = 0; j < mainList[i].list.length; j++) {
+									for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+										oneList.push(mainList[i].list[j].list[k].id);
+									}
+								}
+							}
+						};
+						return oneList;
+					},
+					getMain() {
+						$.ajax({
+							url: zfyurl + "/app/api/extNotice/findMaterial",
+							type: 'POST',
+							data: {
+
+							},
+							dataType: 'jsonp',
+							success: res => {
+								mui.hideLoading();
+								if (res.code == 'M000000') {
+									this.mainList = res.data;
+									this.getNameList();
+									for (let i = 0; i < this.mainList.length; i++) {
+										this.isContained(this.mainList[i].code);
+										if (i == this.mainList.length - 1) {
+											this.forDone = true;
+										}
+									}
+									if (this.forDone) {
+										let totalList = this.totalList;
+										let codeList = this.codeList;
+										let nameList = this.nameList;
+										let forList = this.forList;
+										let mainList = this.mainList;
+										let totalNameList = this.totalNameList;
+										let codeList2 = JSON.parse(JSON.stringify(codeList));
+										if (totalList.length == 0) {
+											for (let i = 0; i < codeList.length; i++) {
+
+												for (let j = 0; j < nameList.length; j++) {
+													if (nameList[j].code == codeList[i]) {
+														forList.push(nameList[j])
+													}
+												}
+											}
+											this.forList = forList;
+										} else {
+
+											for (let q = 0; q < totalList.length; q++) {
+												for (let i = 0; i < mainList.length; i++) {
+													if (mainList[i].code == totalList[q]) {
+														totalNameList.push({
+															code: mainList[i].code,
+															name: mainList[i].name
+														})
+														for (let j = 0; j < mainList[i].list.length; j++) {
+															for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+																codeList2.remove(mainList[i].list[j].list[k].code)
+															}
+														}
+													}
+
+												}
+											}
+
+											for (let i = 0; i < codeList2.length; i++) {
+												for (let j = 0; j < nameList.length; j++) {
+													if (nameList[j].code == codeList2[i]) {
+														forList.push(nameList[j])
+													}
+												}
+											}
+
+											this.totalNameList = totalNameList;
+											this.forList = forList;
+										}
+									}
+								}
+								if (res.code == 'E000000') {
+									mui.alert(res.info)
+								}
+							}
+						})
+					},
+					getNameList() {
+						let mainList = this.mainList;
+						var nameList = [];
+						for (let i = 0; i < mainList.length; i++) {
+							for (let j = 0; j < mainList[i].list.length; j++) {
+								for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+									nameList.push({
+										code: mainList[i].list[j].list[k].code,
+										name: mainList[i].list[j].list[k].name
+									});
+								}
+							}
+
+						};
+						this.nameList = nameList;
+					}
+				},
+				created() {
+					statis('1', 'bussiness-subscribe.html', '进入商机设置页面');
+					this.getCompanyList();
+					this.loginUser = JSON.parse(localStorage.getItem('loginUser'));
+					localStorage.setItem('areaStr', '');
+					localStorage.setItem('codeStr', '');
+					setTimeout(function() {
+						vm.getUserSet();
+					}, 200)
+					mui.showLoading("正在加载..", "div");
+					setTimeout(function() {
+						mui.hideLoading();
+					}, 5000)
+				}
+			})
+
+			window.addEventListener('set', function(event) {
+				var val = event.detail;
+				let aList = val.aList;
+				let areaNameList = val.areaNameList;
+				vm.areaList = aList;
+				vm.areaNameList = areaNameList;
+				vm.isOpen();
+			})
+
+			window.addEventListener('city', function(event) {
+				var val = event.detail;
+				let areaList = JSON.parse(JSON.stringify(val.codeList));
+				vm.areaList = val.codeList; //已选城市的city的id数组
+				localStorage.setItem('areaStr', vm.areaList.toString());
+				vm.areaNameList = [];
+				vm.areaFlagList = []; //把已选择地区的列表清空
+				for (let i = 0; i < vm.flagList.length; i++) {
+					vm.areaIsContained(vm.flagList[i].flag) //得到当前选择的地区flag,areaFlagList
+				};
+				for (let i = 0; i < vm.areaFlagList.length; i++) {
+					let oneList = vm.getOneArea(vm.areaFlagList[i].flag);
+					for (let j = 0; j < oneList.length; j++) {
+						areaList.remove(oneList[j])
+					}
+				}
+				if (areaList.length == 0) {
+					vm.areaNameList = [];
+				} else {
+					for (let i = 0; i < areaList.length; i++) {
+						for (let j = 0; j < vm.allList.length; j++) {
+							if (areaList[i] == vm.allList[j].id) {
+								vm.areaNameList.push({
+									id: vm.allList[j].id,
+									name: vm.allList[j].name
+								})
+							}
+						}
+					};
+				}
+				vm.isOpen();
+			})
+
+			window.addEventListener('main', function(event) {
+				var val = event.detail;
+				let codeStr = val.codeStr;
+				let codeList = val.codeList;
+				vm.codeList = codeList;
+				let totalList = val.totalList;
+				let mainList = val.mainList;
+				vm.mainList = mainList;
+				let nameList = val.nameList;
+				var forList = [];
+				var totalNameList = [];
+				vm.codeStr = codeStr;
+				let codeList2 = JSON.parse(JSON.stringify(codeList));
+				if (totalList.length == 0) {
+					vm.totalNameList = [];
+					for (let i = 0; i < codeList.length; i++) {
+						for (let j = 0; j < nameList.length; j++) {
+							if (nameList[j].code == codeList[i]) {
+								forList.push(nameList[j])
+							}
+						}
+					}
+					vm.forList = forList;
+				} else {
+
+					for (let q = 0; q < totalList.length; q++) {
+						for (let i = 0; i < mainList.length; i++) {
+							if (mainList[i].code == totalList[q].substring(0, 2)) {
+								totalNameList.push({
+									code: mainList[i].code,
+									name: mainList[i].name
+								})
+								for (let j = 0; j < mainList[i].list.length; j++) {
+									for (let k = 0; k < mainList[i].list[j].list.length; k++) {
+										codeList2.remove(mainList[i].list[j].list[k].code)
+									}
+								}
+							}
+
+						}
+					}
+
+					for (let i = 0; i < codeList2.length; i++) {
+						for (let j = 0; j < nameList.length; j++) {
+							if (nameList[j].code == codeList2[i]) {
+								forList.push(nameList[j])
+							}
+						}
+					}
+
+					vm.totalNameList = totalNameList;
+					vm.forList = forList;
+					vm.isShow = true;
+				};
+				vm.isOpen();
+			})
+
+			document.getElementById("mySwitch").addEventListener("toggle", function(event) {
+				if (event.detail.isActive) {
+					vm.status = 1;
+				} else {
+					vm.status = 2;
+				}
+			})
+		</script>
+	</body>
+
+</html>

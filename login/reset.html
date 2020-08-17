@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>找回密码</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<style>
+			.login-input li input {
+				color: #666666;
+			}
+			
+			#getCode {
+				width: 30%;
+			}
+			
+			.code {
+				width:30%;
+				height:40px;
+				background-color: #dfcdff;
+				text-align:center;
+				font-size:24px;
+				line-height:40px;
+				top:20px;
+				left:20px;
+				letter-spacing:3px;
+				float: right;
+				display: inline;
+				/* padding: 0 18px; */
+			}
+			
+			input{
+			    caret-color: #fff !important;
+			}
+		</style>
+	</head>
+
+	<body class="bg-white">
+		<!--顶部 start-->
+		<header class="mui-bar mui-bar-nav header bg-blue-grad">
+			<button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left">
+		    	<span class="mui-icon mui-icon-back col-fff font-14"></span>
+		    	<span class="col-fff">返回</span>
+		    </button>
+			<h1 class="mui-title col-fff">找回密码</h1>
+		</header>
+		<!--顶部 end-->
+		<div class="reset pad-lr-30 mar-top-64 pad-top-70" id="app">
+			<div class="tc login-logo">
+				<img src="../images/logo-reset_03.png" />
+			</div>
+			<ul class="login-input">
+				<li>
+					<div class="icon tc">
+						<img src="../images/user-rest_03.png" width="14px" />
+						<div class="line"></div>
+					</div>
+					<input style="position: relative;" type="text" placeholder="请输入手机号" @focus="inLogin" @blur="leaveLogin" id="phone" v-model="phone"/>
+					<div class="loginedpwd" v-show="isShow">
+						<ul>
+							<li v-for = "(item, index) in selectPhone" @tap="setPhone(item)">{{item}}</li>
+						</ul>
+					</div>
+					
+				</li>
+				<li>
+					<div class="icon tc">
+						<img src="../images/gray-imgCode.png" width="20px" />
+						<div class="line"></div>
+					</div>
+					<input type="text" placeholder="请输入图形验证码" id="imgCode" />
+					<div id="checkCode"></button>
+				</li>
+				<li>
+					<div class="icon">
+						<img src="../images/password-rest_07.png" />
+						<div class="line"></div>
+					</div>
+					<input type="text" placeholder="请输入短信验证码" id="sendCode" />
+					<button id="getCode" @click="getCode" type="button">获取验证码</button>
+				</li>
+			</ul>
+			<p class="hint mar-top-10" style="display: none;">验证码10分钟之内有效！</p>
+		</div>
+		<button id="next" class="reg-btn">下一步</button>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			hideBtn("#next")
+			var restPhone = /^[1][3,4,5,7,8][0-9]{9}$/;
+			var restPass = /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\w~!@#$%^&*?]{6,20}$/;
+			//重新获取验证码倒计时 
+			var countdownTime = 60;
+			//验证码失效倒计时
+			var codeInvalidTime = 6000;
+			
+			//随机生成验证码
+			var yzm = {
+			    createCode: function() {
+			        this.code = ""; //存放验证码
+			        var codeLength = 4; //设置验证码长度为4
+			        var checkCode = document.querySelector("#checkCode");
+			        var codeChars = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+			            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+			            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //验证码要随机挑选的字符
+			        for (var i = 0; i < codeLength; i++) {
+			            var charIndex = Math.floor(Math.random() * 52); //随机产生0-52之间的整数
+			            this.code += codeChars[charIndex]; //将随机指向我们规定的字符添加到code容器里
+			        }
+			        if (checkCode) {
+									$('#checkCode').addClass('code');
+									$('#checkCode').text(this.code)
+			        }
+			    },
+			    isLegal: function() {
+			        var InputValue = $("#imgCode").val();
+			        console.log(InputValue);
+			        console.log(this.code);
+							
+			        if (InputValue.toLowerCase() == this.code.toLowerCase()) {
+			            //alert("验证码正确!");
+									return true;
+			        } else {
+			           // alert("验证码不正确,请重试!");
+								 return false;
+			        }
+			    }
+			}
+			
+			$(()=>{
+				yzm.createCode();
+				$('#checkCode').bind('click', ()=>{
+					yzm.createCode();
+				})
+			})
+			
+			/* $("#getCode").click(function() {
+				var phone = $("#phone").val();
+				if(restPhone.test(phone) == false) {
+					mui.alert("请输入正确的手机号 !");
+					return false;
+				}
+				
+				let imgTrue = yzm.isLegal();
+				if(!imgTrue){
+					mui.alert("请输入正确的验证码 !");
+					return false;
+				}
+				
+				var url = zfyurl+"/app/api/user/forgetpasswdCode";
+				statis('2', 'reset.html', '忘记密码页面获取短信验证码');
+				$.ajax({
+					type: "post",
+					url: url,
+					data: {
+						phone: phone
+					},
+					dataType: "jsonp",
+					success: function(res) {
+						if(res.code == "M000000") {
+							sendMsg();
+							$(".hint").show();
+							localStorage.removeItem("forgetpassCodes");
+							localStorage.setItem("forgetpassCodes", res.info);
+							codeInvalid();
+						} else {
+							alert(res.info);
+							$("#getCode").prop("disabled", false);
+							$("#getCode").text("重新获取验证码");
+							countdownTime = 60;
+							return false;
+						}
+					}
+				});
+
+			}) */
+			
+			
+			
+			$("#next").click(function() {
+				var phone = $("#phone").val();
+				var forgetpassCode = localStorage.getItem("forgetpassCodes");
+				var sendCode = $("#sendCode").val();
+				if(restPhone.test(phone) == false) {
+					mui.alert("请输入正确的手机号 !");
+					return false;
+				}
+				if(sendCode == ''|| sendCode == null) {
+					mui.alert("验证码不能为空 !");
+					return false;
+				}
+				$.ajax({
+									url: zfyurl+"/app/api/user/checkCodeIsTrue",
+									type: 'POST',
+									data: {
+										sendCode: sendCode,
+										phone: phone
+									},
+									dataType: 'jsonp',
+									success: res=>{
+										if(res.code=='M000000'){
+											localStorage.removeItem("resetforgetphone");
+											localStorage.setItem("resetforgetphone", phone);
+											location.href = "reset1.html";
+										}
+										if(res.code=='E000000'){
+											mui.alert(res.info)
+										}
+									}
+								})
+				
+			})
+			
+			var vm = new Vue({
+				el: '#app',
+				data() {
+					return {
+						phone: '',
+						phoneListBuyer: [],
+						selectPhone: [],
+						isShow: false,
+					}
+				},
+				watch: {
+					'phone': function(newp, oldp){
+						this.selectPhone = [];
+						if(this.phoneListBuyer.length!=0){
+							let length = newp.length;
+							for (let item of this.phoneListBuyer){
+								if(item.slice(0, length).includes(newp)){
+									this.selectPhone.push(item)
+								}
+							}
+						}
+					}
+				},
+				methods: {
+					leaveLogin(){
+						this.isShow = false;
+					},
+					inLogin(){
+						this.isShow = true;
+					},
+					setPhone(phone){
+						this.phone = phone;
+						this.isShow = false;
+					},
+					getCode(){
+						var phone = $("#phone").val();
+						if(restPhone.test(phone) == false) {
+							mui.alert("请输入正确的手机号 !");
+							return false;
+						}
+						
+						let imgTrue = yzm.isLegal();
+						if(!imgTrue){
+							mui.alert("请输入正确的验证码 !");
+							return false;
+						}
+						
+						var url = zfyurl+"/app/api/user/forgetpasswdCode";
+						statis('2', 'reset.html', '忘记密码页面获取短信验证码');
+						$.ajax({
+							type: "post",
+							url: url,
+							data: {
+								phone: phone
+							},
+							dataType: "jsonp",
+							success: function(res) {
+								if(res.code == "M000000") {
+									sendMsg();
+									$(".hint").show();
+									localStorage.removeItem("forgetpassCodes");
+									localStorage.setItem("forgetpassCodes", res.info);
+									codeInvalid();
+								} else {
+									alert(res.info);
+									$("#getCode").prop("disabled", false);
+									$("#getCode").text("重新获取验证码");
+									countdownTime = 60;
+									return false;
+								}
+							}
+						});
+					}
+				},
+				created() {
+					statis('1', 'reset.html', '进入忘记密码页面');
+					this.phoneListBuyer = JSON.parse(localStorage.getItem('phoneListBuyer')) || [];
+				}
+			})
+			
+			function sendMsg() {
+				if(countdownTime == 0) {
+					$("#getCode").prop("disabled", false);
+					$("#getCode").text("获取验证码");
+					countdownTime = 60;
+					return false;
+				} else {
+					$("#getCode").prop("disabled", true);
+					$("#getCode").text(countdownTime + "S");
+					countdownTime--;
+
+				}
+				setTimeout(function() {
+					sendMsg();
+				}, 1000)
+			}
+
+			function codeInvalid() {
+				if(codeInvalidTime == 0) {
+					localStorage.removeItem("forgetpassCodes");
+					codeInvalidTime = 6000;
+					return false;
+				} else {
+					codeInvalidTime--;
+				}
+
+				setTimeout(function() {
+					codeInvalid();
+				}, 1000)
+
+			}
+		</script>
+	</body>
+
+</html>

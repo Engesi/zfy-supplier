@@ -1,0 +1,390 @@
+{
+	"main.html": {
+		"refer": [
+			"setting.html"
+		],
+		"resources": []
+	},
+	"login.html": {
+		"refer": [
+			"main.html"
+		],
+		"resources": []
+	},
+	"page/fahuo.html": {
+		"refer": [
+			"page/daifahuo.html"
+		],
+		"resources": []
+	},
+	"cgs-home.html": {
+		"refer": [
+			"page/daifahuo.html",
+			"index.html"
+		],
+		"resources": []
+	},
+	"page/daifahuo.html": {
+		"refer": [
+			"page/fahuo.html"
+		],
+		"resources": []
+	},
+	"index.html": {
+		"refer": [
+			"page/jinrishangji.html",
+			"page/login.html"
+		],
+		"resources": []
+	},
+	"page/jinrishangji.html": {
+		"refer": [
+			"page/gonggaoxiangqing.html",
+			"index.html"
+		],
+		"resources": []
+	},
+	"page/gonggaoxiangqing.html": {
+		"refer": [
+			"page/jinrishangji.html"
+		],
+		"resources": []
+	},
+	"home.html": {
+		"resources": [
+			"notice.html"
+		],
+		"refer": [
+			"notice.html",
+			"page/ewm.html"
+		]
+	},
+	"notice.html": {
+		"refer": [
+			"statistics.html"
+		],
+		"resources": []
+	},
+	"index-supplier.html": {
+		"resources": [
+			"supplier/notice.html"
+		],
+		"refer": [
+			"supplier/home.html",
+			"supplier/statistics.html",
+			"supplier/notice.html",
+			"index-buyer.html",
+			"page/saoyisao.html",
+			"buyer/home.html",
+			"buyer/statistics.html",
+			"buyer/notice.html"
+		]
+	},
+	"supplier/statistics.html": {
+		"refer": [
+			"index-supplier.html"
+		]
+	},
+	"index-buyer.html": {
+		"resources": [
+			"buyer/notice.html"
+		],
+		"refer": [
+			"buyer/home.html",
+			"buyer/statistics.html",
+			"buyer/notice.html",
+			"index-supplier.html",
+			"supplier/home.html",
+			"supplier/statistics.html",
+			"supplier/notice.html",
+			"page/saoyisao.html"
+		]
+	},
+	"supplier/notice.html": {
+		"refer": [
+			"page/shangji.html",
+			"supplier/shangji.html",
+			"supplier/jinrishangji.html",
+			"supplier/shenpi.html",
+			"supplier/search.html",
+			"supplier/daishouhuo.html",
+			"supplier/caiwu.html",
+			"page/tongzhi.html",
+			"supplier/baomingguanli.html",
+			"supplier/tongzhi.html",
+			"supplier/hetong.html",
+			"supplier/notice-hetongdingdan.html"
+		]
+	},
+	"page/saoyisao.html": {
+		"refer": [
+			"page/Barcode_B2.html"
+		]
+	},
+	"supplier/jinrishangji.html": {
+		"refer": [
+			"supplier/shangji.html",
+			"supplier/gonggaoxiangqing.html",
+			"supplier/search.html"
+		]
+	},
+	"supplier/shangji.html": {
+		"refer": [
+			"supplier/jinrishangji.html",
+			"supplier/yijiezhishangji.html",
+			"supplier/weibaomingshangji.html"
+		]
+	},
+	"supplier/shouhuoqueren.html": {
+		"refer": [
+			"supplier/daishouhuo.html"
+		]
+	},
+	"supplier/daishouhuo.html": {
+		"refer": [
+			"supplier/shouhuoqueren.html"
+		]
+	},
+	"supplier/home.html": {
+		"refer": [
+			"supplier/daifahuo.html",
+			"supplier/daishouhuo.html",
+			"supplier/yishouhuo.html",
+			"supplier/baomingguanli.html",
+			"supplier/yiwancheng.html",
+			"supplier/shangji.html",
+			"supplier/daifukuan.html",
+			"supplier/shezhi.html",
+			"supplier/shenpi.html",
+			"supplier/hetong.html",
+			"page/login.html",
+			"supplier/aboutUs.html",
+			"supplier/question.html",
+			"supplier/changjianwenti.html"
+		]
+	},
+	"supplier/shenpi.html": {
+		"refer": [
+			"supplier/shenpi1.html",
+			"supplier/shenpixiangqing.html"
+		]
+	},
+	"supplier/baomingxiangqing.html": {
+		"refer": [
+			"supplier/baomingguanli.html"
+		]
+	},
+	"supplier/baomingguanli.html": {
+		"refer": [
+			"supplier/baomingxiangqing.html",
+			"supplier/baomingxiangqing2.html"
+		]
+	},
+	"supplier/hetong.html": {
+		"refer": [
+			"supplier/hetong2.html",
+			"supplier/hetong1.html"
+		]
+	},
+	"supplier/daifahuo.html": {
+		"refer": [
+			"supplier/fahuo.html"
+		]
+	},
+	"supplier/yishouhuo.html": {
+		"refer": [
+			"supplier/yishouhuo1.html"
+		]
+	},
+	"supplier/daifukuan.html": {
+		"refer": [
+			"supplier/daifukuan1.html"
+		]
+	},
+	"supplier/shezhi.html": {
+		"refer": [
+			"supplier/im.html",
+			"supplier/account-security.html"
+		]
+	},
+	"supplier/hetong1.html": {
+		"refer": [
+			"supplier/search.html",
+			"supplier/hetong.html"
+		]
+	},
+	"supplier/yiwancheng.html": {
+		"refer": [
+			"supplier/yiwancheng1.html"
+		]
+	},
+	"supplier/fahuo.html": {
+		"refer": [
+			"supplier/fahuodan.html"
+		]
+	},
+	"buyer/home.html": {
+		"refer": [
+			"buyer/daifahuo.html",
+			"buyer/changjianwenti.html",
+			"buyer/shezhi.html",
+			"buyer/aboutUs.html",
+			"buyer/daishouhuo.html",
+			"buyer/yishouhuo.html",
+			"buyer/yiwancheng.html",
+			"buyer/daifukuan.html",
+			"buyer/hetong.html",
+			"buyer/shenpi.html",
+			"page/login.html",
+			"buyer/kehuguanli.html",
+			"page/saoyisao.html"
+		]
+	},
+	"buyer/notice.html": {
+		"refer": [
+			"buyer/shenpi.html",
+			"buyer/daishouhuo.html",
+			"buyer/search.html"
+		]
+	},
+	"buyer/shenpi.html": {
+		"refer": [
+			"buyer/shenpixiangqing.html",
+			"buyer/shenpi1.html",
+			"buyer/search.html"
+		]
+	},
+	"buyer/shenpixiangqing.html": {
+		"refer": [
+			"buyer/shenpi.html"
+		]
+	},
+	"buyer/changjianwenti.html": {
+		"refer": [
+			"buyer/question.html"
+		]
+	},
+	"buyer/daishouhuo.html": {
+		"refer": [
+			"buyer/daishouhuo1.html"
+		]
+	},
+	"buyer/evaluate.html": {
+		"refer": [
+			"buyer/yishouhuo.html"
+		]
+	},
+	"buyer/daishouhuo1.html": {
+		"refer": [
+			"buyer/evaluate.html"
+		]
+	},
+	"buyer/yishouhuo.html": {
+		"refer": [
+			"buyer/yishouhuo1.html"
+		]
+	},
+	"buyer/daifahuo.html": {
+		"refer": [
+			"buyer/daifahuo1.html"
+		]
+	},
+	"buyer/daifukuan.html": {
+		"refer": [
+			"buyer/daifukuan1.html"
+		]
+	},
+	"buyer/hetong.html": {
+		"refer": [
+			"buyer/hetong2.html"
+		]
+	},
+	"page/login.html": {
+		"refer": [
+			"index-supplier.html",
+			"page/login-dx.html",
+			"page/register.html",
+			"page/reset.html",
+			"index-buyer.html"
+		]
+	},
+	"page/login-dx.html": {
+		"refer": [
+			"page/login.html",
+			"page/register.html"
+		]
+	},
+	"page/register.html": {
+		"refer": [
+			"page/register1.html"
+		]
+	},
+	"page/register1.html": {
+		"refer": [
+			"page/register2.html"
+		]
+	},
+	"buyer/shezhi.html": {
+		"refer": [
+			"buyer/im.html",
+			"buyer/account-security.html"
+		]
+	},
+	"buyer/account-security.html": {
+		"refer": [
+			"page/modify-password.html",
+			"page/modify-phone.html"
+		]
+	},
+	"supplier/account-security.html": {
+		"refer": [
+			"page/modify-password.html",
+			"page/modify-phone.html"
+		]
+	},
+	"page/modify-phone.html": {
+		"refer": [
+			"page/login.html"
+		]
+	},
+	"page/modify-password.html": {
+		"refer": [
+			"page/login.html"
+		]
+	},
+	"supplier/changjianwenti.html": {
+		"refer": [
+			"supplier/question.html"
+		]
+	},
+	"supplier/baomingxiangqing2.html": {
+		"refer": [
+			"supplier/baomingguanli.html"
+		]
+	},
+	"buyer/kehuguanli.html": {
+		"refer": [
+			"buyer/kehuxiangqing.html"
+		]
+	},
+	"buyer/kehuxiangqing.html": {
+		"refer": [
+			"buyer/kehuxiangqing1.html"
+		]
+	},
+	"supplier/weibaomingshangji.html": {
+		"refer": [
+			"supplier/gonggaoxiangqing.html"
+		]
+	},
+	"supplier/yijiezhishangji.html": {
+		"refer": [
+			"supplier/gonggaoxiangqing.html"
+		]
+	},
+	"supplier/hetong2.html": {
+		"refer": [
+			"supplier/hetong.html"
+		]
+	}
+}

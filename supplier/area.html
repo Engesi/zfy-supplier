@@ -1,0 +1,483 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>选择地区</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+		.font-lighter{font-size: 16px;color: #666;}
+		.mui-icon-arrowright{color: #999;}
+		.mui-scroll-wrapper{top: 20px}
+		/*.mui-pull-top-pocket{top: 20px;}*/
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-closeempty"></a>
+					</span>
+					<h1 class="mui-title">选择地区</h1>
+					
+					
+		</header>
+		
+		<div class="pad-top-64 sxactive">
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">全国地区</div>
+				<div class="buttonWrap">
+					<button type="button" id="areaAll" @tap="setAreaActiveAllTotal('areaAll',0)" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+				</div>
+			</div>
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">华北地区</div>
+				<div class="buttonWrap areaWrap4" number="4">
+					<button type="button" id="areaAll4" @tap="setAreaActiveAll('areaAll4', 'areaWrap4', 'aList4', 'areaList4')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList4" :id=`area-${item.id}` @tap="setAreaActive('aList4', 'areaAll4', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">华东地区</div>
+				<div class="buttonWrap areaWrap2" number="2">
+					<button type="button" id="areaAll2" @tap="setAreaActiveAll('areaAll2', 'areaWrap2', 'aList2', 'areaList2')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList2" :id=`area-${item.id}` @tap="setAreaActive('aList2', 'areaAll2', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">东北地区</div>
+				<div class="buttonWrap areaWrap5" number="5">
+					<button type="button" id="areaAll5" @tap="setAreaActiveAll('areaAll5', 'areaWrap5', 'aList5', 'areaList5')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList5" :id=`area-${item.id}` @tap="setAreaActive('aList5', 'areaAll5', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">华中地区</div>
+				<div class="buttonWrap areaWrap7" number="7">
+					<button type="button" id="areaAll7" @tap="setAreaActiveAll('areaAll7', 'areaWrap7', 'aList7', 'areaList7')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList7" :id=`area-${item.id}` @tap="setAreaActive('aList7', 'areaAll7', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">华南地区</div>
+				<div class="buttonWrap areaWrap3" number="3">
+					<button type="button" id="areaAll3" @tap="setAreaActiveAll('areaAll3', 'areaWrap3', 'aList3', 'areaList3')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList3" :id=`area-${item.id}` @tap="setAreaActive('aList3', 'areaAll3', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">西南地区</div>
+				<div class="buttonWrap areaWrap6" number="6">
+					<button type="button" id="areaAll6" @tap="setAreaActiveAll('areaAll6', 'areaWrap6', 'aList6', 'areaList6')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList6" :id=`area-${item.id}` @tap="setAreaActive('aList6', 'areaAll6', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+			<div class="approve-sx approve-sx-state">
+				<div class="busDetailTitle">西北地区</div>
+				<div class="buttonWrap areaWrap1" number="1">
+					<button type="button" id="areaAll1" @tap="setAreaActiveAll('areaAll1', 'areaWrap1', 'aList1', 'areaList1')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList1" :id=`area-${item.id}` @tap="setAreaActive('aList1', 'areaAll1', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+			<div class="approve-sx approve-sx-state approve-sx-last">
+				<div class="busDetailTitle">其他地区</div>
+				<div class="buttonWrap areaWrap8" number="8">
+					<button type="button" id="areaAll8" @tap="setAreaActiveAll('areaAll8', 'areaWrap8', 'aList8', 'areaList8')" class="mui-btn mui-btn-primary  mui-btn-outlined">全部</button>
+					<button type="button" v-for="(item, index) in areaList8" :id=`area-${item.id}` @tap="setAreaActive('aList8', 'areaAll8', `area-${item.id}`,item.id)" class="mui-btn mui-btn-primary mui-btn-outlined">{{item.provinceName}}</button>
+				</div>
+			</div>
+			
+		</div>
+		<div class="approveBottomWait">
+			<div class="fixedBig" id="confirm" @tap="confirm">确定（已选<span v-if="num!=''&&typeof(num)!='undefined'">{{num}}</span><span v-else>0</span>个）</div>
+		</div>
+		</div>
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			Array.prototype.indexOf = function(val) {
+			for (var i = 0; i < this.length; i++) { 
+			if (this[i] == val) return i;
+			} 
+			return -1; 
+			};
+			Array.prototype.remove = function remove(val) {
+				var index = this.indexOf(val);
+				if (index > -1) {
+					this.splice(index, 1);
+				}
+			};
+			mui.init({
+				gestureConfig: {
+				        tap: true, //默认为false
+								longtap: true
+				      },
+			});
+			
+			function simpleName(res){
+				$.each(res.data, (index, item)=>{
+					if(item.provinceName=="内蒙古自治区"){
+						item.provinceName = "内蒙古";
+					}
+					if(item.provinceName=="广西壮族自治区"){
+						item.provinceName = "广西";
+					}
+					if(item.provinceName=="西藏自治区"){
+						item.provinceName = "西藏";
+					}
+					if(item.provinceName=="宁夏回族自治区"){
+						item.provinceName = "宁夏";
+					}
+					if(item.provinceName=="新疆维吾尔自治区"){
+						item.provinceName = "新疆";
+					}
+					if(item.provinceName=="香港特别行政区"){
+						item.provinceName = "香港";
+					}
+					if(item.provinceName=="澳门特别行政区"){
+						item.provinceName = "澳门";
+					}
+				})
+			}
+			
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						areaList1: [],
+						areaList2: [],
+						areaList3: [],
+						areaList4: [],
+						areaList5: [],
+						areaList6: [],
+						areaList7: [],
+						areaList8: [],
+						aList: [],
+						aList1: [],
+						aList2: [],
+						aList3: [],
+						aList4: [],
+						aList5: [],
+						aList6: [],
+						aList7: [],
+						aList8: [],
+						strList: '',
+						num: '',
+						loginUser: '',
+						noticeSet: '',
+						allList: [],
+						areaNameList: []
+					}
+				},
+				watch: {
+					'aList1': function(){
+						if(this.aList1.length==this.areaList1.length){
+							$('#areaAll1').addClass('active');
+						}
+					},
+					'aList2': function(){
+						if(this.aList2.length==this.areaList2.length){
+							$('#areaAll2').addClass('active');
+						}
+					},
+					'aList3': function(){
+						if(this.aList3.length==this.areaList3.length){
+							$('#areaAll3').addClass('active');
+						}
+					},
+					'aList4': function(){
+						if(this.aList4.length==this.areaList4.length){
+							$('#areaAll4').addClass('active');
+						}
+					},
+					'aList5': function(){
+						if(this.aList5.length==this.areaList5.length){
+							$('#areaAll5').addClass('active');
+						}
+					},
+					'aList6': function(){
+						if(this.aList6.length==this.areaList6.length){
+							$('#areaAll6').addClass('active');
+						}
+					},
+					'aList7': function(){
+						if(this.aList7.length==this.areaList7.length){
+							$('#areaAll7').addClass('active');
+						}
+					},
+					'aList8': function(){
+						if(this.aList8.length==this.areaList8.length){
+							$('#areaAll8').addClass('active');
+						}
+					}
+				},
+				methods: {
+					getAreaList(areaFlag){
+						$.ajax({
+											url: zfyurl+"/app/api/extNotice/findArea",
+											type: 'POST',
+											data: {
+												areaFlag: areaFlag
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													if(areaFlag==1){
+														simpleName(res);
+														this.areaList1 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==2){
+														simpleName(res);
+														this.areaList2 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==3){
+														simpleName(res);
+														this.areaList3 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==4){
+														simpleName(res);
+														this.areaList4 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==5){
+														simpleName(res);
+														this.areaList5 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==6){
+														simpleName(res);
+														this.areaList6 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==7){
+														simpleName(res);
+														this.areaList7 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}else if(areaFlag==8){
+														simpleName(res);
+														this.areaList8 = res.data;
+														this.allList = this.allList.concat(res.data);
+													}
+													console.log(this.allList)
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+										})
+					},
+					getUserSet(){
+						$.ajax({
+											url: zfyurl+"/app/api/userSet/findUserSet",
+											type: 'POST',
+											data: {
+												type: 2,
+												identify: 2,
+												userId: localStorage.getItem('userId')
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													this.noticeSet = res.data;
+													console.log(localStorage.getItem('areaStr'))
+													//areaList赋值
+													if(localStorage.getItem('areaStr')!=''&&localStorage.getItem('areaStr')!=null&&localStorage.getItem('areaStr')!=undefined&&localStorage.getItem('areaStr')!=999){
+														console.log('缓存')
+														this.aList = localStorage.getItem('areaStr').split(',');
+													}else if(localStorage.getItem('areaStr')=='999'){ //重置为空
+														this.aList = [];
+														console.log('缓存999')
+													}else{
+														console.log('接口')
+														if(this.noticeSet.noticeProvinceId.length!=0){
+																	this.aList = this.noticeSet.noticeProvinceId.split(',');
+																}else{
+																	this.aList = []
+																}
+													}
+															this.num = this.aList.length;
+													if(this.aList.length>0){
+														for(let i =0; i<this.aList.length; i++){
+																	if(this.aList[i]==0){
+																		$('#areaAll').addClass('active');
+																	}else{
+																		console.log()
+																		let elem = $(`#area-${this.aList[i]}`).parent('div');
+																		console.log(elem.attr('number'));
+																		let selectedNum = elem.attr('number');
+																		this[`aList${selectedNum}`].push(this.aList[i]);
+																		
+																		$(`#area-${this.aList[i]}`).addClass('active');
+																	}
+																}
+													}
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+									})
+					},
+					setAreaActiveAllTotal(elem, ids){
+						console.log('asdas')
+						let el = "#" + elem;
+						let id = ids;
+						if ($(el).attr('class').indexOf('active') == -1) {
+							$('.buttonWrap button').removeClass('active');
+							$(el).addClass('active');
+							this.aList1 = [];this.aList2 = [];this.aList3 = [];this.aList4 = [];this.aList5 = [];this.aList6 = [];this.aList7 = [];this.aList8 = [];
+							this.aList = [0];
+							this.num = this.aList.length;
+							console.log(this.aList);
+						} else {
+							$('.buttonWrap button').removeClass('active');
+							this.aList1 = [];this.aList2 = [];this.aList3 = [];this.aList4 = [];this.aList5 = [];this.aList6 = [];this.aList7 = [];this.aList8 = [];
+							this.aList = [];
+							this.num = this.aList.length;
+							console.log(this.aList);
+						}
+					},
+					setAreaActive(bList, areaAllBtn, elem, ids){
+											let el = "#" + elem;
+											let id = ids;
+											if ($(el).attr('class').indexOf('active') == -1) {
+												if ($('#areaAll').attr('class').indexOf('active') != -1) {
+													$("#areaAll").removeClass('active');
+													this[bList] = [];
+												}
+												/* if ($(`#${areaAllBtn}`).attr('class').indexOf('active') != -1) {
+													$(`#${areaAllBtn}`).removeClass('active');
+													this[bList] = [];
+												} */
+												$(el).addClass('active');
+												this[bList].push(id);
+												
+												this.aList = this.aList1.concat(this.aList2).concat(this.aList3).concat(this.aList4).concat(this.aList5).concat(this.aList6).concat(this.aList7).concat(this.aList8);
+												this.strList = this.aList.toString();
+												console.log(this.strList);
+												this.num = this.aList.length;
+												
+												console.log(this[bList]);
+											} else {
+												if ($(`#${areaAllBtn}`).attr('class').indexOf('active') != -1) {
+													$(`#${areaAllBtn}`).removeClass('active');
+													$(el).removeClass('active');
+												}else{
+													$(el).removeClass('active');
+												}
+												
+												this[bList].remove(id);
+												
+												this.aList = this.aList1.concat(this.aList2).concat(this.aList3).concat(this.aList4).concat(this.aList5).concat(this.aList6).concat(this.aList7).concat(this.aList8);
+												this.strList = this.aList.toString();
+												console.log(this.strList);
+												this.num = this.aList.length;
+												
+												console.log(this[bList]);
+											}
+										},
+					setAreaActiveAll(elem, wrap, bList, areaList){
+											let el = "#" + elem;
+											if ($(el).attr('class').indexOf('active') == -1) {
+												if ($('#areaAll').attr('class').indexOf('active') != -1) {
+													$("#areaAll").removeClass('active');
+													$(`.${wrap} button`).addClass('active');
+													/* $(el).addClass('active'); */
+													this[bList] = [];
+													for (let i=0; i<this[areaList].length; i++){
+														this[bList].push(this[areaList][i].id);
+													}
+													
+													this.aList = this.aList1.concat(this.aList2).concat(this.aList3).concat(this.aList4).concat(this.aList5).concat(this.aList6).concat(this.aList7).concat(this.aList8);
+													this.strList = this.aList.toString();
+													console.log(this.strList);
+													this.num = this.aList.length;
+													
+													console.log(this[bList]);
+												}else{
+													$(`.${wrap} button`).addClass('active');
+													/* $(el).addClass('active'); */
+													this[bList] = [];
+													for (let i=0; i<this[areaList].length; i++){
+														this[bList].push(this[areaList][i].id);
+													}
+													
+													this.aList = this.aList1.concat(this.aList2).concat(this.aList3).concat(this.aList4).concat(this.aList5).concat(this.aList6).concat(this.aList7).concat(this.aList8);
+													this.strList = this.aList.toString();
+													console.log(this.strList);
+													this.num = this.aList.length;
+													
+													console.log(this[bList]);
+												}
+												
+											} else {
+												$(`.${wrap} button`).removeClass('active');
+												this[bList] = [];
+												
+												this.aList = this.aList1.concat(this.aList2).concat(this.aList3).concat(this.aList4).concat(this.aList5).concat(this.aList6).concat(this.aList7).concat(this.aList8);
+												this.strList = this.aList.toString();
+												console.log(this.strList);
+												this.num = this.aList.length;
+												
+												console.log(this[bList]);
+											}
+										},
+							confirm(){
+								let areaStr = this.aList.toString();
+								localStorage.setItem('areaStr', areaStr);
+								for(let i = 0; i<this.aList.length; i++){
+									if(this.aList[0]==0){
+										this.areaNameList = [{name: '全部', id: 0}];
+									}else{
+										for(let j = 0; j<this.allList.length; j++){
+											if(this.aList[i] == this.allList[j].id){
+												this.areaNameList.push({id: this.allList[j].id, name: this.allList[j].provinceName})
+											}
+										}
+									}
+								}
+								mui.plusReady(function() {
+										var ws=plus.webview.getWebviewById('bussiness-subscribe.html');
+										console.log(vm.aList);
+										mui.fire(ws, 'set', {  
+												aList: vm.aList,
+												areaNameList: vm.areaNameList,
+										});
+										mui.back()
+								})
+							}
+				},
+				created(){
+					 this.getAreaList(1);
+					this.getAreaList(2);
+					this.getAreaList(3);
+					this.getAreaList(4);
+					this.getAreaList(5);
+					this.getAreaList(6);
+					this.getAreaList(7);
+					this.getAreaList(8);
+					this.getUserSet();
+					
+				}
+			})
+			
+		</script>
+	</body>
+
+</html>

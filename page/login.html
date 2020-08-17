@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>登陆</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<style>
+			.login-input li input{width: 60%;}
+			.mui-checkbox input[type=checkbox]:checked:before, .mui-radio input[type=radio]:checked:before{color: #fff;}
+		</style>
+	</head>
+
+	<body>
+		<div class="login">
+			<div class="tc login-logo">
+				<img src="../images/logo.png"/>
+			</div>
+			<h1 class="font-18 col-fff tc font-bold pad-top-20">筑服云——建筑产业链服务平台</h1>
+			<ul class="login-input">
+				<li>
+					<div class="icon tc">
+						<img src="../images/denglu-shouji.png" width="14px"/>
+						<div class="line"></div>
+					</div>
+					<input type="text" placeholder="请输入手机号" id="phone"/>
+				</li>
+				<li>
+					<div class="icon">
+						<img src="../images/denglu-mima.png"/>
+						<div class="line"></div>
+					</div>
+					<input type="password" placeholder="请输入密码" class="mui-input-password" id="passwd"/>
+				</li>
+			</ul>
+			<div class="tc login-a pad-top-15">
+				<a href="javascript:;" class="login-sms">短信登陆</a>
+				<!-- <a href="register.html">免费注册</a> -->
+				<a href="reset.html" class="bor-none">忘记密码</a>
+			</div>
+			<input type="button" value="登 录" id="login"/>
+			<!-- <div class="third-party tc">
+				<p class="col-fff font-16">———— 第三方账号登录 ————</p>
+				<span href="javascript:;"><img src="../images/denglu-weixin.png" width="30px"/></span>
+			</div> -->
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script>
+			/* mui('body').on('tap','#phone',function(e){
+				localStorage.setItem('login', 2);
+				openWindow("../index-supplier.html");
+			}); */
+			mui('body').on('tap','#login',function(e){
+				localStorage.setItem('login', 2);
+				openWindow("../index-supplier.html");	
+			});
+			mui('body').on('tap','.login-sms',function(e){
+				localStorage.setItem('login', 2);
+				openWindow("login-sms.html");
+			});
+		    var first = null;
+			mui.back = function() {
+              //首次按键，提示‘再按一次退出应用’
+                    if (!first) {
+                        first = new Date().getTime();
+                        mui.toast('再按一次退出应用');
+                        setTimeout(function() {
+                            first = null;
+                        }, 1000);
+                    } else {
+                        if (new Date().getTime() - first < 1000) {
+                            plus.runtime.quit();
+                        }
+                    }
+            };
+		</script>
+		
+	</body>
+
+</html>

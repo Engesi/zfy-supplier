@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>企业信息</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+		.font-lighter{font-size: 16px;color: #666;}
+		.mui-icon-arrowright{color: #999;}
+		.mui-scroll-wrapper{top: 20px}
+		/*.mui-pull-top-pocket{top: 20px;}*/
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">企业信息</h1>
+		</header>
+		
+		<div class="pad-top-64">
+			
+			<div class="approve-sx appdel">
+				<div class="busDetailTitle">工商信息</div>
+				<div>
+					<div>企业名称</div>
+					<span>{{detail.companyName}}</span>
+				</div>
+				<div>
+					<div>信用代码</div>
+					<span>{{detail.socialCreditCode}}</span>
+				</div>
+				<div>
+					<div>组织形式</div>
+					<span v-if="detail.unitNature==1">国企</span>
+					<span v-if="detail.unitNature==2">民营</span>
+					<span v-if="detail.unitNature==3">外企</span>
+					<span v-if="detail.unitNature==4">合资</span>
+				</div>
+				<div>
+					<div>注册资本</div>
+					<span>
+						{{detail.regCapital}}
+						<span v-if="detail.regtype==1">万元</span>
+						<span v-if="detail.regtype==2">美元</span>
+						<span v-if="detail.regtype==3">英镑</span>
+						<span v-if="detail.regtype==4">港元</span>
+						<span v-if="detail.regtype==5">欧元</span>
+					</span>
+				</div>
+				<div>
+					<div>法人代表</div>
+					<span>{{detail.legalPerson}}</span>
+				</div>
+				<div>
+					<div>成立年份</div>
+					<span>{{detail.setupYear}}</span>
+				</div>
+				<div>
+					<div>企业电话</div>
+					<span>{{detail.tel}}</span>
+				</div>
+				<div>
+					<div>企业传真</div>
+					<span>{{detail.fax}}</span>
+				</div>
+				<div>
+					<div>注册地址</div>
+					<span>{{detail.provinceName}}{{detail.cityName}}{{detail.registerAddress}}</span>
+				</div>
+				<div>
+					<div>主营业务</div>
+					<span>{{detail.mainBusinessName}}</span>
+				</div>
+				<div>
+					<div>营业执照</div>
+						<!-- <a :href="imgurl" download="img.png">img</a> -->
+						<span><img :src="imgurl" /></span>
+				</div>
+			</div>
+			
+			<div class="approve-sx2">
+				<div class="busDetailTitle">联系人信息</div>
+				<div class="appdel" v-for="(item,index) in contactList">
+					<div>
+						<div>联系人</div>
+						<span>{{item.name}}</span>
+					</div>
+					<div>
+						<div>联系电话</div>
+						<span>{{item.tel}}</span>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		</div>
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				gestureConfig: {
+				        tap: true, //默认为false
+								longtap: true
+				      },
+			});
+			
+			
+			
+		var id = JSON.parse(localStorage.getItem('loginUser')).comId;
+		var vm = new Vue({
+			el: '#app',
+			data(){
+				return{
+					detail: '',
+					people: [],
+					tels: [],
+					imgurl: zfyurl+'/admin/api/center/attach/view/',
+					imgurl2: zfyurl+'/admin/api/center/attach/view/',
+					comClassName: '',
+					address: '',
+					contactList: []
+					
+				}
+			},
+			methods: {
+				pageHandler() {
+					   				  $.ajax({
+					   				  					 	url: zfyurl+"/app/api/company/view",
+					   				  					 	data: {
+																		'id': JSON.parse(localStorage.getItem('loginUser')).comId
+																	},
+					   				  					 	type:"POST",
+					   				  					 	dataType:'jsonp',
+					   				  					 	success: res=>{
+					   				  					 		if(res.code=="M000000"){
+					   				  					 			console.log(res.data);
+																			this.detail = res.data;
+																			if(res.data.licAttachmentId =="" ||res.data.licAttachmentId==null||typeof(res.data.licAttachmentId)=="undefined"){
+																				this.imgurl = "../images/logo.png";
+																			}else{
+																				this.imgurl +=res.data.licAttachmentId+'.png';
+																			}
+																			
+																			this.imgurl2 +=res.data.authorizedAttachmentId+'.png';
+																			this.comClassName = res.comClassName;
+																			this.address = res.comProvinceName+res.comCityName+res.data.comAddress;
+																			for(var i in res.contactsList){
+																				this.contactList.push({name: res.contactsList[i].name,tel: res.contactsList[i].tel,phone: res.contactsList[i].phone,email: res.contactsList[i].email})
+																			}
+					   				  					 		}
+					   				  					 		if(res.code=="E000000"){
+					   				  					 			mui.alert(res.info)
+					   				  					 		}
+					   				  					 		
+					   				  					 	}
+					   				  				})
+				 },
+			},
+			created(){
+				statis('1', 'enterprise-data.html', '进入企业信息页面');
+							 
+							 this.pageHandler();
+			}
+		})
+			$(function(){
+				document.addEventListener("error", function (e) {
+						    var elem = e.target;
+						    if (elem.tagName.toLowerCase() == "img") {
+						        elem.src = "../images/logo.png";
+						    }
+						}, true);
+			});
+			
+		</script>
+	</body>
+
+</html>

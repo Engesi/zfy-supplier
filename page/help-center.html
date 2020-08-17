@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>帮助中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			h2{font-size: 20px;color: #333;line-height: 18px;font-weight: bold;}
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				h2{font-size: 18px;color: #333;line-height: 18px;}
+				p{font-size: 14px;}
+			}
+			
+			body {
+				background: #e4e4e4;
+			}
+			
+			.handle {
+				padding: 10px;
+				background: #ffffff;
+				margin-bottom: 15px;
+			}
+			
+			.handleTop {
+				padding-top: 10px;
+				margin-bottom: 10px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">帮助中心</h1>
+		</header>
+
+		<div class="pad-top-74" style="position: relative;" id="app">
+			<div class="handle" v-for="(item, index) in videoList">
+				<video :src="item.video" controls preload="none" width="100%" height="300"></video>
+				<!-- <source src="/easy/api/attach/view/attach51243" type="video/mp4"> -->
+				<div class="handleTop">{{item.title}}</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init();
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						pageNum: '',
+						pageSize: 5,
+						videoList: []
+					}
+				},
+				methods: {
+					getVideos(pageNum){
+						this.pageNum = pageNum;
+						$.ajax({
+											url: zfyurl+"/app/api/user/helpCenter?type=4",
+											type: 'POST',
+											data: {
+												page: this.pageNum,
+												pageSize: this.pageSize
+											},
+											dataType: 'jsonp',
+											success: res=>{
+												if(res.code=='M000000'){
+													for(let i in res.data){
+														res.data[i].video = zfyurl+'/easy/api/attach/view/'+res.data[i].file_id;
+													}
+													this.videoList = res.data;
+													console.log(this.videoList)
+												}
+												if(res.code=='E000000'){
+													mui.alert(res.info)
+												}
+											}
+										})
+					}
+				},
+				created(){
+					statis('1', 'help-center.html', `进入帮助中心页面`)
+					this.getVideos(1)
+				}
+			})
+		</script>
+	</body>
+
+</html>
+
+

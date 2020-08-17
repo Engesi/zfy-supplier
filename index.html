@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>筑服宝</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_711115_zi5p2o0lhn.css"/>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		
+		<script>
+			mui.init();
+			mui.plusReady(function() {
+				var login = localStorage.getItem('login') || 0;
+				if(login==0){
+					mui.openWindow({
+						url: "login/login.html",
+						id: "login"
+					})
+				}else if(login==1){
+					mui.alert('请用供应商账号登录', "", "", "", "div");
+					mui.openWindow({
+						url: "login/login.html",
+						id: "login"
+					})
+				}else if(login==2){
+					localStorage.setItem('bs', 2)
+					mui.openWindow({
+						url: "index-supplier.html",
+						id: "supplier"
+					})
+				}else if(login==3){
+					localStorage.setItem('bs', 2)
+					mui.openWindow({
+						url: "index-supplier.html",
+						id: "supplier"
+					})
+				}
+			})
+			
+		</script>
+		<!--通知头部模板-->
+		
+	</body>
+</html>

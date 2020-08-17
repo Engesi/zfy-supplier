@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>登陆</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<style>
+			@media only screen and (max-width: 340px) {
+				#phone,#sendCode{font-size: 14px;}
+			}
+			.hint{color: #fff;}
+
+			.code {
+				width:30%;
+				height:40px;
+				background-color: #dfcdff;
+				text-align:center;
+				font-size:24px;
+				line-height:40px;
+				letter-spacing:3px;
+				float: right;
+				display: inline;
+			}
+			
+			#getCode {
+				width: 30%;
+			}
+			
+			input{
+			    caret-color: #fff !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="login">
+			<div class="tc login-logo">
+				<img src="../images/logo.png" />
+			</div>
+			<h1 class="font-18 col-fff tc font-bold pad-top-20">筑服云——建筑产业链服务平台</h1>
+			<ul class="login-input">
+				<li>
+					<div class="icon tc">
+						<img src="../images/denglu-shouji.png" width="14px" />
+						<div class="line"></div>
+					</div>
+					<input style="position: relative;" type="text" placeholder="请输入手机号" @focus="inLogin" @blur="leaveLogin" id="phone" v-model="phone"/>
+					<div class="loginedpwd" v-show="isShow">
+						<ul>
+							<li v-for = "(item, index) in selectPhone" @tap="setPhone(item)">{{item}}</li>
+						</ul>
+					</div>
+					
+				</li>
+				<li>
+					<div class="icon tc">
+						<img src="../images/imgcode.png" width="20px" />
+						<div class="line"></div>
+					</div>
+					<input type="text" placeholder="请输入图形验证码" id="imgCode" />
+					<div id="checkCode">
+				</li>
+				<li>
+					<div class="icon">
+						<img src="../images/denglu-mima.png" />
+						<div class="line"></div>
+					</div>
+					<input type="text" placeholder="请输入短信验证码" @keyup.13="tapToSearch" id="sendCode" />
+					<button id="getCode">获取验证码</button>
+				</li>
+			</ul>
+			<p class="hint  mar-top-10" style="display: none;">验证码10分钟之内有效！</p>
+			<div class="tc login-a pad-top-15">
+				<a href="login.html" withtitle="false">密码登录</a>
+				<!-- <a href="register.html" withtitle="false">免费注册</a> -->
+				<a href="reset.html" class="bor-none" withtitle="false">忘记密码</a>
+			</div>
+			<input type="button" value="登 录" id="login" />
+			<!--<div class="third-party tc">
+				<p class="col-fff font-16">第三方账号登录</p>
+				<a href="javascript:;"><img src="../images/wx_03.png" width="30px" /></a>
+			</div>-->
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			var restPhone = /^[1][3,4,5,7,8][0-9]{9}$/;
+			//重新获取验证码倒计时 
+			var countdownTime = 60;
+			//验证码失效倒计时
+			var codeInvalidTime = 6000;
+			
+			//随机生成验证码
+			var yzm = {
+			    createCode: function() {
+			        this.code = ""; //存放验证码
+			        var codeLength = 4; //设置验证码长度为4
+			        var checkCode = document.querySelector("#checkCode");
+			        var codeChars = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+			            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+			            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //验证码要随机挑选的字符
+			        for (var i = 0; i < codeLength; i++) {
+			            var charIndex = Math.floor(Math.random() * 52); //随机产生0-52之间的整数
+			            this.code += codeChars[charIndex]; //将随机指向我们规定的字符添加到code容器里
+			        }
+			        if (checkCode) {
+									$('#checkCode').addClass('code');
+									$('#checkCode').text(this.code)
+			        }
+			    },
+			    isLegal: function() {
+			        var InputValue = $("#imgCode").val();
+			        console.log(InputValue);
+			        console.log(this.code);
+							
+			        if (InputValue.toLowerCase() == this.code.toLowerCase()) {
+			            //alert("验证码正确!");
+									return true;
+			        } else {
+			           // alert("验证码不正确,请重试!");
+								 return false;
+			        }
+			    }
+			}
+			
+			$(function() {
+				yzm.createCode();
+				$('#checkCode').bind('click', ()=>{
+					yzm.createCode();
+				})
+				$("#getCode").click(function() {
+					var phone = $("#phone").val();
+					if(restPhone.test(phone) == false) {
+						mui.alert("请输入正确的手机号 !");
+						return false;
+					};
+					let imgTrue = yzm.isLegal();
+					if(!imgTrue){
+						mui.alert("请输入正确的图形验证码 !");
+						return false;
+					}
+					console.log(phone);
+					$(".hint").show();
+					sendMsg();
+					var url = zfyurl+"/app/api/user/loginSendCode";
+					statis('2', 'login-dx.html', '短信验证码登录页面获取短信验证码');
+					$.ajax({
+						type: "post",
+						url: url,
+						data: {
+							phone: phone
+						},
+						dataType: "jsonp",
+						success: function(res) {
+							if(res.code == "M000000") {
+								yzm.createCode();
+								localStorage.removeItem("loginSendCode");
+								/* localStorage.setItem("loginSendCode", res.info); */
+								codeInvalid();
+
+							} else {
+								mui.alert(res.info);
+								$("#getCode").prop("disabled", false);
+								$("#getCode").text("重新获取验证码");
+								countdownTime = 60;
+								return false;
+							}
+
+						}
+					});
+
+				})
+				
+
+				$("#login").click(function() {
+					 var loginSendCode = localStorage.getItem("loginSendCode");
+					
+					var sendCode = $("#sendCode").val();
+					/*if(sendCode != loginSendCode) {
+						mui.alert("请输入正确的验证码 !");
+						return false;
+					} */
+					var phone = $("#phone").val();
+					if(restPhone.test(phone) == false) {
+						mui.alert("请输入正确的手机号 !");
+						return false;
+					}
+
+					var url = zfyurl+"/app/api/user/smsLogin";
+					statis('2', 'login-dx.html', '用短信验证码登录');
+					$.ajax({
+						type: "post",
+						url: url,
+						data: {
+							phone: phone,
+							msgCode: sendCode
+						},
+						dataType: "jsonp",
+						success: function(res) {
+							if(res.code == "M000000") {
+								var data = res.data;
+								console.log(data);
+								/*if(data.identifyFlag != "1") {
+										mui.alert("当前账号还未认证,请前去认证 !");
+										return false;
+								}*/
+								loginUser = JSON.stringify(data);
+								localStorage.removeItem('loginUser');
+								localStorage.setItem('loginUser', loginUser);
+								localStorage.setItem('userId', data.id);
+								if(data.registerIdentify=='1'){
+					 		    	 mui.alert('请用供应商账号登录', "", "", "", "div");
+					 		    }
+					 		    if(data.registerIdentify=='2'){
+					 		    	localStorage.setItem('login', 2);
+										localStorage.setItem('bs', 2);
+										addPhone(phone);
+					 		    	mui.openWindow({
+					 		    		url: "../index-supplier.html",
+					 		    		id: "supplier"
+					 		    	})
+					 		    }
+					 		    if(data.registerIdentify=='3'){
+					 		    	localStorage.setItem('login', 3);
+										localStorage.setItem('bs', 1);
+										addPhone(phone);
+					 		    	mui.openWindow({
+					 		    		url: "../index-supplier.html",
+					 		    		id: "supplier"
+					 		    	})
+					 		    }
+							} else {
+								mui.alert(res.info);
+							}
+
+						}
+					});
+
+				})
+
+				function sendMsg() {
+
+					if(countdownTime == 0) {
+						$("#getCode").prop("disabled", false);
+						$("#getCode").text("获取验证码");
+						countdownTime = 60;
+						return false;
+					} else {
+						$("#getCode").prop("disabled", true);
+						$("#getCode").text(countdownTime + "S");
+						countdownTime--;
+					}
+
+					setTimeout(function() {
+						sendMsg();
+					}, 1000);
+				}
+
+				function codeInvalid() {
+					if(codeInvalidTime == 0) {
+						localStorage.removeItem("loginSendCode");
+						codeInvalidTime = 6000;
+						return false;
+					} else {
+						codeInvalidTime--;
+					}
+					setTimeout(function() {
+						codeInvalid();
+					}, 1000);
+				}
+
+			});
+			var first = null;
+			mui.back = function() {
+				//首次按键，提示‘再按一次退出应用’
+				if(!first) {
+					first = new Date().getTime();
+					mui.toast('再按一次退出应用');
+					setTimeout(function() {
+						first = null;
+					}, 1000);
+				} else {
+					if(new Date().getTime() - first < 1000) {
+						plus.runtime.quit();
+					}
+				}
+			};
+			
+			var vm = new Vue({
+				el: '.login',
+				data() {
+					return {
+						phone: '',
+								phoneListBuyer: [],
+								selectPhone: [],
+								isShow: false,
+							}
+						},
+						watch: {
+							'phone': function(newp, oldp){
+								this.selectPhone = [];
+								if(this.phoneListBuyer.length!=0){
+									let length = newp.length;
+									for (let item of this.phoneListBuyer){
+										if(item.slice(0, length).includes(newp)){
+											this.selectPhone.push(item)
+										}
+									}
+								}
+							}
+						},
+						methods: {
+							leaveLogin(){
+								this.isShow = false;
+							},
+							inLogin(){
+								this.isShow = true;
+							},
+							setPhone(phone){
+								this.phone = phone;
+								this.isShow = false;
+							},
+					tapToSearch(){
+							
+							 var loginSendCode = localStorage.getItem("loginSendCode");
+							
+							var sendCode = $("#sendCode").val();
+							/*if(sendCode != loginSendCode) {
+								mui.alert("请输入正确的验证码 !");
+								return false;
+							} */
+							var phone = $("#phone").val();
+							if(restPhone.test(phone) == false) {
+								mui.alert("请输入正确的手机号 !");
+								return false;
+							}
+						
+							var url = zfyurl+"/app/api/user/smsLogin";
+						statis('2', 'login-dx.html', '用短信验证码登录');
+							$.ajax({
+								type: "post",
+								url: url,
+								data: {
+									phone: phone,
+									msgCode: sendCode
+								},
+								dataType: "jsonp",
+								success: function(res) {
+									if(res.code == "M000000") {
+										var data = res.data;
+										console.log(data);
+										/*if(data.identifyFlag != "1") {
+												mui.alert("当前账号还未认证,请前去认证 !");
+												return false;
+										}*/
+										loginUser = JSON.stringify(data);
+										localStorage.removeItem('loginUser');
+										localStorage.setItem('loginUser', loginUser);
+										localStorage.setItem('userId', data.id);
+										if(data.registerIdentify=='1'){
+							 		    	 mui.alert('请用供应商账号登录', "", "", "", "div");
+							 		    }
+							 		    if(data.registerIdentify=='2'){
+							 		    	localStorage.setItem('login', 2);
+												localStorage.setItem('bs', 2);
+												addPhone(phone);
+							 		    	mui.openWindow({
+							 		    		url: "../index-supplier.html",
+							 		    		id: "supplier"
+							 		    	})
+							 		    }
+							 		    if(data.registerIdentify=='3'){
+							 		    	localStorage.setItem('login', 3);
+												localStorage.setItem('bs', 1);
+												addPhone(phone);
+							 		    	mui.openWindow({
+							 		    		url: "../index-supplier.html",
+							 		    		id: "supplier"
+							 		    	})
+							 		    }
+									} else {
+										mui.alert(res.info);
+									}
+						
+								}
+							});
+					}
+				},
+				created() {
+					statis('1', 'login-dx.html', '进入短信验证码登录页面');
+					this.phoneListBuyer = JSON.parse(localStorage.getItem('phoneListBuyer')) || [];
+				}
+			})
+			
+		</script>
+	</body>
+
+</html>

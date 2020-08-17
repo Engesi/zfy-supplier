@@ -1,0 +1,514 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>基本信息编辑</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+			h2{font-size: 20px;color: #333;line-height: 18px;font-weight: bold;}
+			p{font-size: 16px;line-height: 26px;padding-top: 15px;color: #494949;}
+			@media only screen and (max-width: 320px) {
+				h2{font-size: 18px;color: #333;line-height: 18px;}
+				p{font-size: 14px;}
+			}
+			.moren,.message{display: none;}
+		
+			
+			
+			#getcode {
+				width: 18%;
+			}
+			
+			.mui-input-group .mui-row {
+				height: auto !important; 
+			}
+			
+			#textarea {
+				    background: #f8f8fa;
+				    margin-top: 5px;
+				    padding: 5px;
+				    border-radius: 8px;
+						width: 90%;
+						margin-left: 5%;
+						margin-bottom: 80px;
+						height: 60pt;
+			}
+			
+			
+			
+			.mui-row>div:first-child {
+				width: 90%;
+				display: block;
+				margin: 0 auto;
+				padding: 15px 0;
+			}
+			
+			.mui-row>input {
+				padding: 0;
+				background-color: #f8f8fa;
+				width: 90%;
+				display: block;
+				margin-left: 5%;
+			}
+			
+			.mui-radio input {
+				top: -3px !important;
+			}
+			
+			.phone-row {
+				display: inline-block !important;
+				width: 80% !important;
+			}
+			
+			.mui-popover {
+				width: 95%;
+				top: 40%;
+				margin-left: 2.5%;
+				position: fixed;
+			}
+			
+			.resetLabel {
+				text-align: left;
+			}
+			
+			#codeTip {
+				text-align: left;
+				    /* padding-left: 5%; */
+				    padding: 10px 5%;
+				    font-size: 15px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-closeempty"></a>
+					</span>
+					<h1 class="mui-title">基本信息编辑</h1>
+		</header>
+
+		<div class=" pad-top-74" style="position: relative;" id="app">
+			
+			<form class="mui-input-group" id="personedit">
+			    <div class="mui-row">
+			      <div>姓名</div>
+						<input type="text" name="userName" id="userName" class="mui-input-clear" placeholder="" :value="userInfo.userName">
+			    </div>
+			    
+					<div class="mui-row">
+						<div>性别</div>
+						<div class="flexwrap">
+							<div class="mui-radio mui-left" >
+								<label>男</label>
+								<input name="sex" id="male" value="1" type="radio">
+							</div>
+							<div class="mui-radio mui-left">
+								<label>女</label>
+								<input name="sex" id="female" value="2" type="radio">
+							</div>
+						</div>
+					</div>
+					
+					<div class="mui-row">
+					  <div>部门：</div>
+						<input type="text" name="orgName" disabled class="mui-input-clear" placeholder="" :value="userInfo.orgName">
+					</div>
+					
+					<div class="mui-row">
+					  <div>职务：</div>
+						<input type="text" name="roleName" disabled class="mui-input-clear" placeholder="" :value="userInfo.roleName">
+					</div>
+					
+					<div class="mui-row" style="position: relative;">
+					  <div>手机：</div>
+						<input type="text" name="phone" readonly class="mui-input-clear phone-row" placeholder="" :value="userInfo.phone">
+						<button type="button" id="choose" class="mui-btn mui-btn-primary" style="position: absolute; right: 6%; height: 40px;">修改</button>
+					</div>
+					
+					<div class="mui-row">
+					  <div>邮箱：</div>
+						<input type="text" name="email" class="mui-input-clear" placeholder="" :value="userInfo.email">
+					</div>
+					
+					<div class="mui-row">
+					  <div>毕业院校：</div>
+						<input type="text" name="graduate" class="mui-input-clear" placeholder="" :value="userInfo.graduate">
+					</div>
+					
+					<div class="mui-row">
+					  <div>出生日期</div>
+						<input id="birth" name="birthday" type="text" class="mui-input-clear" placeholder=" " :value="userInfo.birthday">
+					</div>
+					
+					<div class="mui-row">
+					  <div>工作单位：</div>
+						<input type="text" name="employCompany" class="mui-input-clear" placeholder="" :value="userInfo.employCompany">
+					</div>
+					
+					<div class="mui-row">
+					  <div>最高学历：</div>
+						
+						<input id="graduate" @tap="education" type="text" class="mui-input-clear" placeholder=" " :value="educationInfo">
+						
+					</div>
+					
+					<div class="mui-row">
+					  <div>工作时长：</div>
+						<input type="text" name="workingYears" class="mui-input-clear" placeholder="" :value="userInfo.workingYears">
+					</div>
+					
+					<div class="mui-row">
+					  <div>毕业日期</div>
+						<input id="enddate" name="graduateDate" type="text" class="mui-input-clear" placeholder="" :value="userInfo.graduateDate">
+					</div>
+					
+					
+					
+					
+					
+					<div class="mui-row">
+						<div>个人简介</div>
+					  <textarea id="textarea" name="selfIntroduction" placeholder="" class="mui-input-speech mui-input-clear" :value="userInfo.selfIntroduction"></textarea>
+					</div>
+					
+			    <div class="approveBottomWait">
+			    
+			    	<div type="submit"class="fixedBig" id="save">保存</div>
+			    </div>
+			</form>
+			<div id="popover" class="mui-popover reset">
+			  <form class="mui-input-group">
+			      <div class="mui-row">
+			          <div class="resetLabel">密码：</div>
+			          <input type="password" id="pwd" class="mui-input-password" placeholder="请输入密码">
+			      </div>
+						<div class="mui-row">
+						  <div class="resetLabel">新手机号：</div>
+							<div class="mui-row" style="display: flex;">
+								<input id="phone" type="text" class="mui-input-clear" placeholder="输入手机号" style="width: 60%;">
+								<button type="button" id="getCode" @tap="getCode" class="mui-btn mui-btn-primary" style="position: absolute; right: 6%; height: 40px;">验证码</button>
+							</div>
+							
+						</div>
+						<div class="mui-row">
+						  <div class="resetLabel">验证码：</div>
+							<input id="code" type="text" class="mui-input-clear" placeholder="输入验证码">
+							<div id="codeTip">验证码1分钟之内有效！</div>
+						</div>
+						<div class="mui-button-row">
+							<button type="button" class="mui-btn mui-btn-danger" id="cancel">取消</button>
+						  <button type="button" class="mui-btn mui-btn-primary" @tap="update">立即修改</button>
+						</div>
+			  </form>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init();
+			var restName = /^[\u4e00-\u9fa5]+$/;
+			$("#codeTip").hide()
+			function sendMsg() {
+			
+				if(countdownTime == 0) {
+					$("#getCode").prop("disabled", false);
+					$("#getCode").text("获取验证码");
+					countdownTime = 60;
+					return false;
+				} else {
+					$("#getCode").prop("disabled", true);
+					$("#getCode").text(countdownTime + "S");
+					countdownTime--;
+				}
+			
+				setTimeout(function() {
+					sendMsg();
+				}, 1000);
+			}
+			
+			function codeInvalid() {
+				if(codeInvalidTime == 0) {
+					$("#codeTip").hide();
+					codeInvalidTime = 60;
+					return false;
+				} else {
+					codeInvalidTime--;
+				}
+				setTimeout(function() {
+					codeInvalid();
+				}, 1000);
+			}
+			
+			var restPhone = /^[1][3,4,5,7,8][0-9]{9}$/;
+			var restPass = /(?!^(\d+|[a-zA-Z]+|[~!@#$%^&*?]+)$)^[\w~!@#$%^&*?]{6,20}$/;
+			//重新获取验证码倒计时 
+			var countdownTime = 60;
+			//验证码失效倒计时
+			var codeInvalidTime = 60;
+			
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return{
+						userInfo: '',
+						educationInfo: '',
+						educationCode: '',
+						selectBirth: '',
+						selectEnd: ''
+					}
+				},
+				methods: {
+					getUserInfo(){
+						$.ajax({		
+									url: zfyurl+"/app/api/user/findUserInfo",
+									data: {
+										'userId': localStorage.getItem('userId'),
+									},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										if(res.code=="M000000"){
+											console.log(res.data.education)
+											if(res.data.education==0){
+												this.educationInfo = "博士";
+											}else if(res.data.education==1){
+												this.educationInfo = "硕士";
+											}else if(res.data.education==2){
+												this.educationInfo = "本科";
+											}else if(res.data.education==3){
+												this.educationInfo = "大专";
+											}
+											console.log(this.educationInfo)
+											this.userInfo = res.data;
+											if(res.data.birthday!=null&&res.data.birthday!=""){
+												let birthArr = res.data.birthday.split('/');
+												this.selectBirth = birthArr.join('-');
+											}else {
+												this.selectBirth = "";
+											}
+											
+											if(res.data.graduateDate!=""&&res.data.graduateDate!=null){
+												let endArr = res.data.graduateDate.split('/');
+												this.selectEnd = endArr.join('-');
+											}else{
+												this.selectEnd = "";
+											}
+											
+											
+											console.log(this.selectBirth);
+											console.log(res.data.sex)
+											if(res.data.sex==1){
+												$('#male').attr('checked',true)
+											}else if(res.data.sex==2){
+												$('#female').attr('checked',true)
+											}else{
+												
+											}
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info)
+										}
+										
+									}
+								})
+					},
+					getCode(){
+						var pwd = $("#pwd").val();
+						var phone = $("#phone").val();
+						if(pwd == "" || pwd.length > 40) {
+							mui.alert("密码不能为空 !");
+							return false;
+						};
+						if(pwd.length > 40) {
+							mui.alert("密码长度不得超过40位 !");
+							return false;
+						};
+						if(restPhone.test(phone) == false) {
+							mui.alert("请输入正确的手机号 !");
+							return false;
+						};
+						
+						$.ajax({
+							type: "post",
+							url: zfyurl+"/app/api/user/chekcPwdAndPhone",
+							data: {
+								passwd: pwd,
+								phone: phone,
+								userId: localStorage.getItem('userId')
+							},
+							dataType: "jsonp",
+							success: function(res) {
+								if(res.code == "M000000") {
+									sendMsg();
+									$("#codeTip").show();
+									codeInvalid();
+						
+								} else {
+									mui.alert(res.info);
+									$("#getCode").prop("disabled", false);
+									$("#getCode").text("重新获取验证码");
+									countdownTime = 60;
+									return false;
+								}
+						
+							}
+						});
+					},
+					update(){
+						var pwd = $("#pwd").val();
+						var phone = $("#phone").val();
+						var code = $("#code").val();
+						if(pwd == "" || pwd.length > 40) {
+							mui.alert("密码不能为空 !");
+							return false;
+						};
+						if(pwd.length > 40) {
+							mui.alert("密码长度不得超过40位 !");
+							return false;
+						};
+						if(restPhone.test(phone) == false) {
+							mui.alert("请输入正确的手机号 !");
+							return false;
+						};
+						if(code == "") {
+							mui.alert("请输入验证码 !");
+							return false;
+						};
+						statis('2', 'personal-edit.html', '修改了手机号');
+						$.ajax({
+							type: "post",
+							url: zfyurl+"/app/api/user/updateUserPhone",
+							data: {
+								passwd: pwd,
+								phone: phone,
+								userId: localStorage.getItem('userId'),
+								code: code
+							},
+							dataType: "jsonp",
+							success: function(res) {
+								if(res.code == "M000000") {
+									localStorage.setItem('login', 0);
+									mui('.reset').popover('toggle');
+									mui.openWindow({
+										url: "../login/login.html",
+										id: "login"
+									})
+								} else {
+									mui.alert(res.info);
+								}
+						
+							}
+						});
+						
+					},
+					education(){
+						var picker = new mui.PopPicker();
+						 picker.setData([{value:'0', text: '博士'}, {value: '1', text: '硕士'}, {value: '2', text: '本科'}, {value: '3', text: '大专'}]);
+						 picker.show(function (selectItems) {
+						    console.log(selectItems[0].text);//智子
+						    console.log(selectItems[0].value);//zz 
+								vm.educationInfo = selectItems[0].text;
+								vm.educationCode = selectItems[0].value;
+						  })
+					}
+				},
+				created(){
+					statis('1', 'personal-edit.html', '进入个人资料编辑页面');
+					this.getUserInfo();
+				}
+				
+			})
+			
+			
+			$('#birth').bind('tap',function(){
+				var dtPicker2 = new mui.DtPicker({
+					type: 'date',
+					beginYear: '1900',
+					 "value": vm.selectBirth  ,
+				});
+				dtPicker2.show(function (selectItems) {
+				        console.log('开始时间',selectItems.y.text);//{text: "2016",value: 2016} 
+								$('#birth').val(`${selectItems.y.value}/${selectItems.m.value}/${selectItems.d.value}`);
+								vm.selectBirth = `${selectItems.y.value}-${selectItems.m.value}-${selectItems.d.value}`;
+				    })
+			})
+			
+			$('#enddate').bind('tap',function(){
+				var dtPicker3 = new mui.DtPicker({
+					type: 'date',
+					beginYear: '1900',
+					value: vm.selectEnd,
+				});
+				dtPicker3.show(function (selectItems) {
+				        console.log('开始时间',selectItems.y.text);//{text: "2016",value: 2016} 
+								$('#enddate').val(`${selectItems.y.value}/${selectItems.m.value}/${selectItems.d.value}`);
+								vm.selectEnd = `${selectItems.y.value}-${selectItems.m.value}-${selectItems.d.value}`;
+								console.log(vm.selectEnd)
+				    })
+			})
+			
+			
+			$("#choose").bind('tap',function(){
+				console.log(12)
+				mui('.reset').popover('toggle');
+			})
+			
+			$("#cancel").bind('tap',function(){
+							console.log(12)
+							mui('.reset').popover('toggle');
+						})
+			
+			$("#save").bind('tap',()=>{
+				let isNext = false;
+				let userName = $("#userName").val();
+				if(userName.length >30) {
+					mui.toast('请输入正确的姓名', {type: 'div'})
+					return false;
+				}else{
+					isNext = true;
+				}
+				if(isNext){
+					let t = $('#personedit').serializeArray();
+					t.push({name: "id", value: localStorage.getItem('userId')});
+					t.push({name: "education", value: vm.educationCode});
+					statis('2', 'personal-edit.html', '保存个人资料');
+					$.ajax({
+						url: zfyurl+'/app/api/user/updateUserInfo',
+						data: t,
+						type: 'POST',
+						dataType: 'jsonp',
+						success: res=>{
+							if(res.code=='M000000'){
+								mui.toast(res.info);
+								mui.plusReady(function() {
+										var ws=plus.webview.currentWebview().opener();
+										mui.fire(ws, 'set', {  
+												
+										});
+										mui.back()
+								})
+							}
+							if(res.code=="E000000"){
+								mui.alert(res.info)
+							}
+						}
+					})
+				}
+				
+			})
+			
+		</script>
+	</body>
+
+</html>
+
+

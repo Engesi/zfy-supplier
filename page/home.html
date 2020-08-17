@@ -1,0 +1,455 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>工作台</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_sjrdslu2hlq.css" />
+		<style type="text/css">
+			
+			
+		</style>
+	</head>
+
+	<body>
+		<div class="home" v-cloak>
+				<div class="hometop">
+					<div id="head">
+						<img :src="imgurl" class="fl" />
+					</div>
+					<div class="headright">
+						<div id="name">{{userInfo.userName}}</div>
+						<div id="company">{{userInfo.orgName}}</div>
+					</div>
+				</div>
+				<div class="homemiddle">
+					<div><a href="personal-data.html" withtitle="false"><img src="../images/mine.png" /><span>个人资料</span><span class="iconfont icon-jiantou"></span></a></div>
+					<div><a href="enterprise-data.html" withtitle="false"><img src="../images/createtask@3x.png" /><span>企业信息</span><span class="iconfont icon-jiantou"></span></a></div>
+					<div><a href="customer-service.html" withtitle="false"><img src="../images/customerservice@3x.png" /><span>客服中心</span><span class="iconfont icon-jiantou"></span></a></div>
+					<div><a href="help-center.html" withtitle="false"><img src="../images/prompt@3x.png" /><span>帮助中心</span><span class="iconfont icon-jiantou"></span></a></div>
+					<div><a href="account-manage.html" withtitle="false"><img src="../images/unlock@3x.png" /><span>修改密码</span><span class="iconfont icon-jiantou"></span></a></div>
+					<div><a href="../login/agreement-private.html" withtitle="false"><img src="../images/yinsi.png" /><span>隐私政策</span><span class="iconfont icon-jiantou"></span></a></div>
+					<div><a href="../login/agreement.html" withtitle="false"><img src="../images/xieyi.png" /><span>服务协议</span><span class="iconfont icon-jiantou"></span></a></div>
+					
+				</div>
+				
+				<div class="homemiddle">
+					<div id="outlogin"><a href="javascript" withtitle="false"><img src="../images/smallscreen@3x.png" /><span>退出当前账号</span><span class="iconfont icon-jiantou"></span></a></div>
+				</div>
+				
+				
+				<!-- <div><a href="account-manage.html" withtitle="false">账号管理</a></div>
+				<div><a href="../page/appProject.html" withtitle="false">审批</a></div>
+				<div><a href="approve1.html" withtitle="false">模板1</a></div> -->
+				
+				<!-- <div>常用地址管理</div> -->
+		</div>
+		<!--工作台模块部分 end-->
+		<!--退出按钮 start-->
+		<!--<div class="pad-lr-45 pad-tb-20">
+			<button type="button" class="corner-btn theme-bg-supplier" id="sign_out">退出登陆</button>
+		</div>-->
+		<!--退出按钮 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init();
+			mui.plusReady(function() {
+				$('#outlogin').bind('tap',()=>{
+					statis('2', 'home.html', `退出登录`)
+					localStorage.setItem('login', 0);
+					let bs = localStorage.getItem('bs');
+											
+													if(plus.webview.getWebviewById('login-dx.html')){
+														plus.webview.getWebviewById('login-dx.html').close();
+													}
+													if(plus.webview.getWebviewById('login')){
+														plus.webview.getWebviewById('login').close();
+													}
+													if(plus.webview.getWebviewById('login.html')){
+														plus.webview.getWebviewById('login.html').close();
+													}
+													setTimeout(function(){
+														mui.openWindow({
+															url: "../login/login.html",
+															id: "login"
+														});
+														plus.webview.getWebviewById('supplier').close();
+													},500)
+														
+													
+												
+											
+					
+				})
+				 
+			})
+			
+			var vm = new Vue({
+				el: '.home',
+				data(){
+					return {
+						userInfo: '',
+						imgurl: ''
+					}
+				},
+				methods: {
+					getUserInfo(id){
+						$.ajax({		
+									url: zfyurl+"/app/api/user/findUserInfo",
+									data: {
+										/* 'userId': '260c363f7b21437484f742cadbb5e0fb', */
+										'userId': id,
+									},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										if(res.code=="M000000"){
+													this.userInfo = res.data;
+													if(res.data.iconUrl!=""&&res.data.iconUrl!=null&&typeof(res.data.iconUrl)!="undefined"){
+														this.imgurl = zfyurl+"/admin/api/center/attach/view/"+res.data.iconUrl+".png"
+													}else{
+														this.imgurl = "../images/logo.png"
+													}
+													console.log(this.imgurl)
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info)
+										}
+										
+									}
+								})
+					}
+				},
+				created(){
+					statis('1', 'home.html', '查看我的页面')
+					let userId = localStorage.getItem('userId');
+					console.log(localStorage.getItem('userId'))
+					this.getUserInfo(userId)
+				}
+			})
+			
+			//给失效的图片改成默认样式
+			$(function(){
+				document.addEventListener("error", function (e) {
+						    var elem = e.target;
+						    if (elem.tagName.toLowerCase() == "img") {
+						        elem.src = "../images/logo.png";
+						    }
+						}, true);
+			});
+			
+			window.addEventListener('refresh', function (event) {
+				console.log('刷新')
+			      vm.getUserInfo(localStorage.getItem('userId'))
+			 })
+			
+			/* document.getElementById('head').addEventListener('tap', function() { 
+			    if(mui.os.plus) { 
+			        var a = [{ 
+			            title: "拍照" 
+			    }, { 
+			        title: "从手机相册选择" 
+			    }]; 
+			    plus.nativeUI.actionSheet({ 
+			        title: "修改用户头像", 
+			        cancel: "取消", 
+			        buttons: a 
+			    }, function(b) { //actionSheet 按钮点击事件
+			        switch(b.index) { 
+			        case 0: 
+			            break; 
+			        case 1: 
+			            getImage(); //拍照
+			            break; 
+			        case 2: 
+			            galleryImg(); //打开相册
+			            break; 
+			        default: 
+			            break; 
+			        } 
+			    }) 
+			    } 
+			}, false); */
+			
+			function getImage() {
+			    var cmr = plus.camera.getCamera(); 
+			    var res = cmr.supportedImageResolutions[0]; 
+			    var fmt = cmr.supportedImageFormats[0]; 
+			    cmr.captureImage(function(path) { 
+			        //plus.io.resolveLocalFileSystemURL(path, function(entry) {   
+			    plus.io.resolveLocalFileSystemURL(path, function(entry) { 
+			        var localUrl = entry.toLocalURL(); 
+			        uploadHead(localUrl + "?version=" + new Date().getTime()); 
+			    }, function(err) { 
+			        console.error("拍照失败：" + err.message); 
+			    }, { 
+			        index: 1 
+			    }); 
+			    }); 
+			}
+			
+			//  function galleryImg() { 
+			//     plus.gallery.pick(function(a) { 
+			//     plus.io.resolveLocalFileSystemURL(a, function(entry) { 
+			//         plus.io.resolveLocalFileSystemURL("_doc/", function(root) { 
+			//         root.getFile("head.png", {}, function(file) {
+			//             //文件已存在 
+			//             file.remove(function() { 
+			//             console.log("file remove success"); 
+			//             entry.copyTo(root, 'head.png', function(e) { 
+			//                 var e = e.fullPath + "?version=" + new Date().getTime(); 
+			//                 uploadHead(e); /*上传图片*/ 
+			//                 //变更大图预览的src 
+			//                 //目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现 
+			//                 },function(e) { 
+			//                             console.log('copy image fail:' + e.message); 
+			//             }); 
+			//             }, function() { 
+			//             console.log("delete image fail:" + e.message); 
+			//             }); 
+			//         }, function() { 
+			//             //文件不存在 
+			//             entry.copyTo(root, 'head.png', function(e) { 
+			//             var path = e.fullPath + "?version=" + new Date().getTime(); 
+			//             uploadHead(path); /*上传图片*/ 
+			//             },function(e) { 
+			//             console.log('copy image fail:' + e.message); 
+			//             }); 
+			//         }); 
+			//         }, function(e) { 
+			//         console.log("get _www folder fail"); 
+			//         }) 
+			//     }, function(e) { 
+			//         console.log("读取拍照文件错误：" + e.message); 
+			//     }); 
+			//     }, function(a) {}, { 
+			//     filter: "image" 
+			//     }) 
+			// }; 
+			
+			function getImage(){
+			    var cameraObj = plus.camera.getCamera();
+			    cameraObj.captureImage(function(path){
+			        CompressImage(path)
+							console.log(`${path}第一次拍照成功`)
+			    }, function(e){
+			        console.log('取消拍照');
+			    }, {
+			        filename:'_doc/pic/',
+			        index:1
+			    });
+			}
+			
+			function galleryImg(){
+				console.log("从相册中选择图片:");
+				    plus.gallery.pick( function(path){
+				    	console.log(`${path}相册选择照片的路径`);
+							$("#head").html('<img src="'+path+'">');
+							uploadHead(path);
+							/* upload(path); */
+				    }, function ( e ) {
+				    	console.log( "取消选择图片" );
+				    }, {filter:"image"} );
+			}
+			
+			
+			function upload(path){
+			    var wt=plus.nativeUI.showWaiting();
+			    var task=plus.uploader.createUpload(zfyurl+"/zuul/admin/api/center/attach/upload",
+			        {method:"POST"},
+			        function(t,status){ //上传完成
+			            if(status==200){
+			                alert("上传成功："+t.responseText);
+			                wt.close(); //关闭等待提示按钮
+			            }else{
+			                alert("上传失败："+status);
+			                wt.close();//关闭等待提示按钮
+			            }
+			        }
+			    );
+			    //添加其他参数
+			    task.addData("name","test");
+			    task.addFile(path,{key:"dddd"});
+			    task.start();
+			}
+			
+			
+			function CompressImage(path){
+			    plus.zip.compressImage( {
+			        src:path,
+			        dst:path,
+			        overwrite:true,
+			        quality:60,
+			    }, function(event){
+			        var _src=event.target;
+			        mui.confirm("是否保存该图片","温馨提示",["否","是"],function(e){
+			            console.log(`${_src}压缩后的路径`)
+			            if(e.index){
+			                plus.gallery.save(_src, function(evt){
+												console.log(`${evt.file}保存到本地的路径`)
+			                    $("#head").html('<img src="'+evt.file+'">');
+													uploadHead(evt.file)
+			                    
+			                }, function(err){
+			                    mui.alert('保存失败: '+JSON.stringify(err));
+			                    
+			                });
+			            }
+			        })
+			
+			        console.log(event.size)
+			    }, function(err){
+			        
+			    });
+			}
+			
+			function uploadHead(imgPath) {
+				console.log(imgPath);
+				var imgArr = imgPath.split('/');
+				let fileName = imgArr[imgArr.length-1];
+				console.log(fileName)
+			    var image = new Image('200', '200'); 
+					console.log(image);
+			    image.src = imgPath; 
+					console.log(JSON.stringify(image));
+			    image.onload = function() { 
+			    var imgData = getBase64Image(image);
+					
+					var file = dataURLtoFile(imgData, fileName);
+			   console.log(JSON.stringify(file)); 
+				 console.log(imgData);
+				 var formData = new FormData();  
+				     formData.append("file", dataURLtoFile(imgData,fileName));   
+				     formData.append("fileName", fileName); 
+			    /*在这里调用上传接口*/ 
+					
+					/* $.ajax({
+										 	url: zfyurl+"/app/api/user/uploadImg",
+										 	data: formData,
+										 	type:"POST",
+										 	dataType:'jsonp',
+											contentType: false,   // 告诉jQuery不要去设置Content-Type请求头  
+											processData: false,
+										 	success: res=>{
+										 		if(res.code=="M000000"){
+													console.log(JSON.stringify(res.data))
+													mui.toast(res.data.id)
+										 		}
+										 		if(res.code=="E000000"){
+										 			mui.toast(res.info)
+										 		}
+										 		
+										 	},
+											error: res=>{
+												console.log(res)
+											}
+									}) */
+					
+			   mui.ajax(zfyurl+"/app/api/user/uploadImg", {
+			        data: { 
+			        fileName: fileName,
+							file: file
+			        }, 
+			        dataType: 'jsonp', 
+			        type: 'post',  
+			        success: function(res) {
+								console.log(JSON.stringify(res.data))
+			        mui.toast(res.data.id)
+
+			        },  
+			            error: function(xhr, type, errorThrown) { 
+			        mui.toast('网络异常，请稍后再试！'); 
+			        } 
+			    });
+			    } 
+			} 
+			
+			//将base64转成file流
+			 /* function dataURLtoFile(dataurl, filename) {//将base64转换为文件
+			        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+			            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+			        while(n--){
+			            u8arr[n] = bstr.charCodeAt(n);
+			        }
+			        return new File([u8arr], filename, {type:mime});
+			    } */
+			
+			
+			function  dataURLtoFile(dataurl, filename) { 
+				    var arr = dataurl.split(','),
+				        mime = arr[0].match(/:(.*?);/)[1],
+				        bstr = atob(arr[1]),
+				        n = bstr.length,
+				        u8arr = new Uint8Array(n);
+				    while (n--) {
+				        u8arr[n] = bstr.charCodeAt(n);
+				    }
+				    return new File([u8arr], filename, { type: mime });
+				}
+			
+			
+			//将图片压缩转成base64 
+			function getBase64Image2(img) { 
+			    var canvas = document.createElement("canvas"); 
+			    var width = img.width; 
+			    var height = img.height; 
+			    // calculate the width and height, constraining the proportions 
+			    if(width > height) { 
+			    if(width > 100) { 
+			        height = Math.round(height *= 100 / width); 
+			        width = 100; 
+			    } 
+			    } else { 
+			    if(height > 100) { 
+			        width = Math.round(width *= 100 / height); 
+			        height = 100; 
+			    } 
+			    } 
+			    canvas.width = width; /*设置新的图片的宽度*/ 
+			    canvas.height = height; /*设置新的图片的长度*/ 
+			    var ctx = canvas.getContext("2d"); 
+			    ctx.drawImage(img, 0, 0, width, height); /*绘图*/ 
+			    var dataURL = canvas.toDataURL("image/png", 0.8); 
+			    return dataURL.replace("data:image/png;base64,", ""); 
+			} 
+			
+			 //压缩图片转成base64
+			    function getBase64Image(img){
+			        var canvas=document.createElement("canvas");
+			        var width=img.width;
+			        var height=img.height;
+			        if(width>height){
+			            if(width>100){
+			                height=Math.round(height*=100/width);
+			                width=100;
+			            }
+			        }else{
+			            if(height>100){
+			                width=Math.round(width*=100/height);
+			            }
+			            height=100;
+			        }
+			
+			        canvas.width=width;
+			        canvas.height=height;
+			        var ctx=canvas.getContext('2d');
+			        ctx.drawImage(img,0,0,width,height);
+			
+			        var dataUrl=canvas.toDataURL('image/png',0.8);
+			        return dataUrl.replace('data:image/png:base64,','');
+			    }   
+		
+		</script>
+		
+	</body>
+
+</html>

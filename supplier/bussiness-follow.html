@@ -1,0 +1,842 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>通知</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/mui.picker.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_i0p8k95whbe.css" />
+		<style type="text/css">
+			.notice a {
+				display: block;
+			}
+
+			.font-lighter {
+				font-size: 16px;
+				color: #666;
+			}
+
+			.mui-icon-arrowright {
+				color: #999;
+			}
+
+			.mui-scroll-wrapper {
+				top: 20px
+			}
+
+			#shangji {
+				width: 100%;
+			}
+
+			#todayRight {
+				width: 20%;
+				background-color: #fff;
+				margin-bottom: 10px;
+				box-shadow: 0px 0px 9px 0px rgba(98, 98, 98, 0.15);
+				border-radius: 5px;
+				padding: 20px 2px 20px 2px;
+				position: relative;
+				margin-left: 2%;
+				font-size: 12px;
+				text-align: center;
+			}
+
+			.list-state {
+				background: none;
+				color: #000;
+			}
+
+			.icontop {
+				font-size: 32px;
+			}
+
+			.afather {
+				padding: 10px 0;
+			}
+
+			.ason {
+				position: absolute;
+			}
+
+			.fixedwrap {
+				position: fixed;
+				width: 100%;
+				z-index: 99999;
+				background-color: #fff;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		<!-- <div class="net"><span>返回<br />正式版</span></div> -->
+		<!--<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+<div class="mui-scroll">-->
+		<!--通知模块 start-->
+		<div id="app" v-cloak>
+			<div>
+				<!-- 固定在最上方 -->
+				<div class="fixedwrap">
+					<div class="mytag">
+						<div @tap="myFollow">
+							<div class="followWrap"><img src="../images/myfollow.png" />
+								<!-- <div class="redTip"></div> -->
+								<div class="mui-badge mui-badge-danger followTip" v-if="info!=0&&info!=''&&info!=null&&tipShow">{{info}}</div>
+							</div>
+							<span class="active" id="myFollow">我的订阅</span>
+						</div>
+						<div @tap="myAll">
+							<div><img src="../images/mybussiness.png" /></div>
+							<span id="myAll">全部商机</span>
+						</div>
+						<div @tap="myEnroll">
+							<div><img src="../images/mybaoming.png" />
+								<!-- <div class="redTip"></div> -->
+							</div>
+							<span id="myEnroll">我的报名</span>
+						</div>
+						<div @tap="myStore">
+							<div><img src="../images/mystore.png" /></div>
+							<span id="myStore">我的收藏</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- 占位用 -->
+				<div class="mytag" style="visibility: hidden; z-index: -999;">
+					<div>
+						<div><img src="../images/myfollow.png" />
+							<div class="redTip none"></div>
+						</div>
+						<span class="active"></span>
+					</div>
+					<div>
+						<div><img src="../images/mybussiness.png" /></div>
+						<span></span>
+					</div>
+					<div>
+						<div><img src="../images/mybaoming.png" />
+							<div class="redTip"></div>
+						</div>
+						<span></span>
+					</div>
+					<div>
+						<div><img src="../images/mystore.png" /></div>
+						<span></span>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="mui-inner-wrap" id="app" @swipeleft="changeLeft" @swiperight="changeRight">
+
+
+
+				<!--搜索模块 start-->
+
+
+
+				<div v-if="isShow" id="isShowDiv" class="main" style="text-align: center; margin-top: 50px;">
+						<div style="text-align: center;"><i class="icon-iconbell iconfont" style="color: #6699ff; font-size: 32px;"></i></div>
+						<div>每天找商机太麻烦</div>
+						<div>还可能漏掉商机</div>
+						<div>赶紧点击定制商机告诉我</div>
+						<div>系统精准匹配相关的招投标信息</div>
+						<div>每天第一时间自动推送给您</div>
+						<div style="margin-top: 20px;">
+							<button type="button" @tap="goBussSet" class="mui-btn mui-btn-primary">定制商机</button>
+						</div>
+					</div>
+
+				<div v-if="nodata" style="padding-top: 50px; width: 100%; text-align: center;">
+					没有数据
+				</div>
+				<div class="maintop" v-if="sxIsShow">
+					<div class="mainleft">
+						<div @tap="clever" class="cleverSort">智能排序<span class="posi"><i class="icon-xiangshang iconfont"></i><i class="icon-xiangxia iconfont"></i></span></div>
+						<div @tap="bussiness" class="bussinessSort">商机进度<i class="icon-xiangxia iconfont"></i></div>
+						<div @tap="endtime" class="endtimeSort">报名截止时间<span class="posi"><i class="icon-xiangshang iconfont"></i><i class="icon-xiangxia iconfont"></i></span></div>
+						<div @tap="publish" class="publishSort">发布时间<span class="posi"><i class="icon-xiangshang iconfont"></i><i class="icon-xiangxia iconfont"></i></span></div>
+					</div>
+					<div class="mainbottom" v-if="bussinessIsShow">
+						<div @tap="bussinessSelect(0)">进行中</div>
+						<div @tap="bussinessSelect(1)">已结束（终止）</div>
+						<div @tap="bussinessSelect('all')">全部</div>
+					</div>
+				</div>
+
+
+				<div id="refreshContainer" v-show="!isShow">
+					<ul class="list bussinessList">
+						<li v-if="bussinessList" v-for="(item, index) in bussinessList" @tap="setStorageExtId(item.id, item.type, item.purchaseId)" style="position: relative;">
+							
+								<div class="bussinessTitle">{{item.title}}<img v-if="type==1&&item.readFlag==0" :id=`red${item.id}` class="newFollow" src="../images/newFollow.png" /></div>
+								<!-- readFlag:0未读；1已读 -->
+								<div class="bussinessContainer">
+									<div class="bussinessRow1">
+										<div>
+											<img src="../images/flag_fill.png" />
+											<span v-if="item.type==1">招标采购</span>
+											<span v-else-if="item.type==2">询价采购</span>
+											<span v-else-if="item.type==3">竞价采购</span>
+											<span v-else-if="item.type==6">竞谈采购</span>
+										</div>
+										<div>
+											<img src="../images/coordinates_fill@3x.png" />
+											<span>{{item.provinceName}}{{item.cityName}}</span>
+										</div>
+									</div>
+									<div class="bussinessRow2">
+										<div>
+											<img src="../images/createtask_fill@3x.png" />
+											<span>{{item.companyName}}</span>
+										</div>
+									</div>
+									<div class="bussinessRow3">
+										<div>
+											<img src="../images/task_fill@3x.png" />
+											<span class="redcolor"><span v-if="item.applyNum==null||item.applyNum==''||typeof(item.applyNum)=='undefined'">0</span><span v-else>{{item.applyNum}}</span>家已报名</span>
+										</div>
+										<div>
+											<img src="../images/clock_fill.png"/>
+											<span class="redcolor" v-if="item.endTime!=0&&item.endTime!=''&&typeof(item.endTime)!='undefined'&&item.endTime!=null">倒计时{{item.endTime}}</span>
+											<span v-else>已截止</span>
+										</div>
+
+									</div>
+									
+									<div class="bussinessRow2">
+										<div>
+											<img src="../images/time_fill.png" />
+											<span>{{item.publishTime}}</span>
+										</div>
+									</div>
+								</div>
+					
+							<button v-if="item.endTime!=0&&item.endTime!=''&&typeof(item.endTime)!='undefined'&&item.endTime!=null&&item.endStatus!=1&&item.status==1" type="button"
+							  class="bluebtn fr" style="position: absolute;right: 12pt;bottom: 12pt;">报名</button>
+							<span v-else-if="item.status==2" class="fr" style="position: absolute;right: 12pt;bottom: 12pt; color: #6D87E7">已截止</span>
+							<span v-else-if="item.status==3" class="fr" style="position: absolute;right: 12pt;bottom: 12pt; color: #6D87E7">已终止</span>
+							<span v-else-if="item.status==4" class="fr" style="position: absolute;right: 12pt;bottom: 12pt; color: #6D87E7">已报名</span>
+						</li>
+					</ul>
+
+
+
+					
+				</div>
+
+
+
+
+
+
+				<!-- 菜单容器 -->
+
+				<!-- 主页面容器 -->
+
+			</div>
+
+		</div>
+
+		<!--</div>
+</div>-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为false
+					longtap: true,
+					swipeleft: true,
+					swipeRight: true
+				},
+				pullRefresh: {
+					container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					up: {
+						height: 50, //可选.默认50.触发上拉加载拖动距离
+						auto: false, //可选,默认false.自动上拉加载一次
+						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+						contentnomore: '', //可选，请求完毕若没有更多数据时显示的提醒内容；
+						callback: pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					},
+					 down: {
+					       style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+					       color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+					       height: 50,//可选,默认50px.下拉刷新控件的高度,
+					       auto: false,//可选,默认false.首次加载自动上拉刷新一次
+					       callback :pullfreshDown //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					     }
+				}
+
+			});
+
+			var _getParam = function(obj, param) {
+				return obj[param] || '';
+			};
+
+
+			var vm = new Vue({
+				el: '#app',
+				data() {
+					return {
+						loginUser: '',
+						bussinessList: [],
+						msg: 'asdsad',
+						page: 1,
+						pageSize: 5,
+						type: 1,
+						isShow: false,
+						targetUrl: 'bussiness-detail-bid.html',
+						bussinessIsShow: false,
+						sxIsShow: false,
+						endSort: '',
+						applySort: '',
+						status: '',
+						statusSort: '',
+						endSort2: '',
+						applySort2: '',
+						status2: '',
+						statusSort2: '',
+						nodata: false,
+						isDone: '',
+						info: ''
+					}
+				},
+				methods: {
+					pageHandler: function(pageNum) {
+						mui.showLoading("正在加载..","div");
+						this.getFollowNum();
+						setTimeout(()=>{
+							mui.hideLoading();
+							
+						},10000)
+						this.bussinessList = [];
+						$('.mui-pull-caption').text('');
+						this.page = pageNum;
+						let postData = {}
+						console.log(this.type);
+						if(this.type==2){
+							this.endSort = this.endSort2;
+							this.applySort = this.applySort2;
+							this.status = this.status2;
+							this.statusSort = this.statusSort2;
+						}else{
+							this.endSort = '';
+							this.applySort = '';
+							this.status = '';
+							this.statusSort = '';
+						}
+						$.ajax({
+							url: zfyurl + "/app/api/extNotice/findNoticelist",
+							data: {
+								'type': this.type,
+								'pageSize': this.pageSize,
+								'pageNum': this.page,
+								'userId': localStorage.getItem('userId'),
+								endSort: this.endSort,
+								applySort: this.applySort,
+								status: this.status,
+								statusSort: this.statusSort,
+								companyId: JSON.parse(localStorage.getItem('loginUser')).comId
+							},
+							type: "POST",
+							dataType: 'jsonp',
+							success: res => {
+								if (res.code == "M000000") {
+									mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+									
+									if (res.data.length == 0) {
+										this.bussinessList = [];
+										mui.hideLoading();
+										if(this.isShow==false){
+											this.nodata = true;
+										}else{
+											this.nodata = false;
+										}
+										mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+										console.log('停用')
+									} else if (res.data.length < 5) {
+										this.nodata = false;
+										let bussinessList = res.data;
+										
+										$.each(bussinessList, (index, item) => {
+											if (item.type == 1) {
+												bussinessList[index].targetUrl = 'bussiness-detail-bid.html';
+											} else if (item.type == 2) {
+												bussinessList[index].targetUrl = 'bussiness-detail-enquiry.html';
+											} else if (item.type == 3) {
+												bussinessList[index].targetUrl = 'bussiness-detail-ctd.html';
+											} else if (item.type == 6) {
+												bussinessList[index].targetUrl = 'bussiness-detail-contest.html';
+											}
+										})
+										this.bussinessList = bussinessList;
+											mui.hideLoading();
+										mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+										$('.mui-pull-caption').text('没有更多数据了');
+										console.log('停用')
+
+
+									} else {
+										this.nodata = false;
+										this.page += 1;
+										let bussinessList = res.data;
+										$.each(bussinessList, (index, item) => {
+											if (item.type == 1) {
+												bussinessList[index].targetUrl = 'bussiness-detail-bid.html';
+											} else if (item.type == 2) {
+												bussinessList[index].targetUrl = 'bussiness-detail-enquiry.html';
+											} else if (item.type == 3) {
+												bussinessList[index].targetUrl = 'bussiness-detail-ctd.html';
+											} else if (item.type == 4) {
+												bussinessList[index].targetUrl = 'bussiness-detail-contest.html';
+											}
+										})
+										this.bussinessList = bussinessList;
+										mui.hideLoading();
+										mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+										mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+									}
+								}
+								if (res.code == "E000000") {
+									mui.toast(res.info);
+								}
+
+							},
+							error: res=>{
+								mui.hideLoading();
+								mui.toast('数据加载失败');
+							}
+						})
+					},
+					
+					bussinessExist(id) {
+						$.ajax({
+							url: zfyurl + "/app/api/userSet/findUserSet",
+							data: {
+								'type': 2,
+								'identify': 2,
+								'userId': id,
+							},
+							type: "POST",
+							dataType: 'jsonp',
+							success: res => {
+								if (res.code == "M000000") {
+									console.log(JSON.stringify(res.data))
+									if (res.data) {
+										//status为1是已设置
+										if(res.data.status==1&&((res.data.noticeType!=null&&res.data.noticeType!='')||(res.data.noticeMethod!=null&&res.data.noticeMethod!='')||(res.data.noticeProvinceId!=null&&res.data.noticeProvinceId!='')||(res.data.noticeComId!=null&&res.data.noticeComId!='')||(res.data.noticePurchase!=null&&res.data.noticePurchase!='')||(res.data.noticeCityId!=null&&res.data.noticeCityId!=''))){
+											this.isShow = false; //有数据且订阅设置打开不显示前往订阅
+											this.tipShow = true;
+										}else{
+											this.isShow = true; 
+											this.tipShow = false;
+										}
+										console.log(this.isShow);
+										
+									} else {
+										this.isShow = true;
+										this.tipShow = false;
+									}
+										this.isDone = true;
+								}
+								if (res.code == "E000000") {
+									mui.toast(res.info);
+									this.isDone = true;
+								}
+
+							},
+							error: res=>{
+								this.isDone = true;
+							}
+						})
+					},
+					setStorageExtId(id, type, purchaseId) {
+						var isRead = false;
+						if(this.type==1){ //当是我的订阅的时候
+							isRead = true;
+							if($(`#red${id}`)){
+								$(`#red${id}`).hide();
+								
+							}
+							
+						}else{
+							isRead = false;
+						}
+						if(purchaseId==''||purchaseId==null){
+							mui.openWindow({
+														 id: 'bussiness-detail-customize.html',
+														 url: 'bussiness-detail-customize.html',
+														 styles: {
+														 	"render": "always",
+														 	"popGesture": "hide",
+														 	"bounce": "vertical",
+														 },
+														 extras: {
+															 extId: id,
+															 isRead: isRead,
+															 type: type
+														 }
+							})
+						}else{
+							if(type==1){
+								mui.openWindow({
+															 id: 'bussiness-detail-bid.html',
+															 url: 'bussiness-detail-bid.html',
+															 styles: {
+															 	"render": "always",
+															 	"popGesture": "hide",
+															 	"bounce": "vertical",
+															 },
+															 extras: {
+																 extId: id,
+																 isRead: isRead
+															 }
+								})
+							}else if(type==2){
+								mui.openWindow({
+															 id: 'bussiness-detail-enquiry.html',
+															 url: 'bussiness-detail-enquiry.html',
+															 styles: {
+															 	"render": "always",
+															 	"popGesture": "hide",
+															 	"bounce": "vertical",
+															 },
+															 extras: {
+																 extId: id,
+																 isRead: isRead
+															 }
+								})
+							}else if(type==3){
+								mui.openWindow({
+															 id: 'bussiness-detail-ctd.html',
+															 url: 'bussiness-detail-ctd.html',
+															 styles: {
+															 	"render": "always",
+															 	"popGesture": "hide",
+															 	"bounce": "vertical",
+															 },
+															 extras: {
+																 extId: id,
+																 isRead: isRead
+															 }
+								})
+							}else if(type==6){
+								mui.openWindow({
+															 id: 'bussiness-detail-contest.html',
+															 url: 'bussiness-detail-contest.html',
+															 styles: {
+															 	"render": "always",
+															 	"popGesture": "hide",
+															 	"bounce": "vertical",
+															 },
+															 extras: {
+																 extId: id,
+																 isRead: isRead
+															 }
+								})
+							}
+						}
+						
+						
+					},
+					myFollow() {
+						statis('1', 'bussiness-follow.html', '进入商机列表，我的订阅')
+						this.bussinessExist(localStorage.getItem('userId'));
+						
+						this.type = 1;
+						setTimeout(()=>{
+							this.pageHandler(1);
+						},100);
+
+						this.sxIsShow = false;
+						localStorage.setItem('searchType', 1);
+						$('.mytag span').removeClass('active');
+						$('#myFollow').addClass('active');
+					},
+					getFollowNum(){
+						$.ajax({
+							url: zfyurl + "/app/api/extNotice/findSubScribeReadNum",
+							data: {
+								'userId': localStorage.getItem('userId'),
+							},
+							type: "POST",
+							dataType: 'jsonp',
+							success: res => {
+								if(res.code=="M000000"){
+									this.info = res.info;
+								};
+								if(res.code=="E000000"){
+									msg.toast(res.info)
+								}
+							}
+						})
+					},
+					myAll() {
+						statis('1', 'bussiness-follow.html', '进入商机列表，全部商机')
+						this.isShow = false;
+						this.type = 2;
+						this.status2 = "";
+						this.endSort2 = "";
+						this.applySort2 = "";
+						this.statusSort2 = "";
+						this.pageHandler(1);
+						this.sxIsShow = true;
+						$('.mainleft i').removeClass('active');
+						localStorage.setItem('searchType', 2);
+						$('.mytag span').removeClass('active');
+						$('#myAll').addClass('active');
+					},
+					myEnroll() {
+						statis('1', 'bussiness-follow.html', '进入商机列表，我的报名')
+						this.isShow = false;
+						this.type = 3;
+						this.pageHandler(1);
+						this.sxIsShow = false;
+						localStorage.setItem('searchType', 3);
+						$('.mytag span').removeClass('active');
+						$('#myEnroll').addClass('active');
+					},
+					myStore() {
+						statis('1', 'bussiness-follow.html', '进入商机列表，我的收藏')
+						this.isShow = false;
+						this.type = 4;
+						this.pageHandler(1);
+						this.sxIsShow = false;
+						localStorage.setItem('searchType', 4);
+						$('.mytag span').removeClass('active');
+						$('#myStore').addClass('active');
+					},
+					clever(){
+						this.bussinessIsShow = false;
+						this.status2 = "";
+						this.endSort2 = "";
+						this.applySort2 = "";
+						if(this.statusSort2==''||this.statusSort2==2){
+							this.statusSort2 = 1;
+							$('.mainleft i').removeClass('active');
+							$('.cleverSort .icon-xiangxia').addClass('active');
+							mui.toast('报名截止时间倒序排列', {type: 'div'});
+						}else if(this.statusSort2==1){
+							this.statusSort2 = 2;
+							$('.mainleft i').removeClass('active');
+							$('.cleverSort .icon-xiangshang').addClass('active');
+							mui.toast('发布时间倒序排列', {type: 'div'});
+						}
+						this.pageHandler(1)
+					},
+					bussiness(){
+						this.bussinessIsShow = !this.bussinessIsShow;
+					},
+					bussinessSelect(status){
+						this.bussinessIsShow = !this.bussinessIsShow;
+						$('.mainleft i').removeClass('active');
+						if(status=="all"){
+							this.status2 = '';
+						}else{
+							this.status2 = status;
+						};
+						$('.bussinessSort .icon-xiangxia').addClass('active');
+						this.endSort2 = "";
+						this.applySort2 = "";
+						this.statusSort2 = "";
+						this.pageHandler(1)
+					},
+					endtime(){
+						this.bussinessIsShow = false;
+						this.status2 = "";
+						this.applySort2 = "";
+						this.statusSort2 = "";
+						if(this.endSort2==''||this.endSort2==2){
+							this.endSort2 = 1;
+							$('.mainleft i').removeClass('active');
+							$('.endtimeSort .icon-xiangshang').addClass('active');
+							mui.toast('截止时间正序排列', {type: 'div'})
+						}else if(this.endSort2==1){
+							this.endSort2 = 2;
+							$('.mainleft i').removeClass('active');
+							$('.endtimeSort .icon-xiangxia').addClass('active');
+							mui.toast('截止时间倒序排列', {type: 'div'})
+						}
+						this.pageHandler(1)
+					},
+					publish(){
+						this.bussinessIsShow = false;
+						this.status2 = "";
+						this.endSort2 = "";
+						this.statusSort2 = "";
+						if(this.applySort2==''||this.applySort2==2){
+							this.applySort2 = 1;
+							$('.mainleft i').removeClass('active');
+							$('.publishSort .icon-xiangshang').addClass('active');
+							mui.toast('发布时间正序排列', {type: 'div'})
+						}else if(this.applySort2==1){
+							this.applySort2 = 2;
+							$('.mainleft i').removeClass('active');
+							$('.publishSort .icon-xiangxia').addClass('active');
+							mui.toast('发布时间倒序排列', {type: 'div'})
+						}
+						this.pageHandler(1)
+					},
+					goBussSet(){
+						mui.openWindow({
+							id: 'bussiness-subscribe.html',
+							url: 'bussiness-subscribe.html',
+							styles: {
+								"render": "always",
+								"popGesture": "hide",
+								"bounce": "vertical",
+							}
+						})
+					},
+					changeLeft(){
+						/* if(this.type==1){
+							this.myAll();
+							
+						}
+						else if(this.type==2){
+							this.myEnroll();
+						}
+						else if(this.type==3){
+							this.myStore();
+						} */
+					},
+					changeRight(){
+						/* if(this.type==2){
+							this.myFollow();
+						}
+						else if(this.type==3){
+							this.myAll();
+						}
+						else if(this.type==4){
+							this.myEnroll();
+						} */
+					},
+				},
+				created() {
+					statis('1', 'bussiness-follow.html', '进入商机列表，我的订阅');
+					this.bussinessExist(localStorage.getItem('userId'));
+					mui.plusReady(function() {
+						vm.loginUser = JSON.parse(localStorage.getItem('loginUser'));
+						let id = localStorage.getItem('userId');
+						vm.bussinessExist(id);
+						
+							setTimeout(()=>{
+								vm.pageHandler(1);
+							},100)
+						
+						
+						localStorage.setItem('searchType', 1);
+					})
+				}
+
+			})
+			window.addEventListener('set', function(event) {
+				var val = event.detail;
+				console.log(JSON.stringify(val))
+			})
+
+
+
+
+			function pullfresh() {
+				console.log('阿斯顿撒');
+				if(vm.type==2){
+					vm.endSort = vm.endSort2;
+					vm.applySort = vm.applySort2;
+					vm.status = vm.status2;
+				}else{
+					vm.endSort = '';
+					vm.applySort = '';
+					vm.status = '';
+				}
+				$.ajax({
+					url: zfyurl + "/app/api/extNotice/findNoticelist",
+					data: {
+						'type': vm.type,
+						'pageSize': vm.pageSize,
+						'pageNum': vm.page,
+						'userId': localStorage.getItem('userId'),
+						endSort: vm.endSort,
+						applySort: vm.applySort,
+						status: vm.status
+					},
+					type: "POST",
+					dataType: 'jsonp',
+					success: res => {
+						if (res.code == "M000000") {
+							console.log(res.data.length)
+							if (res.data.length == 0) {
+								console.log(vm.nodata)
+								if(vm.nodata==false){
+									$('.mui-pull-caption').text('没有更多数据了');
+								}
+								
+								mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+								console.log('停用')
+							} else if (res.data.length < 5) {
+								let bussinessList = res.data;
+								$.each(bussinessList, (index, item) => {
+									
+									vm.bussinessList.push(bussinessList[index]);
+
+								})
+								
+								mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+								console.log('停用')
+							} else {
+								vm.page += 1;
+								console.log(vm.page)
+								let bussinessList = res.data;
+								$.each(bussinessList, (index, item) => {
+									
+									vm.bussinessList.push(bussinessList[index]);
+								})
+								/* mui('#refreshContainer').pullRefresh().enablePullupToRefresh(); */
+								mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+								console.log('启动2')
+							}
+
+						}
+						if (res.code == "E000000") {
+							mui.alert(res.info)
+						}
+
+					}
+				})
+			}
+			
+			function pullfreshDown(){
+				console.log('下拉刷新')
+				vm.pageHandler(1);
+				setTimeout(()=>{
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+				},4000)
+			}
+			
+			window.addEventListener('num', function (event) {
+				vm.getFollowNum();
+			 })
+			
+			window.addEventListener('set', function (event) {
+				location.reload();
+			 })
+		</script>
+
+
+	</body>
+
+</html>

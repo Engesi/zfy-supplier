@@ -1,0 +1,495 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>交易管理</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_wcw558h33hg.css" />
+		<style type="text/css">
+		.notice a {
+			display: block;
+		}
+		
+		.font-lighter{font-size: 16px;color: #666;}
+		.mui-icon-arrowright{color: #999;}
+		.mui-scroll-wrapper{top: 20px}
+		/*.mui-pull-top-pocket{top: 20px;}*/
+
+			i {padding-top:10px ;z-index: 999;}
+			.list-state {
+				background: none;
+				color: #000;
+			}
+			
+			.read {
+				height: 100%;
+			}
+			
+			.delete {
+				height: 100%;
+			}
+			
+			.mui-bar .mui-title {
+			    right: 40px;
+			    left: 40px;
+			    display: inline-block;
+			    overflow: hidden;
+			    width: 50%;
+			    margin: 0 auto;
+			    text-overflow: ellipsis;
+					}
+					
+					header {
+						height: 64px !important;
+						padding-top: 10px;
+					}
+					.noticeLeft {
+						width: 100%;
+					}
+					
+					.noticeRight {
+						    width: 20%;
+						    background-color: #fff;
+						    box-shadow: 0px 0px 9px 0px rgba(98, 98, 98, 0.15);
+						    padding: 50px 2px 20px 2px;
+						    position: relative;
+								margin-left: 2%;
+								font-size: 16px;
+								text-align: center;
+								color: #87898f;
+						}
+						
+						.notice li {
+							padding: 0 !important;
+							background: none !important;
+						}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+					  <span class="index-left">
+					    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+						</span>
+						<h1 class="mui-title">{{title}}</h1>
+						<span class="index-right ui-top-right">
+							<i class="mui-pull-right icon-qingchu1 iconfont rightIcon" @tap="noticeClear"></i>
+							<i class="mui-pull-right icon-laji iconfont leftIcon" @tap="noticeDelete" style="padding-right: 5px; padding-left: 10px;"></i>
+						  
+						</span>
+			</header>
+			
+			<!--列表部分 start-->
+			<div class="pad-top-74" id="refreshContainer">
+				
+				<ul class="pad-bot-10 notice noticeList mui-row">
+					<li class="mui-col-sm-12 mui-col-xs-12" v-if="noticeList.length==0" style="background: #fff !important;">
+						<div>
+							<div class="icon fl">
+								
+							</div>
+							<div class="noticeLiRight">
+								
+							</div>
+							 <div class="font-lighter"></div>
+						</div>
+						<div class="noticeBottom">暂无新消息</div>
+					</li>
+						<li style="display: flex;" class="mui-col-sm-12 mui-col-xs-12"  v-for="(item, index) in noticeList">
+							<div @tap="openBussiness(item.type, item.relationId, `red${item.id}`)" @swipeleft="turnLeft(`${item.id}-left`, `${item.id}-right`)" @swiperight="turnRight(`${item.id}-left`, `${item.id}-right`)" class="noticeLeft" :id=`${item.id}-left` style="padding: 20px; box-sizing: content-box; background-color: #fff;">
+								<div>
+									<div class="icon fl">
+										<img :src=`../images/ioc${iocurl}.png` class="fl" />
+										<span class="redTip" v-if="item.readFlag==0" :id="'red'+item.id"></span>
+									</div>
+									<div class="noticeLiRight">
+											<span class="font-bold">发送人：{{item.sendUserName}}</span>
+											<span class="approveOpen" v-if="item.type==8&&item.relationId!=0&&item.relationId!=''&&item.relationId!=null&&typeof(item.relationId)!='undefined'">查看详情</span>
+									</div>
+									 <div class="font-lighter" style="font-size: 12px !important;">{{item.sendDatetime}}</div>
+								</div>
+								<div class="noticeBottom" v-html="item.content"></div>
+							</div>
+							<div class="noticeRight" :id=`${item.id}-right` @tap="clickRight(`${item.id}-right`, item.id)">
+								<div>删除</div>
+								<div style="margin-top: -25px;">消息</div>
+							</div>
+						</li>
+					</ul>
+			</div>
+		</div>
+		
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				gestureConfig: {
+				        longtap: true, //默认为false
+								tap: true,
+								swipeleft: true,
+								swipeRight: true
+				      },
+				pullRefresh : {
+				   container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				   up : {
+				     height:50,//可选.默认50.触发上拉加载拖动距离
+											auto:false,//可选,默认false.自动上拉加载一次
+											contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+											contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+				     callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+				   },
+					 down: {
+					       style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+					       color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+					       height: 50,//可选,默认50px.下拉刷新控件的高度,
+					       auto: false,//可选,默认false.首次加载自动上拉刷新一次
+					       callback :pullfreshDown //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					     }
+				 },
+				 beforeback: function() {
+				　　　　 //获得父页面的webview
+				        var ws = plus.webview.currentWebview().opener();
+				　　　　 //触发父页面的自定义事件(refresh),从而进行刷新
+				        mui.fire(ws, 'refresh');
+								mui.fire(ws, 'close');
+				        //返回true,继续页面关闭逻辑
+				        return true;
+				    }
+			});
+			
+			var btnArray = ['否', '是'];
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						page: 1,
+						pageSize: 5,
+						title: '',
+						noticeList: [],
+						type: '',
+						userId: localStorage.getItem('userId'),
+						iocurl: ''
+					}
+				},
+				methods: {
+					getNotice(page, type){
+						this.page = page;
+						$.ajax({
+									url: zfyurl+"/app/api/mkymsg/findMsgByType",
+									data: {
+										userId: localStorage.getItem('userId'),
+										type: type,
+										status: 2,
+										pageNum: this.page,
+										pageSize: this.pageSize
+										},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										mui.hideLoading();
+										if(res.code=="M000000"){
+											mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+												if (res.data.length == 0) {
+													$('.mui-pull-caption').text('没有更多数据了');
+													mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+													mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+												} else if (res.data.length < 5) {
+													let noticeList = res.data;
+													this.noticeList = noticeList;
+													mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+													mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+													$('.mui-pull-caption').text('没有更多数据了');
+												} else {
+													this.page += 1;
+													console.log('page'+this.page)
+													let noticeList = res.data;
+													this.noticeList = noticeList;
+													mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+													mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+												}
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info)
+										}
+										
+									}
+								})
+					},
+					noticeClear(){
+						mui.confirm('确定要将所有消息标为已读？', '清除未读', btnArray, function(e) {
+						                   if (e.index == 1) {
+						                       $.ajax({
+						                       			url: zfyurl+"/app/api/mkymsg/updateReadFlagByTypeAndStatus",
+						                       			data: {
+						                       				readFlag:1,
+						                       				status: 2,
+						                       				userId: localStorage.getItem('userId'),
+						                       				type: vm.type,
+						                       				},
+						                       			type:"POST",
+						                       			dataType:'jsonp',
+						                       			success: res=>{
+						                       				if(res.code=="M000000"){
+						                       					mui.toast('消息清除成功')
+						                       						location.reload();
+						                       				}
+						                       				if(res.code=="E000000"){
+						                       					mui.alert(res.info)
+						                       				}
+						                       				
+						                       			}
+						                       		});
+																			statis('2', 'notice-detail.html', `将${vm.title}所有消息标为已读`)
+						                   } else {
+						                     
+						                   }
+						               })
+						
+					},
+					noticeDelete(){
+						mui.confirm('确定要删除所有消息？', '消息删除', btnArray, function(e) {
+						                   if (e.index == 1) {
+						                       $.ajax({
+						                       			url: zfyurl+"/app/api/mkymsg/deleteByTypeAndStatus",
+						                       			data: {
+						                       				status: 2,
+						                       				userId: vm.userId,
+						                       				type: vm.type,
+						                       				},
+						                       			type:"POST",
+						                       			dataType:'jsonp',
+						                       			success: res=>{
+						                       				if(res.code=="M000000"){
+						                       					mui.toast('消息删除成功')
+						                       						location.reload();
+						                       				}
+						                       				if(res.code=="E000000"){
+						                       					mui.alert(res.info)
+						                       				}
+						                       				
+						                       			}
+						                       		});
+																			statis('2', 'notice-detail.html', `将${vm.title}所有消息删除`)
+						                   } else {
+						                     
+						                   }
+						               })
+						
+					},
+					openBussiness(type, relationId, elem){
+						
+						if(type==8&&relationId!=''&&relationId!=null&&typeof(relationId)!='undefined'){
+							$.ajax({
+								url: zfyurl + "/app/api/mkymsg/msgToHtml",
+								type: 'POST',
+								data: {
+									userId: localStorage.getItem('userId'),
+									relationId: relationId
+								},
+								dataType: 'jsonp',
+								success: res => {
+									if (res.code == 'M000000') {
+										let type2 = res.data.type;
+										let relationId2 = res.data.relationId;
+										if(type2 == 1){
+											$("#"+elem).hide();
+											if (res.data.method == 1) {
+												
+												mui.openWindow({
+																			 id: 'bussiness-detail-bid.html',
+																			 url: 'bussiness-detail-bid.html',
+																			 styles: {
+																			 	"render": "always",
+																			 	"popGesture": "hide",
+																			 	"bounce": "vertical",
+																			 },
+																			 extras: {
+																				 extId: relationId2,
+																			 }
+												})
+												
+											} else if (res.data.method == 2) {
+												mui.openWindow({
+																			 id: 'bussiness-detail-enquiry.html',
+																			 url: 'bussiness-detail-enquiry.html',
+																			 styles: {
+																			 	"render": "always",
+																			 	"popGesture": "hide",
+																			 	"bounce": "vertical",
+																			 },
+																			 extras: {
+																				 extId: relationId2,
+																			 }
+												})
+											} else if (res.data.method == 3) {
+												mui.openWindow({
+																			 id: 'bussiness-detail-ctd.html',
+																			 url: 'bussiness-detail-ctd.html',
+																			 styles: {
+																			 	"render": "always",
+																			 	"popGesture": "hide",
+																			 	"bounce": "vertical",
+																			 },
+																			 extras: {
+																				 extId: relationId2,
+																			 }
+												})
+											} else if (res.data.method == 6) {
+												mui.openWindow({
+																			 id: 'bussiness-detail-contest.html',
+																			 url: 'bussiness-detail-contest.html',
+																			 styles: {
+																			 	"render": "always",
+																			 	"popGesture": "hide",
+																			 	"bounce": "vertical",
+																			 },
+																			 extras: {
+																				 extId: relationId2,
+																			 }
+												})
+											}
+										}
+									}
+									if (res.code == 'E000000') {
+										mui.alert(res.info)
+									}
+								}
+							})
+							
+						}
+					},
+					turnLeft(id, id2){
+						$(`.noticeLeft`).css("transform","translate3d(0%, 0px, 0px)");
+						$(`.noticeRight`).hide();
+						$('#'+id).css("transform","translate3d(-1%, 0px, 0px)");
+						$('#'+id).css("transition","transform 350ms");
+						$('#'+id2).show()
+					},
+					turnRight(id, id2){
+						$(`#${id}`).css("transform","translate3d(0%, 0px, 0px)");
+						$(`#${id}`).css("transition","transform 350ms");
+						$('#'+id2).hide()
+					},
+					clickRight(id,type){
+						$(`#${id}`).css("transform","translate3d(0%, 0px, 0px)");
+						$(`#${id}`).css("transition","transform 350ms");
+						$(`#${id}Right`).hide();
+						statis('2', 'notice-detail.html', `删除了${this.title}的一条消息`)
+						$.ajax({
+									url: zfyurl+"/app/api/mkymsg/delete",
+									data: {
+										readFlag:1,
+										id: type
+										},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										if(res.code=="M000000"){
+												$(`red${type}`).hide();
+												location.reload();
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info)
+										}
+										
+									}
+								})
+					},
+				},
+				created(){
+					let id = localStorage.getItem('userId');
+					let type = localStorage.getItem('noticeType');
+					this.type = type;
+					/* this.getNotice(1, 8); */
+					mui.plusReady(function() {
+						vm.getNotice(1, type);
+						mui.showLoading("正在加载..","div");
+					})
+					if(type==2){
+						this.title = '订单消息';
+						this.iocurl = "deal";
+					}else if(type==8){
+						this.title = '商机消息';
+						this.iocurl = "bussiness";
+					}else if(type==5){
+						this.title = '入库通知';
+						this.iocurl = "store";
+					}else if(type==6){
+						this.title = '系统消息';
+						this.iocurl = "system";
+					}else if(type==7){
+						this.title = '小筑客服';
+						this.iocurl = "xiaozhu"
+					}else if(type==9){
+						this.title = '合同消息',
+						this.iocurl = "contract";
+					};
+					statis('1', 'notice-detail.html', `查看消息列表-${this.title}`);
+				}
+			})
+			
+			function pullfreshDown(){
+				console.log('下拉刷新')
+				vm.getNotice(1, vm.type);
+				setTimeout(()=>{
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+				},4000)
+			}
+			
+		function pullfresh(){
+					$.ajax({
+										url: zfyurl+"/app/api/mkymsg/findMsgByType",
+										data: {
+											userId: localStorage.getItem('userId'),
+											type: vm.type,
+											status: 2,
+											pageNum: vm.page,
+											pageSize: vm.pageSize
+											},
+										type:"POST",
+										dataType:'jsonp',
+										success: res=>{
+											if (res.code == "M000000") {
+												console.log(res.data.length)
+												if (res.data.length == 0) {
+													$('.mui-pull-caption').text('没有更多数据了');
+													mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+												} else if (res.data.length < 5) {
+													let noticeList = res.data;
+													$.each(noticeList, (index, item) => {
+													
+														vm.noticeList.push(noticeList[index]);
+
+													})
+													$('.mui-pull-caption').text('没有更多数据了')
+													mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+												} else {
+													vm.page += 1;
+													console.log('page'+vm.page)
+													let noticeList = res.data;
+													$.each(noticeList, (index, item) => {
+														vm.noticeList.push(noticeList[index]);
+													})
+													mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+												}
+
+											}
+											if (res.code == "E000000") {
+												mui.alert(res.info)
+											}
+															}
+													})
+					}
+		</script>
+	</body>
+
+</html>

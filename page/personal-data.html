@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>个人资料</title>
+		<meta name="viewport" content="width=device-width,initia l-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css"/>
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_1804860_9d02kit2igr.css" />
+		<style type="text/css">
+		.font-lighter{font-size: 16px;color: #666;}
+		.mui-icon-arrowright{color: #999;}
+		.mui-scroll-wrapper{top: 20px}
+		header {
+			height: 64px !important;
+			padding-top: 10px;
+		}
+		/*.mui-pull-top-pocket{top: 20px;}*/
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		<header class="mui-bar mui-bar-nav">
+				  <span class="index-left">
+				    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+					</span>
+					<h1 class="mui-title">个人资料</h1>
+		</header>
+		
+		<div class="pad-top-64">
+			<div class="approve-sx approve-sx-time">
+				<div class="busDetailTitle">展示设置</div>
+				<div style="display: flex; justify-content: space-between;">
+					<span>是否在首页展示</span>
+					<div class="mui-switch mui-switch-mini mui-switch-blue" id="mySwitch">
+					  <div class="mui-switch-handle"></div>
+					</div>
+				</div>
+				<div class="redcolor"><span>首页展示开启后，您的信息将会在筑服云主站人才资源库展示。</span></div>
+				<div style="display: flex; justify-content: space-between;">
+					<span>是否接收与我司相关寻源业务短信通知</span>
+					<div class="mui-switch mui-switch-mini mui-switch-blue" id="mySwitch2">
+					  <div class="mui-switch-handle"></div>
+					</div>
+				</div>
+				<div class="redcolor"><span>关闭接受短信通知后，您将无法收到筑服云给您发送的短信消息。</span></div>
+			</div>
+			<div class="approve-sx appdel approve-sx-last">
+				<div class="busDetailTitle">基本信息</div>
+				<div>
+					<div>姓名</div>
+					<span>{{userInfo.userName}}</span>
+				</div>
+				<div>
+					<div>性别</div>
+					<span v-if="userInfo.sex==1">男</span>
+					<span v-if="userInfo.sex==2">女</span>
+				</div>
+				<div>
+					<div>部门</div>
+					<span>{{userInfo.orgName}}</span>
+				</div>
+				<div>
+					<div>职务</div>
+					<span>{{userInfo.roleName}}</span>
+				</div>
+				<div>
+					<div>手机</div>
+					<span>{{userInfo.phone}}</span>
+				</div>
+				<div>
+					<div>邮箱</div>
+					<span>{{userInfo.email}}</span>
+				</div>
+				<div>
+					<div>毕业院校</div>
+					<span>{{userInfo.graduate}}</span>
+				</div>
+				<div>
+					<div>出生日期</div>
+					<span>{{userInfo.birthday}}</span>
+				</div>
+				<div>
+					<div>工作单位</div>
+					<span>{{userInfo.employCompany}}</span>
+				</div>
+				<div>
+					<div>最高学历</div>
+					<span>{{educationInfo}}</span>
+				</div>
+				<div>
+					<div>工作时长</div>
+					<span>{{userInfo.workingYears}}年</span>
+				</div>
+				<div>
+					<div>毕业日期</div>
+					<span>{{userInfo.graduateDate}}</span>
+				</div>
+				<div>
+					<div>个人简介</div>
+					<span>{{userInfo.selfIntroduction}}</span>
+				</div>
+			</div>
+			
+		</div>
+		<div class="approveBottomWait">
+			<div class="fixedBig" id="edit">编辑</div>
+		</div>
+		</div>
+		<!--合同列表部分 end-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.7.2.min.js"></script>
+		<script src="../js/all.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data-3.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script>
+			mui.init({
+				gestureConfig: {
+				        tap: true, //默认为false
+								longtap: true
+				      },
+			});
+			
+			var vm = new Vue({
+				el: '#app',
+				data(){
+					return {
+						isAcceptSns: 0,
+						isShow: 0,
+						userInfo: '',
+						educationInfo: ''
+					}
+				},
+				methods: {
+					getUserInfo(id){
+						$.ajax({		
+									url: zfyurl+"/app/api/user/findUserInfo",
+									data: {
+										'userId': id,
+									},
+									type:"POST",
+									dataType:'jsonp',
+									success: res=>{
+										if(res.code=="M000000"){
+											this.userInfo = res.data;
+											if(res.data.education==0){
+												this.educationInfo = "博士";
+											}else if(res.data.education==1){
+												this.educationInfo = "硕士";
+											}else if(res.data.education==2){
+												this.educationInfo = "本科";
+											}else if(res.data.education==3){
+												this.educationInfo = "大专";
+											}
+											if(res.data.isAcceptSns==null||res.data.isAcceptSns==''||typeof(res.data.isAcceptSns)=='undefined'){
+												this.isAcceptSns == 1;
+											}else {
+												this.isAcceptSns = res.data.isAcceptSns;
+											}
+											if(res.data.isShow==null||res.data.isShow==''||typeof(res.data.isShow)=='undefined'){
+												this.isShow == 1;
+											}else {
+												this.isShow = res.data.isShow;
+											}
+											if(this.isShow == 0){
+												$('#mySwitch').addClass('mui-active')
+											}
+											else{
+												$('#mySwitch').removeClass('mui-active')
+											}
+											if(this.isAcceptSns == 1){
+												$('#mySwitch2').addClass('mui-active')
+											}
+											else{
+												$('#mySwitch2').removeClass('mui-active')
+											}
+										}
+										if(res.code=="E000000"){
+											mui.alert(res.info)
+										}
+										
+									}
+								})
+					}
+				},
+				watch: {
+					'isShow': function(newVal){
+						$.ajax({
+								url: zfyurl+"/app/api/user/updateUserInfo",
+								data: {
+									'isShow': newVal,
+									'id': localStorage.getItem('userId')
+								},
+								type:"POST",
+								dataType:'jsonp',
+								success: res=>{
+									if(res.code=="M000000"){
+											
+						
+									}
+									if(res.code=="E000000"){
+										mui.alert(res.info)
+									}
+									
+								}
+							})
+					},
+					'isAcceptSns': function(newVal){
+						$.ajax({
+								url: zfyurl+"/app/api/user/updateUserInfo",
+								data: {
+									'isAcceptSns': newVal,
+									'id': localStorage.getItem('userId')
+								},
+								type:"POST",
+								dataType:'jsonp',
+								success: res=>{
+									if(res.code=="M000000"){
+											
+						
+									}
+									if(res.code=="E000000"){
+										mui.alert(res.info)
+									}
+									
+								}
+							})
+					}
+				},
+				created(){
+					statis('1', 'personal-data.html', '查看个人资料页面')
+					let userId = localStorage.getItem('userId');
+					this.getUserInfo(userId)
+				}
+			})
+			
+		mui.plusReady(function() {
+			
+				$("#edit").bind('tap', ()=>{
+					mui.openWindow({
+						id: 'personal-edit.html',
+						url: 'personal-edit.html',
+						styles: {
+							"render": "always",
+							"popGesture": "hide",
+							"bounce": "vertical",
+						}
+					})
+				})
+			
+		})
+			
+			document.getElementById("mySwitch").addEventListener("toggle",function(event){
+			  if(event.detail.isActive){
+			    console.log("你启动了开关1");
+					vm.isShow = 0;
+			  }else{
+			    console.log("你关闭了开关1");
+					vm.isShow = 1;
+			  };
+				statis('2', 'personal-data.html', '操作了个人信息是否在首页展示开关');
+			})
+		
+		document.getElementById("mySwitch2").addEventListener("toggle",function(event){
+		  if(event.detail.isActive){
+		    console.log("你启动了开关2");
+			vm.isAcceptSns = 1;
+		  }else{
+		    console.log("你关闭了开关2");  
+			vm.isAcceptSns = 0;
+		  }
+			statis('2', 'personal-data.html', '操作了是否接收相关寻源业务短信开关');
+		})
+		 
+		 window.addEventListener('set', function (event) {
+		       location.reload()
+		  })
+		 
+		</script>
+	</body>
+
+</html>

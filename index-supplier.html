@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>筑服云</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="fonts/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_1804860_ebfd053dkf.css"/>
+		<style>
+			.header {
+				padding-top: 12px !important;
+				box-shadow: 0px 5px 8px #d3d3d3 !important;
+			}
+			
+			.ui-top-right {
+				margin-top: 10px !important;
+			}
+			
+			.mui-tab-label {
+				font-size: 12px;
+				    display: block;
+				    overflow: hidden;
+				    text-overflow: ellipsis;
+			}
+			
+			.labelImg {
+				width: 24px;
+				padding-top: 5px;
+				padding-bottom: 1px;
+			}
+			
+			.mui-bar .mui-title {
+				left: 30px !important;
+			}
+		
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav header theme-bg-supplier" id="header">
+			<div>
+				
+				<h1 class="mui-title  supplier-home">商机</h1>
+				<div class="ui-top-right">
+						<i class="leftIcon"><img src="images/search-icon.png" style="width: 20px" id="sjsousuo" ></img></i>
+						<i class="rightIcon"><img src="images/shezhi-icon.png" style="width: 20px" id="sjshezhi"></img></i>
+				</div>
+			</div>
+		</header>
+		<!--底部导航 start-->
+		<nav class="mui-bar mui-bar-tab bg-white bor-top-e6">
+			<a href="javascript" class="mui-tab-item mui-active">
+				<!-- <span class="mui-icon icon-tongzhi2 iconfont"></span>
+				<span class="mui-tab-label">消息</span> -->
+				<img src="images/notice-noactive.png" id="notice-noactive" class="labelImg noactive" />
+				<img src="images/notice-active.png" id="notice-active" class="labelImg isactive" />
+				<div class="mui-tab-label">消息</div>
+			</a>
+			<a href="javascript" class="mui-tab-item" >
+				<!-- <span class="mui-icon icon-dengpao iconfont"></span>
+				<span class="mui-tab-label">商机</span> -->
+				<img src="images/bussiness-noactive.png" id="bussiness-noactive" class="labelImg noactive" />
+				<img src="images/bussiness-active.png" id="bussiness-active" class="labelImg isactive" />
+				<div class="mui-tab-label">商机</div>
+			</a>
+			<a href="javascript" class="mui-tab-item">
+				<!-- <span class="mui-icon icon-wode iconfont" style="font-size: 21px;line-height: 24px;"></span>
+				<span class="mui-tab-label">我的</span> -->
+				<img src="images/my-noactive.png" id="my-noactive" class="labelImg noactive" />
+				<img src="images/my-active.png" id="my-active" class="labelImg isactive" />
+				<div class="mui-tab-label">我的</div>
+			</a>
+		</nav>
+		<!--底部导航 end-->
+		
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/all.js"></script>
+		<!--通知头部模板-->
+		<script type="text/template" id="notice">
+			<div>
+				<h1 class="mui-title supplier-home">消息</h1>
+				<div class="ui-top-right">
+						<i class="leftIcon"><img src="images/search-icon.png" style="width: 20px" id="sousuo" ></img></i>
+						<i class="rightIcon"><img src="images/shezhi-icon.png" style="width: 20px" id="shezhi"></img></i>
+				</div>
+			</div>
+		</script>
+		<!--商机-->
+		<script type="text/template" id="statistics">
+			<div>
+				
+				<h1 class="mui-title  supplier-home">商机</h1>
+				<div class="ui-top-right">
+						<i class="leftIcon"><img src="images/search-icon.png" style="width: 20px" id="sjsousuo" ></img></i>
+						<i class="rightIcon"><img src="images/shezhi-icon.png" style="width: 20px" id="sjshezhi"></img></i>
+				</div>
+			</div>
+		</script>
+		<!--工作台头部模板-->
+		<script type="text/template" id="home">
+			<div>
+				<h1 class="mui-title  supplier-home" >我的</h1>
+			</div>
+		</script>
+		<!--分享弹窗 end-->
+		<script type="text/javascript">
+			mui.init({
+				preloadPages:[{
+				    id:'notice.html',
+				    url:'notice.html'           
+				  }
+				  ]
+			});
+			localStorage.setItem('state', 2);
+			var subpages = ['supplier/notice.html', 'supplier/bussiness-follow.html', 'page/home.html'];
+			
+			var subpage_style = null;
+			var activeView = '';
+			
+			var aniShow = {};
+			var title = document.getElementById("title"),
+				notice = document.getElementById("notice").innerHTML,
+				statistics = document.getElementById("statistics").innerHTML,
+				home = document.getElementById("home").innerHTML,
+				header = document.getElementById("header");
+			 //创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function() {
+				//解决iPhone11底部黑条问题
+				if(isIPhoneX()) {
+					console.log('iphone')
+					subpage_style = {
+						top: '64px',
+						bottom: '88px',
+						styles: {
+							"render": "always"
+						}
+					};
+				}else{
+					console.log('android')
+					subpage_style = {
+						top: '64px',
+						bottom: '66px',
+						styles: {
+							"render": "always"
+						}
+					};
+				}
+				$('.noactive').show();
+				$(".isactive").hide();
+				$("#notice-noactive").hide();
+				$("#notice-active").show();
+				var self = plus.webview.currentWebview();
+				var noticeChild = plus.webview.create('supplier/notice.html', 'supplier/notice.html', subpage_style);
+				mui.fire(noticeChild, 'tishi', {
+						
+				});
+				header.innerHTML = notice;
+				console.log(JSON.stringify(self))
+				self.append(noticeChild);
+				console.log(JSON.stringify(self))
+				activeView = 'supplier/notice.html';
+			
+				$('#shezhi').bind('tap',()=>{
+					console.log('设置')
+					mui.openWindow({
+						id: 'notice-set.html',
+						url: 'supplier/notice-set.html',
+						styles: {
+							"render": "always",
+							"popGesture": "hide",
+							"bounce": "vertical",
+						}
+					})
+				})
+				$('#sousuo').bind('tap',()=>{
+					localStorage.setItem('searchStatus', 2)
+					mui.openWindow({
+						id: 'page/notice-search.html',
+						url: 'page/notice-search.html',
+						styles: {
+							"render": "always",
+							"popGesture": "hide",
+							"bounce": "vertical",
+						}
+					})
+				})
+			$('#sjshezhi').bind('tap',()=>{
+				console.log(123)
+				mui.openWindow({
+					id: 'bussiness-subscribe.html',
+					url: 'supplier/bussiness-subscribe.html',
+					styles: {
+						"render": "always",
+						"popGesture": "hide",
+						"bounce": "vertical",
+					}
+				})
+			})
+			$('#sjsousuo').bind('tap',()=>{
+				console.log(123)
+				mui.openWindow({
+					id: 'supplier/bussiness-search.html',
+					url: 'supplier/bussiness-search.html',
+					styles: {
+						"render": "always",
+						"popGesture": "hide",
+						"bounce": "vertical",
+					}
+				})
+			})
+			});
+			
+			 //当前激活选项
+			/* var activeTab = subpages[0]; */
+			
+			 //选项卡点击事件
+			mui('.mui-bar-tab').on('tap', 'a', function(e) {
+				
+				var label = this.querySelector('.mui-tab-label').innerHTML;
+				if (label=="消息") {
+					$('.noactive').show();
+					$(".isactive").hide();
+					$("#notice-noactive").hide();
+					$("#notice-active").show();
+					var self = plus.webview.currentWebview();
+					var activeChild=plus.webview.getWebviewById(activeView);
+					activeChild.close();
+					var noticeChild = plus.webview.create('supplier/notice.html', 'supplier/notice.html', subpage_style);
+					header.innerHTML = notice;
+					self.append(noticeChild);
+					activeView = 'supplier/notice.html';
+					
+					
+					$('#shezhi').bind('tap',()=>{
+						console.log('设置')
+						mui.openWindow({
+							id: 'notice-set.html',
+							url: 'supplier/notice-set.html',
+							styles: {
+								"render": "always",
+								"popGesture": "hide",
+								"bounce": "vertical",
+							}
+						})
+					})
+					$('#sousuo').bind('tap',()=>{
+						localStorage.setItem('searchStatus', 2)
+						mui.openWindow({
+							id: 'page/notice-search.html',
+							url: 'page/notice-search.html',
+							styles: {
+								"render": "always",
+								"popGesture": "hide",
+								"bounce": "vertical",
+							}
+						})
+					})
+				}else if(label=="商机"){
+					$('.noactive').show();
+					$(".isactive").hide();
+					$("#bussiness-noactive").hide();
+					$("#bussiness-active").show();
+					var self = plus.webview.currentWebview();
+					var activeChild=plus.webview.getWebviewById(activeView);
+					activeChild.close();
+					
+					var bussinessChild = plus.webview.create('supplier/bussiness-follow.html', 'supplier/bussiness-follow.html', subpage_style);
+					header.innerHTML = statistics;
+					self.append(bussinessChild);
+					activeView = 'supplier/bussiness-follow.html';
+					
+					
+					$('#sjshezhi').bind('tap',()=>{
+						console.log(123)
+						mui.openWindow({
+							id: 'bussiness-subscribe.html',
+							url: 'supplier/bussiness-subscribe.html',
+							styles: {
+								"render": "always",
+								"popGesture": "hide",
+								"bounce": "vertical",
+							}
+						})
+					});
+					
+					$('#sjsousuo').bind('tap',()=>{
+						console.log(123)
+						mui.openWindow({
+							id: 'supplier/bussiness-search.html',
+							url: 'supplier/bussiness-search.html',
+							styles: {
+								"render": "always",
+								"popGesture": "hide",
+								"bounce": "vertical",
+							}
+						})
+					})
+					
+				}else{
+					$('.noactive').show();
+					$(".isactive").hide();
+					$("#my-noactive").hide();
+					$("#my-active").show();
+					var self = plus.webview.currentWebview();
+					var activeChild=plus.webview.getWebviewById(activeView);
+				
+					activeChild.close();
+					
+					var homeChild = plus.webview.create('page/home.html', 'page/home.html', subpage_style);
+					header.innerHTML = home;
+					self.append(homeChild);
+					activeView = 'page/home.html';
+					
+					
+				}
+			});
+			
+			
+			
+			
+			$(document).on('click','#switch',function(){
+				localStorage.setItem('state', 1);
+				setTimeout(function(){
+					openWindow('index-buyer.html');
+				},1000)
+				
+			});
+			$(document).on('click',"#share",function(){
+				mui.openWindow({
+					url: "page/share.html",
+					id: 'fenxiang',
+					styles: {
+						background: 'transparent'
+					},
+					show: {
+						aniShow:"slide-in-bottom",
+						duration: '600ms'
+					},
+					 waiting:{
+				      autoShow:false
+				   },
+				    extras: {
+				    	theme: true
+				    }
+				})
+			});
+			var first = null;
+			mui.back = function() {
+              //首次按键，提示‘再按一次退出应用’
+                    if (!first) {
+                        first = new Date().getTime();
+                        mui.toast('再按一次退出应用');
+                        setTimeout(function() {
+                            first = null;
+                        }, 1000);
+                    } else {
+                        if (new Date().getTime() - first < 1000) {
+                            plus.runtime.quit();
+                        }
+                    }
+            };
+     window.addEventListener('refresh', function (event) {
+     	console.log('刷新')
+           location.reload()
+      })       
+		</script>
+	</body>
+</html>

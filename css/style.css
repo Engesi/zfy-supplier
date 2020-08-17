@@ -1,0 +1,465 @@
+
+/*项目需要共用样式*/
+.mar-top-44{margin-top: 44px;}
+.mar-top-64{margin-top: 64px;}
+/*蓝色渐变*/
+.bg-blue-grad{background-image: linear-gradient(90deg, #0166f9 0%, #0295fc 50%, #02c4fe 100%);}
+.bg-grey-grad{background-image: linear-gradient(0deg, #67728e 0%, #3b445f 100%);}
+
+/*白色模块背景阴影*/
+.bg-shadow{background-color: #fff;box-shadow: 0px 0px 18px 0px rgba(153, 220, 255, 0.22);border-radius: 4px;}
+
+/*所用字体颜色*/
+.col-fc5832{color: #fc5832;}  
+.col-57b3eb{color: #57b3eb;}
+.col-ffa858{color: #ffa858;}
+.col-04dcb5{color: #04dcb5;}
+.col-ea6346{color: #ea6346;}
+.col-f5c33c{color: #f5c33c;}
+.col-576dff{color: #576dff;}
+.col-01d0a4{color: #01d0a4;}
+.col-734410{color: #734410;}   /*收获确认标题字体颜色*/
+.col-0090ff{color: #0090ff!important;}   /*合同编号颜色*/
+.col-1c89ea{color: #1c89ea;}   /*注册颜色*/
+
+/*所用背景颜色*/
+.bg-0090ff{background-color: #0090ff;}  /*待发货*/
+.bg-ff6305{background-color: #ff6305;}  /*未完成*/
+.bg-ffc40f{background-color: #ffc40f;}  /*待付款*/
+.bg-22ac38{background-color: #22ac38;}  /*已完成*/ 
+.bg-ccc{background-color: #ccc;}         /*已取消*/
+.bg-f5{background-color: #f5f5f5;}
+.bg-fd2222{background-color: #fd2222}   /*报名未通过*/
+.bg-fefedf{background-color: #fefedf;}  /*收获确认标题背景*/
+.bg-05cd25{background-color: #05cd25;}  /*查看发货单*/
+.bg-fba022{background-color: #fba022;}    /*物料招采颜色*/
+.bg-6ad36a{background-color: #6ad36a;}  /*劳务分配颜色*/
+.bg-52a0ff{background-color: #52a0ff;}    /*机械设备*/
+.bg-ff594a{background-color: #ff594a;}      /*专业分包*/
+.bg-222839{background-color: #222839;}   /*发货卡片*/
+.bg-016af9{background-color: #016af9;}   /*查看发货单*/
+.view{width: 100%;margin: 44px auto 50px;}
+
+/*底部导航部分*/
+nav.mui-bar-tab{box-shadow: none;}
+/*登陆注册部分*/
+.login{width:100%;height: 100%;background-image: linear-gradient(0deg, #3f51b5 3%, #3b64c6 30%, #3776d6 100%);position: fixed;top: 0;left: 0;padding: 18% 30px 0 30px;}
+.login-logo{width: 94px;height: 94px;background-color: #fff;box-shadow: 0px 0px 26px 0px rgba(0, 96, 145, 0.57);margin: 0 auto;border-radius: 50%;padding:20px}
+.login h1{padding-bottom: 6%;}
+.login-input li{border-bottom: 1px solid #fff;padding: 20px 0 5px 0;}
+.login-input li .icon{width: 20px;height: 30px;position: relative; display: inline-block;}
+.login-input li .icon .line{height: 12px;border-left: 2px solid #fff;position: absolute;top: 7px;right: -20px;}
+.login-input li input{border: none;background: none;width: 56%;text-indent: 22px;margin-bottom: 0;color: #fff;}
+.login-input li input::placeholder{color: rgba(255,255,255,0.3);font-size: 15px;}
+.login-input li button{background: none;border-radius: 5px;border: solid 1px #fff;color: #fff;float: right;font-size: 14px;}
+.login-a a{display: inline-block;border-right: 1px solid #fff;padding: 0 14px;color: #fff;font-size: 16px;line-height: 14px;}
+.login input[type="button"]{width: 100%;height: 43px;border: 1px solid #fff;border-radius: 25px;background-color: rgba(255, 255, 255, 0.2);font-size: 18px;margin: 18% 0 15% 0;color: #FFFFFF;}
+.login .mui-checkbox{width: 145px}
+.login .mui-checkbox label{font-size: 18px;}
+.mui-checkbox input[type=checkbox]{top: 6px;}
+.third-party p{margin-bottom: 5%;}
+@media only screen and (max-width: 320px) {
+	.login{padding: 15% 30px 0 30px;}
+	.login-a a{font-size: 12px;}
+	.login h1 { padding-bottom: 5%;}
+	.login-input li button{font-size: 12px;}
+	.login-input li:last-child input{width: 60%; padding: 10px 8px;}
+	.login-input li input::placeholder{font-size: 14px;}
+	.login input[type="button"]{margin: 10% 0 10% 0;}	
+}
+
+@media only screen and (max-width: 375px) {
+	.login{padding: 13% 30px 0 30px;}
+	.login input[type="button"]{margin: 12% 0 10% 0;}
+	.login-input li input{width: 60%;}
+}
+.reset .login-input li{border-bottom: 1px solid #ddd;}
+.reset .login-input li .line{border-left: 1px solid #ddd;}
+.reset .login-input li input::placeholder{color: #ddd;}
+.reset .login-input li button{color: rgba(29, 104, 241, 0.96);border: 1px solid rgba(29, 104, 241, 0.96);}
+.reset .login-logo{background-image: linear-gradient(0deg, #1d62f0 0%, #19d7fd 100%), linear-gradient(#53d769, #53d769);box-shadow: none;border-radius: 15px;}
+
+.reg-popover{width: 100%;position: fixed;top: 20%;z-index: 9999;}
+.reg-popover .text p{font-size: 16px;line-height: 24px;color: #515151;}
+.reg-popover .text span.mui-icon{top: 0;left: 0;}
+@media only screen and (max-width: 320px) {
+	.reg-popover .text p{font-size: 13px;}
+}
+@media only screen and (max-width: 375px) {
+	
+}
+.reg-btn{width: 100%;position: fixed;bottom: 0;left:0;margin-bottom: 0;background-image: linear-gradient(18deg, #009cff 1%, #007eff 100%), linear-gradient(#fff, #fff);display: block;font-size: 16px;padding: 15px 0;color: #fff;text-align: center;}
+.register li{position: relative;padding-top: 30px;border-bottom: 1px solid #ededed;}
+.register li label{font-size: 14px;color: #666;}
+.register li input{width: 70%;margin: 0;border: none;}
+.register li .icon{width: 16px;height: 16px;margin-top: 12px}
+.register li .msg{position: absolute;bottom: -24px;left: 28px;font-size: 12px;white-space: nowrap;}
+.register .yanzheng{background-color: #f7f8f9;}
+.register .yanzheng input{background-color: #f7f8f9;}
+.register .yanzheng .yanzheng-img{width: 75px;height: 40px;}
+.register input::placeholder{font-size: 14px;color: #989898;}
+.register .duanxin{width: 40%;}
+@media only screen and (max-width: 320px) {
+	.register li .msg{left: 5px;font-size: 10px;}
+}
+.reg-tab li{float: left;width: 32%;line-height: 38px;color: #fff;background-color:#007eff;margin-right: 2%;opacity: 0.5;border-radius: 3px;}
+.reg-tab li.active{opacity: 1;}
+/*注册完成*/
+.reg-img{width: 66px;height: 66px;margin: 140px auto 20px;}
+
+/*home页 企业logo*/
+.company-info{padding: 10px 23px 16px 23px;}
+.logo{width: 100%;padding: 5px 0;box-shadow: 0px 0px 18px 0px rgba(1, 165, 250, 0.22);position: relative;}
+.logo-box{width: 68px;height: 68px;border-radius: 50%;padding: 10px;position: absolute;top: 10px;left: 0;}
+.logo-box img{width: 100%;height: 100%;}
+.logo .info{padding: 10px 0;margin-left: 68px;min-height: 75px;}
+.header-bg{width: 100%;height: 60px;top: 0;left: 0; border-radius: 0 0 100% 100% / 0 0 150% 150%;z-index: -1;}
+.logo-bg{width: 100%;height: 100%;top: 0;left: 0;z-index: -2;}
+@media only screen and (max-width: 320px) {
+	.logo .info p{font-size: 14px;}
+}
+/*页面标题*/
+.title{position: relative;padding-left: 8px;font-weight: 700;color: #5e5e5e;font-size: 18px;line-height: 22px;}
+.title .line{width:4px;height:16px;position: absolute;top: 2px;left: 0;background-color: #0295fc;border-radius: 2px;}
+/*home页 功能模块部分*/
+.mui-table-view-cell .icon{width: 30px;height: 40px;}
+
+/*基础模块部分*/
+.base-module ul li{line-height: 20px;border-top: 1px solid #e6e6e6;}
+.base-module ul li .icon{display: inline-block;width: 20px;height: 20px;float: left;margin-right: 7px;}
+.base-module ul li .icon img{float: left;}
+.base-module ul li a{display:block;padding: 15px 20px 15px 30px;}
+
+#gray h3,#gray td{color: #b0b0b0;}
+/*通知部分模块*/
+/*搜索*/
+.search{padding: 10px 15px;}
+.search input{width:80%;height: 30px;border-radius: 15px;background-color: #fff;box-shadow: 0px 0px 13px 0px rgba(174, 174, 174,0.31);text-indent: 30px;border: none;}
+.search-icon input{width: 89%;}
+.search input::placeholder{color: #ccc;font-size: 14px;}
+.search i{display: inline-block;width: 30px;height: 30px;}
+.pr>i {
+	position: absolute;
+	left: 40px;
+	top: 5px;
+}
+
+.searchLeft {
+	margin-right: 1%;
+}
+
+.searchText {
+	position: absolute;
+	right: 1%;
+  top: 8px;
+}
+/* .search span{position: absolute;top: 7px;left: 10px;} */
+/* .search span{position: absolute;right: 0;} */
+.search-header{width: 100%;position: fixed;top: 0;left: 0;height: 64px;}
+.search-header .search{margin-top: 24px;padding: 0 10px;}
+.search-header .search input{width: 86%;}
+@media only screen and (max-width: 320px) {
+	.search-header .search input{width: 85%;}
+}
+.lishi li{padding: 12px 15px;border-bottom: 1px solid #eee;color: #494949;}
+
+/*通知模块*/
+/* .notice{font-size: 20px;} */
+.notice li{width:100%;background-color: #fff;margin-bottom: 10px;box-shadow: 0px 0px 9px 0px rgba(98, 98, 98, 0.15);padding: 20px 20px 20px 20px; position: relative;}
+
+.notice .icon{width: 48pt;height: 48pt;margin-right: 15px; position: relative;}
+.notice .icon img {
+	width: 48px;
+	height: 48px;
+}
+.notice .icon span {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.noticeLiRight {
+	display: flex; justify-content: space-between;margin-bottom: 12pt;
+}
+.notice .decorate{width: 8px;height: 20px;background: url(../../images/biaoqian.png) no-repeat center;background-size: cover;position: absolute;top: -2px;left: 15px;}
+.notice-name{line-height: 32px;font-size: 16px;}
+/*订单模块 部分*/
+.order-list li{background-color: #fff;box-shadow: 0px 0px 18px 0px rgba(153, 220, 255, 0.22);border-radius: 4px;margin-bottom: 10px;padding: 0 10px 10px 10px;}
+.order-list li h3{border-bottom: dashed 1px #bfbfbf;font-size: 16px;padding: 15px 0;line-height: 22px;position: relative;padding-right: 20px;}
+.order-list li h3 .mui-icon-arrowright{position: absolute;top: 16px;right: 0px;}
+.list-state,.state{display: inline-block;padding: 0 10px;color: #fff;border-radius: 15px;font-size: 12px;line-height: 20px;}
+.state{position: absolute;top: 15px;right: 15px;}
+.order-list table tr td{font-size: 14px;}
+.order-list table tr td:first-child{white-space :nowrap;padding-right: 20px;color: #666;}
+.order-list table tr td:last-child{color: #333;}
+
+/*待发货详情页面*/
+table td{border: none;padding: 5px 0;}
+.commodity-info{padding: 0 50px 20px 50px;border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;}
+.commodity-info td{border-bottom: 1px solid #ddd;padding: 13px 0 5px 0;}
+.commodity-info tr td:last-child,.order-info td:last-child{color: #999;}
+.commodity-info tr td:last-child{padding-right: 30px;}
+
+/*收货列表 部分模块*/
+.receipt-total td,.receipt-total th{padding-left: 30px;}
+
+/*收货确认部分*/
+.table{width: 100%;}
+.table th{color: #666;}
+.table td,.table th{font-size: 14px;}
+.table td:first-child{padding: 5px 0;color: #666;width: 80px;}
+.table td{color: #333;}
+.shouhuo-btn{position: fixed;bottom: 0;left: 0;width: 100%;background-color: #fff;}
+.shouhuo-btn a{display: inline-block;float: left;width: 50%;line-height:48px;color: #fff;font-size: 16px;}
+.shouhuo-btn .back{color: #9e9e9e;}
+.shouhuo-btn .confirm{color: #fff;background-color: #0166f9;}
+.table input{height: 31px;border: none;margin: 0;padding: 0;}
+
+/*发货*/
+.fahuo-btn{display:block;border-radius: 33px;line-height: 33px;}
+.dingdan-state{position: absolute;top: 15px;right: 15px;}
+.fahuo-card{box-shadow: 0px 0px 9px 0px rgba(153, 220, 255, 0.22);border-radius: 4px;background-image: linear-gradient(0deg, #67728e 0%, #3b445f 100%);position: relative;padding: 10px 15px;margin-bottom: 10px;}
+.fahuo-card .table td{color: #fff;}
+
+/*公告详情*/
+
+
+
+/*合同*/
+.hetong-mod ul li{width: 23%;float: left;line-height: 34px;text-align: center;margin-left: 2.66%;border-radius: 20px;color: #ccc;border: 1px solid #ccc;font-size: 14px;}
+.hetong-mod h4{color: #333;}
+.hetong-mod ul li.active{background-image: linear-gradient(90deg, #00a0e9 0%, #01b2f4 51%, #02c4fe 100%);box-shadow: 0px 2px 6px 0px rgba(2, 196, 254, 0.5);color: #fff;border: 1px solid #02c4fe;}
+.hetongxiazai .icon{width: 20px;}
+.hetongxiazai .icon img{float: left;}
+
+/*商机*/
+.opportunity ul li{padding: 15px 20px;}
+.opportunity .text-over{max-width: 80%;text-overflow:ellipsis;overflow:hidden}
+.opportunity ul li h4{white-space:nowrap;line-height: 24px;}
+.opportunity-tiitle span{color: #fff;padding: 0 2px;margin-left: 5px;font-size: 14px;}
+@media only screen and (min-width: 320px) {
+	.opportunity .text-over{max-width: 76%;}
+}
+@media only screen and (min-width: 375px) {
+	.opportunity .text-over{max-width: 80%;}
+}
+@media only screen and (min-width: 414px) {
+	.opportunity .text-over{max-width: 82%;}
+}
+
+/*客户详情*/
+.kehu-tab{border-top: solid 1px rgba(245, 245, 245, 0.15);}
+.kehu-tab li{width: 50%;float: left;color: #fff;padding: 10px 0;position: relative;font-size: 16px;}
+.kehu-tab li .tri{ width:0;height:0;border-width:0 8px 8px;border-style:solid;border-color:transparent transparent #fff;position: absolute;bottom: 0;left: 50%;margin-left: -8px;}
+.kehu-logo{width: 50px;height: 50px;right: 15px;top: 50px;}
+
+/*发货单*/
+.fahuo-list li{border-bottom: 1px solid #e5e5e5;padding: 18px 0 0 20px;font-size: 14px;}
+.fahuo-list input{width: 60%;border: none;}
+.siji input{margin: 0;}
+.siji li{padding: 8px 20px;}
+
+/*审批*/
+.shenpi li{margin-top: 20px;}
+.shenpi .left .icon{width: 30px;height: 30px;}
+.shenpi .left .line{height: 42px;border-left: 1px solid #999;bottom: -56px;left: 23px;}
+.shenpi .right .icon{width: 22px;height: 22px;top:10px;right: 10px;}
+.shenpi .right{width: 83%;padding: 16px 12px;box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.1), 0px 2px 6px 0px rgba(0, 0, 0, 0.1);border-radius:8px;}
+.shenpi .right h4{font-size: 16px;color: #333;}
+.shenpi .right p{margin-top: 10px;font-size: 16px;color: #999;}
+.shenpi-btn{width: 100%;position: fixed;left: 0;bottom: 20px;}
+.shenpi-btn li{width: 32%;line-height: 33px;text-align: center;color: #fff;margin-right: 2%;float: left;box-shadow: 0px 2px 10px 0px rgba(2, 196, 254, 0.5);border-radius: 20px;font-size: 16px;}
+.shenpi-popup .popup{position: fixed;top: 50%;margin-top: -120px;left: 0;z-index: 99999;width: 100%;}
+.shenpi-popup .popup .bg-white{border-radius: 5px;}
+.shenpi-popup .popup h3{}
+.shenpi-popup .popup textarea{height: 80px;text-indent: 10px;}
+.shenpi-popup .popup textarea::placeholder{font-size: 14px;}
+.shenpi-popup .popup label{font-size: 16px;width: 96px;}
+.shenpi-popup .popup select{width: 64%;border: 1px solid #ddd!important;font-size: 14px;padding: 0 10px;margin: 0;}
+@media only screen and (max-width: 320px) {
+	.shenpi-popup .popup select{width: 55%;}
+}
+/*信息管理*/
+.im-list li{border-top: 1px solid #ddd;padding: 0 15px;line-height: 46px;font-size: 16px;color: #999;}
+.im-list li span{color: #333;}
+.head-portrait{width: 30px;height: 30px;}
+
+/*二维码分享*/
+.share{width: 100%;position: fixed;bottom: 0;left: 0;background-color: #fff;z-index: 99999999999;}
+.share a{margin-left: 20px;color: #333;}
+.share p{padding-bottom: 20px;font-size: 14px;color: #333;}
+.share .icon{width: 24px;height: 24px;display: block;margin: 0 auto;}
+.share span{font-size: 14px;line-height: 30px;}
+
+/*新增*/
+.header .classify-btn{font-size: 28px!important;line-height: 44px!important;float: right;}
+.icon-qiehuan{font-size: 24px!important;position: relative;top: 3px;}
+.shade{width: 100%;height: 100%;position: fixed;top: 0;left: 0;background: rgba(0,0,0,.4);display: none;}
+
+/* 全局样式 */
+.mui-btn {
+	font-size: 12px !important;
+}
+
+.font-lighter {
+	font-size: 14px !important;
+	line-height: 20px;
+}
+
+.noticeLiRight {
+	margin-bottom: 8px;
+}
+
+.noticeLiRight span:first-child {
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.notice li {
+	padding: 16px;
+}
+
+.notice .icon {
+	width: 48px;
+	height: 48px;
+	margin-right: 18px;
+}
+
+.notice .icon span {
+	right: -2px;
+	top: -3px;
+}
+
+.mui-badge {
+	padding: 2px 5px;
+}
+
+.noticeBottom {
+	font-size: 14px !important;
+}
+
+.approveTop {
+	font-size:14px;
+	font-family:PingFangSC-Medium,PingFang SC;
+	font-weight:500;
+	color:rgba(51,52,55,1);
+	line-height:20px;
+}
+
+.homemiddle a span {
+	font-size:14px;
+	font-family:PingFangSC-Regular,PingFang SC;
+	font-weight:400;
+	color:rgba(51,52,55,1);
+	line-height:25px;
+}
+
+#name {
+font-size:20px;
+font-family:PingFangSC-Medium,PingFang SC;
+font-weight:500;
+color:rgba(51,52,55,1);
+line-height:30px;
+margin-bottom: 14px;
+}
+
+#company {
+	font-size:14px;
+	font-family:PingFangSC-Regular,PingFang SC;
+	font-weight:400;
+	color:rgba(153,154,159,1);
+	line-height:20px;
+}
+
+#head img {
+	width: 100%;
+	height: 100%;
+}
+
+.bussinessContainer {
+	font-size:14px;
+	font-family:PingFangSC-Regular,PingFang SC;
+	font-weight:400;
+	color:rgba(51,52,55,1);
+	line-height:20px;
+}
+
+.busDetailTitle {
+	font-size:16px;
+	font-family:PingFangSC-Medium,PingFang SC;
+	font-weight:500;
+	color:rgba(51,52,55,1);
+	line-height:25px;
+	margin-bottom: 10px;
+}
+.posi {
+	position: relative;
+}
+
+.posi .active {
+	color: #93a7ed;
+}
+
+.posi i:first-child {
+	position: absolute;
+	top: -8px;
+}
+
+.posi i:last-child {
+	position: absolute;
+	bottom: -7px;
+}
+
+.mui-bar-tab {
+	height: 65px !important;
+}
+
+.fz12 {
+	font-size: 12px !important;
+}
+
+.bussinessSort .active {
+	    color: #93a7ed;
+}
+
+.mui-switch .mui-switch-handle  {
+	    width: 18px !important;
+	    height: 18px !important;
+	}
+	
+	.mui-switch-mini {
+		    width: 38px !important;
+	}
+	
+	.mui-switch {
+		height: 22px !important;
+	}
+	
+	.followWrap {
+		position: relative;
+	}
+	
+	.followTip {
+		position: absolute;
+		top: -3px;
+		right: -2px;
+		border: 1px solid #fff;
+	}
+	
+	.newFollow {
+		width: 34px;
+	}
+	
+	.loginedpwd {
+		position: absolute;
+		width: 100%;
+		background-color: #396ccd;
+		color: #fff;
+		z-index: 10;
+	}
+	
+	.loginedpwd li {
+		padding: 10px;
+	}
+	
+
