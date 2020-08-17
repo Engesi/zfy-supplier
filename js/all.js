@@ -1,7 +1,7 @@
 /* var zfyurl = "http://192.168.1.202"; */
 /* var zfyurl = "http://218.26.2.254:8082"; */
-/* var zfyurl = "http://222.128.20.226:8083"; */
-var zfyurl = "http://www.zhufuc.com";
+ var zfyurl = "http://222.128.20.226:8083"; 
+/*var zfyurl = "http://www.zhufuc.com";*/
 
 function isIPhoneX(){
 	if(plus.device.model.indexOf('iPhone') >-1 && screen.height >=812){
